@@ -1,0 +1,450 @@
+# Pet Projects Showcase Website - Backend API Implementation
+
+## Project Context
+Building a showcasing website where developers can submit their pet projects for community visibility. The platform features:
+- User account creation and authentication
+- Project submission with manual admin approval
+- Public project browsing with filtering by tags and sorting by monthly visitors
+- Monthly prizes for best newcomer projects
+- Admin panel for project management
+
+Target: ~1000 monthly visitors, hosted on Railway (backend) + Vercel (frontend)
+
+## Backend Technology Stack
+- **Runtime**: Node.js + TypeScript
+- **Framework**: Express.js
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Authentication**: JWT with refresh tokens
+- **Validation**: Zod
+- **File Upload**: Multer
+- **API Documentation**: OpenAPI/Swagger
+- **Environment**: Railway deployment
+
+## Database Schema
+
+### Users Table
+```sql
+- id (UUID, primary key)
+- email (string, unique, required)
+- username (string, unique, required)
+- password_hash (string, required)
+- role (enum: 'user', 'admin', default: 'user')
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+### Projects Table
+```sql
+- id (UUID, primary key)
+- user_id (UUID, foreign key to users)
+- title (string, required)
+- description (text, required)
+- project_url (string, required)
+- image_url (string, optional)
+- monthly_visitors (integer, default: 0)
+- status (enum: 'pending', 'approved', 'rejected', default: 'pending')
+- created_at (timestamp)
+- approved_at (timestamp, nullable)
+- updated_at (timestamp)
+```
+
+### Tags Table
+```sql
+- id (UUID, primary key)
+- name (string, unique, required)
+- color (string, optional - hex color)
+- created_at (timestamp)
+```
+
+### Project_Tags Junction Table
+```sql
+- project_id (UUID, foreign key to projects)
+- tag_id (UUID, foreign key to tags)
+- PRIMARY KEY (project_id, tag_id)
+```
+
+### Monthly_Stats Table
+```sql
+- id (UUID, primary key)
+- project_id (UUID, foreign key to projects)
+- month (date, format: YYYY-MM-01)
+- visitor_count (integer, required)
+- created_at (timestamp)
+- UNIQUE(project_id, month)
+```
+
+## API Endpoints to Implement
+
+### Authentication Routes (`/auth`)
+```
+POST /auth/register
+- Body: { email, username, password }
+- Response: { user, accessToken, refreshToken }
+- Validation: email format, password strength, username uniqueness
+
+POST /auth/login
+- Body: { email, password }
+- Response: { user, accessToken, refreshToken }
+- Authentication: bcrypt password verification
+
+POST /auth/refresh
+- Body: { refreshToken }
+- Response: { accessToken }
+- Validation: JWT refresh token verification
+
+GET /auth/me
+- Headers: Authorization: Bearer <token>
+- Response: { user }
+- Middleware: requireAuth
+```
+
+### Public Routes (`/api`)
+```
+GET /projects
+- Query: ?page=1&limit=20&tags[]=react&tags[]=nodejs&sort=visitors&order=desc&status=approved
+- Response: { projects[], pagination, totalCount }
+- Features: filtering by tags, sorting by visitors/date, pagination
+
+GET /projects/:id
+- Response: { project, tags[], monthlyStats[] }
+- Only return approved projects for non-admin users
+
+GET /tags
+- Response: { tags[] }
+- Return all available tags with usage count
+```
+
+### User Routes (`/api/user`) - Require Authentication
+```
+POST /projects
+- Body: { title, description, project_url, image?, tags[], monthly_visitors }
+- Response: { project }
+- Middleware: requireAuth
+- File upload: handle image upload (multer)
+
+GET /my-projects
+- Response: { projects[] }
+- Middleware: requireAuth
+- Return user's own projects with all statuses
+
+PUT /projects/:id
+- Body: { title?, description?, project_url?, image?, tags[], monthly_visitors? }
+- Response: { project }
+- Middleware: requireAuth, requireOwnership
+- Only allow updates to pending/approved projects
+
+DELETE /projects/:id
+- Response: { success }
+- Middleware: requireAuth, requireOwnership
+
+PUT /projects/:id/stats
+- Body: { month, visitor_count }
+- Response: { stat }
+- Middleware: requireAuth, requireOwnership
+- Update monthly visitor statistics
+```
+
+### Admin Routes (`/api/admin`) - Require Admin Role
+```
+GET /projects/pending
+- Query: ?page=1&limit=20
+- Response: { projects[], pagination }
+- Middleware: requireAuth, requireAdmin
+
+PUT /projects/:id/approve
+- Response: { project }
+- Middleware: requireAuth, requireAdmin
+- Set status to 'approved', set approved_at timestamp
+
+PUT /projects/:id/reject
+- Body: { reason? }
+- Response: { project }
+- Middleware: requireAuth, requireAdmin
+- Set status to 'rejected'
+
+GET /users
+- Query: ?page=1&limit=20&search=email
+- Response: { users[], pagination }
+- Middleware: requireAuth, requireAdmin
+
+GET /stats
+- Response: { totalProjects, pendingProjects, totalUsers, monthlyGrowth }
+- Middleware: requireAuth, requireAdmin
+
+POST /tags
+- Body: { name, color? }
+- Response: { tag }
+- Middleware: requireAuth, requireAdmin
+
+DELETE /tags/:id
+- Response: { success }
+- Middleware: requireAuth, requireAdmin
+```
+
+## Middleware Implementation
+
+### Authentication Middleware
+```typescript
+requireAuth: verify JWT token, attach user to request
+requireAdmin: check user.role === 'admin'
+requireOwnership: verify user owns the resource
+```
+
+### Validation Middleware
+```typescript
+validateRegister: email format, password strength, username format
+validateProject: required fields, URL format, tag validation
+validateStats: month format, visitor count validation
+```
+
+### File Upload Middleware
+```typescript
+uploadImage: multer configuration for image files
+- Max size: 5MB
+- Allowed types: jpg, jpeg, png, webp
+- Storage: Railway volumes or external service
+```
+
+## Security Implementation
+
+### Password Security
+- Use bcrypt with salt rounds = 12
+- Minimum password requirements: 8 chars, 1 uppercase, 1 lowercase, 1 number
+
+### JWT Configuration
+- Access token: 15 minutes expiry
+- Refresh token: 7 days expiry, stored in httpOnly cookie
+- JWT secret from environment variables
+
+### CORS Configuration
+- Allow Vercel frontend domain
+- Allow credentials for cookie-based refresh tokens
+- Production vs development environment handling
+
+### Rate Limiting
+- Registration: 5 attempts per hour per IP
+- Login: 10 attempts per hour per IP
+- Project submission: 10 per day per user
+
+## Error Handling
+
+### Standard Error Responses
+```typescript
+{
+  error: {
+    message: "Human readable error",
+    code: "ERROR_CODE",
+    details?: object
+  }
+}
+```
+
+### Error Types to Handle
+- Authentication errors (401)
+- Authorization errors (403)
+- Validation errors (400)
+- Not found errors (404)
+- Server errors (500)
+- Database constraint violations
+- File upload errors
+
+## Environment Variables Required
+```
+DATABASE_URL=postgresql://...
+JWT_SECRET=random_secret_key
+JWT_REFRESH_SECRET=another_random_key
+NODE_ENV=development|production
+PORT=3000
+CORS_ORIGIN=https://your-frontend-domain.vercel.app
+UPLOAD_PATH=/uploads (for Railway volumes)
+```
+
+## Initial Data Seeding
+
+### Default Admin User
+Create initial admin account for project approval
+
+### Sample Tags
+Seed common tags: React, Vue, Angular, Node.js, Python, TypeScript, JavaScript, etc.
+
+## Testing Strategy
+- Unit tests for utils and services
+- Integration tests for API endpoints
+- Authentication flow testing
+- Database transaction testing
+- File upload testing
+
+## OpenAPI Specification Generation
+
+### Required Implementation
+The backend MUST generate an OpenAPI 3.0 specification to ensure frontend/backend contract alignment.
+
+### Tools and Setup
+```typescript
+// Required packages
+- swagger-jsdoc: Generate OpenAPI spec from JSDoc comments
+- swagger-ui-express: Serve interactive API documentation
+- @types/swagger-jsdoc, @types/swagger-ui-express
+```
+
+### Implementation Requirements
+
+#### 1. OpenAPI Configuration
+```typescript
+// src/swagger.ts
+import swaggerJsdoc from 'swagger-jsdoc';
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Pet Projects Showcase API',
+      version: '1.0.0',
+      description: 'API for pet projects showcase platform',
+    },
+    servers: [
+      {
+        url: process.env.NODE_ENV === 'production' 
+          ? 'https://your-api.railway.app' 
+          : 'http://localhost:3000',
+        description: process.env.NODE_ENV === 'production' ? 'Production' : 'Development'
+      }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
+  },
+  apis: ['./src/routes/*.ts', './src/models/*.ts'], // paths to files with OpenAPI definitions
+};
+
+export const specs = swaggerJsdoc(options);
+```
+
+#### 2. JSDoc Comments for All Endpoints
+Every endpoint must include comprehensive JSDoc comments:
+
+```typescript
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterRequest'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+```
+
+#### 3. Schema Definitions
+Define all request/response schemas:
+
+```typescript
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - id
+ *         - email
+ *         - username
+ *         - role
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         email:
+ *           type: string
+ *           format: email
+ *         username:
+ *           type: string
+ *           minLength: 3
+ *           maxLength: 50
+ *         role:
+ *           type: string
+ *           enum: [user, admin]
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ */
+```
+
+#### 4. API Documentation Endpoint
+```typescript
+// Serve Swagger UI at /api-docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }'
+}));
+
+// Export raw OpenAPI spec at /openapi.json
+app.get('/openapi.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(specs);
+});
+```
+
+#### 5. Frontend Integration
+The frontend will consume the OpenAPI spec to:
+- Generate TypeScript types automatically
+- Create type-safe API client
+- Ensure compile-time contract validation
+
+### Generation Script
+Add to package.json:
+```json
+{
+  "scripts": {
+    "generate-spec": "node -e \"console.log(JSON.stringify(require('./src/swagger').specs, null, 2))\" > openapi.json",
+    "docs": "open http://localhost:3000/api-docs"
+  }
+}
+```
+
+### Required Schema Coverage
+Document all schemas for:
+- User registration/login requests and responses
+- Project CRUD operations
+- Admin operations
+- Error responses
+- Pagination objects
+- Filter and sort parameters
+
+### Validation
+- OpenAPI spec must validate against OpenAPI 3.0 schema
+- All endpoints must have complete documentation
+- All request/response bodies must have schema definitions
+- Security requirements must be documented for protected routes
+
+## Deployment Considerations
+- Railway-specific configuration
+- Database migrations on deployment
+- Environment variable management
+- Health check endpoint (/health)
+- Logging configuration
+- OpenAPI spec served at `/openapi.json` and documentation at `/api-docs`
