@@ -1,17 +1,16 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { Plus, X, Upload, Link as LinkIcon } from 'lucide-react'
-import { ProjectCreate, Tag } from '@/types/api'
+import { Plus, X, ArrowLeft, Save } from 'lucide-react'
+import { ProjectCreate, ProjectUpdate, Tag, Project } from '@/types/api'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
-
 import { apiClient } from '@/lib/api'
 
 interface FormData {
@@ -26,18 +25,21 @@ interface FormData {
   tag_ids: string[]
 }
 
-export default function SubmitProjectPage() {
+export default function EditProjectPage() {
+  const params = useParams()
   const router = useRouter()
-  const { isAuthenticated, isLoading: authLoading } = useApp()
+  const { isAuthenticated, user, isLoading: authLoading } = useApp()
   const { t, isLoaded } = useLanguage()
+  const [project, setProject] = useState<Project | null>(null)
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadingData, setLoadingData] = useState(true)
   const [currentScreenshot, setCurrentScreenshot] = useState('')
   const [currentTech, setCurrentTech] = useState('')
   const [customCategories, setCustomCategories] = useState<string[]>([])
   const [currentCategory, setCurrentCategory] = useState('')
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
       screenshot_urls: [],
       tech_stack: [],
@@ -54,22 +56,53 @@ export default function SubmitProjectPage() {
     if (authLoading) return
 
     if (!isAuthenticated) {
-      router.push('/login?redirect=/submit')
+      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
       return
     }
 
-    const loadTags = async () => {
+    const loadData = async () => {
       try {
-        const tagsData = await apiClient.getTags()
+        setLoadingData(true)
+        const [projectData, tagsData] = await Promise.all([
+          apiClient.getProject(params.id as string),
+          apiClient.getTags()
+        ])
+        
+        // Check if user owns this project
+        if (projectData.owner.id !== user?.id) {
+          alert('You can only edit your own projects')
+          router.push('/my-projects')
+          return
+        }
+        
+        setProject(projectData)
         setTags(tagsData)
+        
+        // Populate form with existing data
+        reset({
+          title: projectData.title,
+          description: projectData.description,
+          long_description: projectData.long_description || '',
+          website_url: projectData.website_url,
+          github_url: projectData.github_url || '',
+          demo_url: projectData.demo_url || '',
+          screenshot_urls: projectData.screenshot_urls,
+          tech_stack: projectData.tech_stack,
+          tag_ids: projectData.tags.map(tag => tag.id)
+        })
       } catch (error) {
-        console.error('Error loading tags:', error)
-        setTags([])
+        console.error('Error loading project:', error)
+        alert('Error loading project data')
+        router.push('/my-projects')
+      } finally {
+        setLoadingData(false)
       }
     }
 
-    loadTags()
-  }, [isAuthenticated, router, authLoading])
+    if (params.id && user) {
+      loadData()
+    }
+  }, [isAuthenticated, params.id, user, router, reset, authLoading])
 
   const addScreenshot = () => {
     if (currentScreenshot.trim()) {
@@ -116,7 +149,7 @@ export default function SubmitProjectPage() {
     try {
       setLoading(true)
       
-      const projectData: ProjectCreate = {
+      const projectData: ProjectUpdate = {
         title: data.title,
         description: data.description,
         long_description: data.long_description || undefined,
@@ -128,25 +161,24 @@ export default function SubmitProjectPage() {
         tag_ids: data.tag_ids
       }
       
-      await apiClient.createProject(projectData)
+      await apiClient.updateProject(params.id as string, projectData)
+      alert('Project updated successfully!')
       router.push('/my-projects')
     } catch (error) {
-      console.error('Error submitting project:', error)
-      alert('Error submitting project. Please try again.')
+      console.error('Error updating project:', error)
+      alert('Error updating project. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  if (authLoading || !isLoaded) {
+  if (authLoading || !isLoaded || loadingData) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-300 rounded w-96 mx-auto"></div>
-            </div>
+      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-300 rounded w-96 mx-auto"></div>
           </div>
         </div>
       </div>
@@ -157,31 +189,55 @@ export default function SubmitProjectPage() {
     return null // Will redirect in useEffect
   }
 
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Project not found</h1>
+          <p className="text-gray-600 mb-4">The project you're looking for doesn't exist or you don't have permission to edit it.</p>
+          <Button onClick={() => router.push('/my-projects')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to My Projects
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('submit.title')}</h1>
-          <p className="text-gray-600">
-            {t('submit.subtitle')}
-          </p>
+        <div className="mb-8 flex items-center gap-4">
+          <Button
+            variant="outline"
+            onClick={() => router.push('/my-projects')}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Project</h1>
+            <p className="text-gray-600">
+              Update your project details and resubmit for approval
+            </p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Basic Information */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('submit.basicInfo')}</CardTitle>
+              <CardTitle>Basic Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('submit.projectTitle')} *
+                  Project Title *
                 </label>
                 <Input
                   id="title"
-                  {...register('title', { required: t('submit.titleRequired'), maxLength: 100 })}
-                  placeholder={t('submit.projectTitlePlaceholder')}
+                  {...register('title', { required: 'Project title is required', maxLength: 100 })}
+                  placeholder="Enter your project title"
                 />
                 {errors.title && (
                   <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
@@ -190,12 +246,12 @@ export default function SubmitProjectPage() {
 
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('submit.shortDescription')} *
+                  Short Description *
                 </label>
                 <Textarea
                   id="description"
-                  {...register('description', { required: t('submit.descriptionRequired'), maxLength: 500 })}
-                  placeholder={t('submit.shortDescriptionPlaceholder')}
+                  {...register('description', { required: 'Description is required', maxLength: 500 })}
+                  placeholder="Brief description of your project (max 500 characters)"
                   rows={3}
                 />
                 {errors.description && (
@@ -205,12 +261,12 @@ export default function SubmitProjectPage() {
 
               <div>
                 <label htmlFor="long_description" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('submit.detailedDescription')}
+                  Detailed Description
                 </label>
                 <Textarea
                   id="long_description"
                   {...register('long_description')}
-                  placeholder={t('submit.detailedDescriptionPlaceholder')}
+                  placeholder="Detailed description of your project, features, and technical details"
                   rows={6}
                 />
               </div>
@@ -220,18 +276,18 @@ export default function SubmitProjectPage() {
           {/* URLs */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('submit.links')}</CardTitle>
+              <CardTitle>Links</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label htmlFor="website_url" className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('submit.websiteUrl')} *
+                  Website URL *
                 </label>
                 <Input
                   id="website_url"
                   type="url"
-                  {...register('website_url', { required: t('submit.websiteRequired') })}
-                  placeholder={t('submit.websiteUrlPlaceholder')}
+                  {...register('website_url', { required: 'Website URL is required' })}
+                  placeholder="https://yourproject.com"
                 />
                 {errors.website_url && (
                   <p className="text-red-600 text-sm mt-1">{errors.website_url.message}</p>
@@ -286,7 +342,6 @@ export default function SubmitProjectPage() {
                 <div className="space-y-2">
                   {watchedScreenshots.map((url, index) => (
                     <div key={index} className="flex items-center gap-2 bg-gray-100 p-2 rounded">
-                      <LinkIcon className="w-4 h-4 text-gray-500" />
                       <span className="flex-1 text-sm truncate">{url}</span>
                       <Button
                         type="button"
@@ -411,7 +466,7 @@ export default function SubmitProjectPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.back()}
+              onClick={() => router.push('/my-projects')}
               disabled={loading}
             >
               Cancel
@@ -421,23 +476,11 @@ export default function SubmitProjectPage() {
               disabled={loading || watchedTechStack.length === 0 || (watchedTagIds.length === 0 && customCategories.length === 0)}
               className="flex-1"
             >
-              {loading ? 'Submitting...' : 'Submit Project'}
+              <Save className="w-4 h-4 mr-2" />
+              {loading ? 'Updating...' : 'Update Project'}
             </Button>
           </div>
         </form>
-
-        <Card className="mt-6">
-          <CardContent className="pt-6">
-            <h3 className="font-semibold text-gray-900 mb-2">📝 Submission Guidelines</h3>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Projects must be original work or have proper attribution</li>
-              <li>• Include clear screenshots or demos of your project</li>
-              <li>• Provide a working website or demo URL</li>
-              <li>• Write a detailed description explaining what your project does</li>
-              <li>• All submissions are reviewed before being published</li>
-            </ul>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )

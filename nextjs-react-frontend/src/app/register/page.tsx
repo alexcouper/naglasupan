@@ -14,7 +14,7 @@ import { apiClient } from '@/lib/api'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { setUser, isDummyMode } = useApp()
+  const { setUser } = useApp()
   const { t, isLoaded } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -33,17 +33,10 @@ export default function RegisterPage() {
         return
       }
 
-      if (isDummyMode) {
-        // Simulate registration
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        alert('Registration successful! Please sign in with your credentials. (Demo Mode)')
-        router.push('/login')
-      } else {
-        const { confirmPassword, ...userData } = data
-        await apiClient.register(userData)
-        alert('Registration successful! Please sign in with your credentials.')
-        router.push('/login')
-      }
+      const { confirmPassword, ...userData } = data
+      await apiClient.register(userData)
+      alert('Registration successful! Please sign in with your credentials.')
+      router.push('/login')
     } catch (error) {
       console.error('Registration error:', error)
       setError('Registration failed. Please try again.')

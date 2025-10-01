@@ -6,11 +6,11 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Project } from '@/types/api'
-import { featuredProjects } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 
 export default function FeaturedProjectsPage() {
-  const { isDummyMode } = useApp()
+
   const { t, isLoaded } = useLanguage()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,22 +19,18 @@ export default function FeaturedProjectsPage() {
     const loadProjects = async () => {
       try {
         setLoading(true)
-        if (isDummyMode) {
-          setProjects(featuredProjects)
-        } else {
-          const projectsData = await apiClient.getFeaturedProjects()
-          setProjects(projectsData)
-        }
+        const projectsData = await apiClient.getFeaturedProjects()
+        setProjects(projectsData)
       } catch (error) {
         console.error('Error loading featured projects:', error)
-        setProjects(featuredProjects)
+        setProjects([])
       } finally {
         setLoading(false)
       }
     }
 
     loadProjects()
-  }, [isDummyMode])
+  }, [])
 
   // Show loading while translations are loading
   if (!isLoaded) {

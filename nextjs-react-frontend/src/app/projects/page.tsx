@@ -9,11 +9,10 @@ import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Project, Tag, ProjectFilters } from '@/types/api'
-import { dummyProjects, dummyTags } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 
 export default function ProjectsPage() {
-  const { isDummyMode } = useApp()
   const { t, isLoaded } = useLanguage()
   const [projects, setProjects] = useState<Project[]>([])
   const [tags, setTags] = useState<Tag[]>([])
@@ -30,51 +29,16 @@ export default function ProjectsPage() {
   const loadData = async () => {
     try {
       setLoading(true)
-      if (isDummyMode) {
-        // Filter and sort dummy data
-        let filteredProjects = dummyProjects.filter(p => p.status === 'approved')
-        
-        if (filters.search) {
-          filteredProjects = filteredProjects.filter(p =>
-            p.title.toLowerCase().includes(filters.search!.toLowerCase()) ||
-            p.description.toLowerCase().includes(filters.search!.toLowerCase())
-          )
-        }
-        
-        if (filters.tags && filters.tags.length > 0) {
-          filteredProjects = filteredProjects.filter(p =>
-            p.tags.some(tag => filters.tags!.includes(tag.slug))
-          )
-        }
-        
-        // Sort projects
-        filteredProjects.sort((a, b) => {
-          const multiplier = filters.sort_order === 'desc' ? -1 : 1
-          switch (filters.sort_by) {
-            case 'monthly_visitors':
-              return (a.monthly_visitors - b.monthly_visitors) * multiplier
-            case 'title':
-              return a.title.localeCompare(b.title) * multiplier
-            default:
-              return (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) * multiplier
-          }
-        })
-        
-        setProjects(filteredProjects)
-        setTags(dummyTags)
-      } else {
-        const [projectsData, tagsData] = await Promise.all([
-          apiClient.getProjects(filters),
-          apiClient.getTags()
-        ])
-        setProjects(projectsData.projects)
-        setTags(tagsData)
-      }
+      const [projectsData, tagsData] = await Promise.all([
+        apiClient.getProjects(filters),
+        apiClient.getTags()
+      ])
+      setProjects(projectsData.projects)
+      setTags(tagsData)
     } catch (error) {
       console.error('Error loading projects:', error)
-      // Fallback to dummy data
-      setProjects(dummyProjects.filter(p => p.status === 'approved'))
-      setTags(dummyTags)
+      setProjects([])
+      setTags([])
     } finally {
       setLoading(false)
     }
@@ -103,7 +67,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     loadData()
-  }, [isDummyMode, filters])
+  }, [filters])
 
   // Show loading while translations are loading
   if (!isLoaded) {

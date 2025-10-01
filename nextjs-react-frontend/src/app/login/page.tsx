@@ -10,12 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { LoginRequest } from '@/types/api'
-import { dummyUsers } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { setUser, isDummyMode } = useApp()
+  const { setUser } = useApp()
   const { t, isLoaded } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -27,30 +27,12 @@ export default function LoginPage() {
       setLoading(true)
       setError('')
 
-      if (isDummyMode) {
-        // Simulate login with dummy data
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Find user by username or email
-        const user = dummyUsers.find(u => 
-          u.username === data.username || u.email === data.username
-        )
-        
-        if (user && data.password === 'password') {
-          setUser(user)
-          const redirect = new URLSearchParams(window.location.search).get('redirect')
-          router.push(redirect || '/')
-        } else {
-          setError('Invalid credentials. Try username: "alice_dev" password: "password"')
-        }
-      } else {
-        const tokenData = await apiClient.login(data)
-        const userData = await apiClient.getCurrentUser()
-        setUser(userData)
-        
-        const redirect = new URLSearchParams(window.location.search).get('redirect')
-        router.push(redirect || '/')
-      }
+      const tokenData = await apiClient.login(data)
+      const userData = await apiClient.getCurrentUser()
+      setUser(userData)
+      
+      const redirect = new URLSearchParams(window.location.search).get('redirect')
+      router.push(redirect || '/')
     } catch (error) {
       console.error('Login error:', error)
       setError('Invalid credentials. Please try again.')
@@ -132,15 +114,7 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {isDummyMode && (
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                <h4 className="text-sm font-medium text-blue-900 mb-2">{t('auth.demoCredentials')}</h4>
-                <div className="text-xs text-blue-700 space-y-1">
-                  <div>{t('auth.usernameDemo')} <code className="bg-blue-100 px-1 rounded">alice_dev</code></div>
-                  <div>{t('auth.passwordDemo')} <code className="bg-blue-100 px-1 rounded">password</code></div>
-                </div>
-              </div>
-            )}
+
           </CardContent>
         </Card>
 

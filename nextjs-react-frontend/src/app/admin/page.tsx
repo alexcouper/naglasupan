@@ -18,12 +18,12 @@ import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useApp } from '@/contexts/AppContext'
 import { Project } from '@/types/api'
-import { dummyProjects } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 
 export default function AdminPage() {
   const router = useRouter()
-  const { user, isAuthenticated, isDummyMode } = useApp()
+  const { user, isAuthenticated, isLoading: authLoading } = useApp()
   const [projects, setProjects] = useState<Project[]>([])
   const [stats, setStats] = useState({
     total: 0,
@@ -35,38 +35,23 @@ export default function AdminPage() {
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending')
 
   useEffect(() => {
+    // Wait for auth loading to complete
+    if (authLoading) return
+
     if (!isAuthenticated || (user?.username !== 'admin' && user?.username !== 'alice_dev')) {
       router.push('/')
       return
     }
 
     loadData()
-  }, [isAuthenticated, user, router, isDummyMode, filter])
+  }, [isAuthenticated, user, router, filter, authLoading])
 
   const loadData = async () => {
     try {
       setLoading(true)
       
-      if (isDummyMode) {
-        // Use dummy data for admin
-        let filteredProjects = dummyProjects
-        
-        if (filter !== 'all') {
-          filteredProjects = dummyProjects.filter(p => p.status === filter)
-        }
-        
-        setProjects(filteredProjects)
-        setStats({
-          total: dummyProjects.length,
-          pending: dummyProjects.filter(p => p.status === 'pending').length,
-          approved: dummyProjects.filter(p => p.status === 'approved').length,
-          rejected: dummyProjects.filter(p => p.status === 'rejected').length
-        })
-      } else {
-        // Real API calls would go here
-        const projectsData = await apiClient.getAdminProjects()
-        setProjects(projectsData.projects)
-      }
+      const projectsData = await apiClient.getAdminProjects()
+      setProjects(projectsData.projects)
     } catch (error) {
       console.error('Error loading admin data:', error)
     } finally {
@@ -76,19 +61,8 @@ export default function AdminPage() {
 
   const handleApproveProject = async (projectId: string, approved: boolean) => {
     try {
-      if (isDummyMode) {
-        // Simulate approval
-        await new Promise(resolve => setTimeout(resolve, 500))
-        setProjects(prev => prev.map(p => 
-          p.id === projectId 
-            ? { ...p, status: approved ? 'approved' : 'rejected' as any }
-            : p
-        ))
-        alert(`Project ${approved ? 'approved' : 'rejected'} successfully! (Demo Mode)`)
-      } else {
-        await apiClient.approveProject(projectId, { approved })
-        loadData() // Reload data
-      }
+      await apiClient.approveProject(projectId, { approved })
+      loadData() // Reload data
     } catch (error) {
       console.error('Error updating project:', error)
       alert('Error updating project')
@@ -97,23 +71,25 @@ export default function AdminPage() {
 
   const handleToggleFeatured = async (projectId: string) => {
     try {
-      if (isDummyMode) {
-        // Simulate toggle
-        await new Promise(resolve => setTimeout(resolve, 500))
-        setProjects(prev => prev.map(p => 
-          p.id === projectId 
-            ? { ...p, is_featured: !p.is_featured }
-            : p
-        ))
-        alert('Featured status toggled! (Demo Mode)')
-      } else {
-        await apiClient.toggleProjectFeatured(projectId)
-        loadData() // Reload data
-      }
+      await apiClient.toggleProjectFeatured(projectId)
+      loadData() // Reload data
     } catch (error) {
       console.error('Error toggling featured:', error)
       alert('Error updating featured status')
     }
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-300 rounded w-96 mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!isAuthenticated) {

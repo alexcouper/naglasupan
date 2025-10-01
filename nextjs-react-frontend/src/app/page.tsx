@@ -9,11 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Project } from '@/types/api'
-import { featuredProjects, trendingProjects } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 
 export default function Home() {
-  const { isDummyMode } = useApp()
   const { t, isLoaded } = useLanguage()
   const [featured, setFeatured] = useState<Project[]>([])
   const [trending, setTrending] = useState<Project[]>([])
@@ -22,29 +21,23 @@ export default function Home() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        if (isDummyMode) {
-          setFeatured(featuredProjects)
-          setTrending(trendingProjects)
-        } else {
-          const [featuredData, trendingData] = await Promise.all([
-            apiClient.getFeaturedProjects(),
-            apiClient.getTrendingProjects()
-          ])
-          setFeatured(featuredData)
-          setTrending(trendingData)
-        }
+        const [featuredData, trendingData] = await Promise.all([
+          apiClient.getFeaturedProjects(),
+          apiClient.getTrendingProjects()
+        ])
+        setFeatured(featuredData)
+        setTrending(trendingData)
       } catch (error) {
         console.error('Error loading data:', error)
-        // Fallback to dummy data
-        setFeatured(featuredProjects)
-        setTrending(trendingProjects)
+        setFeatured([])
+        setTrending([])
       } finally {
         setLoading(false)
       }
     }
 
     loadData()
-  }, [isDummyMode])
+  }, [])
 
   // Show loading while translations are loading
   if (!isLoaded) {

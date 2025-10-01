@@ -1,24 +1,59 @@
 'use client'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { User } from '@/types/api'
 import { LanguageProvider } from './LanguageContext'
+import { apiClient } from '@/lib/api'
 
 interface AppContextType {
   user: User | null
   setUser: (user: User | null) => void
   isAuthenticated: boolean
-  isDummyMode: boolean
-  setIsDummyMode: (isDummy: boolean) => void
+  isLoading: boolean
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [isDummyMode, setIsDummyMode] = useState(true) // Start in dummy mode for easier testing
+  const [isLoading, setIsLoading] = useState(true)
 
   const isAuthenticated = !!user
+
+  // Restore user state from token on app load
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        setIsLoading(true)
+        const userData = await apiClient.validateToken()
+        if (userData) {
+          setUser(userData)
+        }
+      } catch (error) {
+        console.error('Error validating token:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    initializeAuth()
+  }, [])
+
+  // Listen for unauthorized events from API client
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setUser(null)
+      // Optionally redirect to login
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('unauthorized', handleUnauthorized)
+      return () => window.removeEventListener('unauthorized', handleUnauthorized)
+    }
+  }, [])
 
   return (
     <LanguageProvider>
@@ -26,8 +61,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         user,
         setUser,
         isAuthenticated,
-        isDummyMode,
-        setIsDummyMode
+        isLoading
       }}>
         {children}
       </AppContext.Provider>

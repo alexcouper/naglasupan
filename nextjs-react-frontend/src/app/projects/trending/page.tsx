@@ -6,11 +6,11 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Project } from '@/types/api'
-import { trendingProjects } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 
 export default function TrendingProjectsPage() {
-  const { isDummyMode } = useApp()
+
   const { t, isLoaded } = useLanguage()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,22 +19,18 @@ export default function TrendingProjectsPage() {
     const loadProjects = async () => {
       try {
         setLoading(true)
-        if (isDummyMode) {
-          setProjects(trendingProjects)
-        } else {
-          const projectsData = await apiClient.getTrendingProjects()
-          setProjects(projectsData)
-        }
+        const projectsData = await apiClient.getTrendingProjects()
+        setProjects(projectsData)
       } catch (error) {
         console.error('Error loading trending projects:', error)
-        setProjects(trendingProjects)
+        setProjects([])
       } finally {
         setLoading(false)
       }
     }
 
     loadProjects()
-  }, [isDummyMode])
+  }, [])
 
   // Show loading while translations are loading
   if (!isLoaded) {

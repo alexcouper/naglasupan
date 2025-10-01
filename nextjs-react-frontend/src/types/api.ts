@@ -57,6 +57,18 @@ export interface ProjectCreate {
   tag_ids: string[];
 }
 
+export interface ProjectUpdate {
+  title?: string;
+  description?: string;
+  long_description?: string;
+  website_url?: string;
+  github_url?: string;
+  demo_url?: string;
+  screenshot_urls?: string[];
+  tech_stack?: string[];
+  tag_ids?: string[];
+}
+
 export interface AdminProject extends Project {
   rejection_reason: string | null;
   approved_by: User | null;

@@ -21,14 +21,14 @@ import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { dummyProjects } from '@/lib/dummy-data'
+
 import { apiClient } from '@/lib/api'
 import { formatNumber, formatDate, getInitials } from '@/lib/utils'
 
 export default function ProjectDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { isDummyMode } = useApp()
+
   const { t, isLoaded } = useLanguage()
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
@@ -38,18 +38,11 @@ export default function ProjectDetailPage() {
     const loadProject = async () => {
       try {
         setLoading(true)
-        if (isDummyMode) {
-          const foundProject = dummyProjects.find(p => p.id === params.id)
-          setProject(foundProject || null)
-        } else {
-          const projectData = await apiClient.getProject(params.id as string)
-          setProject(projectData)
-        }
+        const projectData = await apiClient.getProject(params.id as string)
+        setProject(projectData)
       } catch (error) {
         console.error('Error loading project:', error)
-        // Fallback to dummy data
-        const foundProject = dummyProjects.find(p => p.id === params.id)
-        setProject(foundProject || null)
+        setProject(null)
       } finally {
         setLoading(false)
       }
@@ -58,7 +51,7 @@ export default function ProjectDetailPage() {
     if (params.id) {
       loadProject()
     }
-  }, [params.id, isDummyMode])
+  }, [params.id])
 
   const nextImage = () => {
     if (project?.screenshot_urls) {

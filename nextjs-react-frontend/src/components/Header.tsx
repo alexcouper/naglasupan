@@ -8,18 +8,21 @@ import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Button } from '@/components/ui/Button'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { apiClient } from '@/lib/api'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
-  const { user, isAuthenticated, isDummyMode, setIsDummyMode } = useApp()
+  const { user, isAuthenticated, setUser } = useApp()
   const { t, isLoaded } = useLanguage()
   const router = useRouter()
 
   const handleLogout = () => {
-    // In dummy mode, just clear the user
     setShowUserMenu(false)
-    // In real mode, this would call apiClient.clearToken() and redirect
+    // Clear user and token, then redirect
+    apiClient.clearToken()
+    setUser(null)
+    router.push('/')
   }
 
   const navigation = [
@@ -76,17 +79,6 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-4">
             {/* Language Switcher */}
             <LanguageSwitcher />
-            
-            {/* Dummy Mode Toggle */}
-            <label className="flex items-center space-x-2 text-sm text-gray-600">
-              <input
-                type="checkbox"
-                checked={isDummyMode}
-                onChange={(e) => setIsDummyMode(e.target.checked)}
-                className="rounded"
-              />
-              <span>{t('nav.demoMode')}</span>
-            </label>
 
             {isAuthenticated ? (
               <div className="flex items-center space-x-3">
@@ -190,15 +182,6 @@ export function Header() {
                 <div className="px-3 py-2">
                   <LanguageSwitcher />
                 </div>
-                <label className="flex items-center space-x-2 text-sm text-gray-600 px-3 py-2">
-                  <input
-                    type="checkbox"
-                    checked={isDummyMode}
-                    onChange={(e) => setIsDummyMode(e.target.checked)}
-                    className="rounded"
-                  />
-                  <span>{t('nav.demoMode')}</span>
-                </label>
               </div>
 
               {isAuthenticated ? (
