@@ -1,0 +1,81 @@
+from ninja import Router
+from django.contrib.auth import authenticate, get_user_model
+from django.shortcuts import get_object_or_404
+from passlib.hash import bcrypt
+
+from api.schemas.auth import Token, LoginRequest
+from api.schemas.user import UserCreate, UserResponse, UserUpdate
+from api.auth.jwt import create_access_token, create_refresh_token
+from api.auth.security import auth
+
+User = get_user_model()
+router = Router()
+
+
+@router.post("/register", response=UserResponse, tags=["Authentication"])
+def register(request, payload: UserCreate):
+    # Check if user already exists
+    if User.objects.filter(email=payload.email).exists():
+        return 400, {"detail": "Email already registered"}
+    
+    if User.objects.filter(username=payload.username).exists():
+        return 400, {"detail": "Username already taken"}
+    
+    # Create user
+    user = User.objects.create_user(
+        email=payload.email,
+        username=payload.username,
+        password=payload.password,
+        first_name=payload.first_name,
+        last_name=payload.last_name,
+    )
+    
+    return 201, user
+
+
+@router.post("/login", response=Token, tags=["Authentication"])
+def login(request, payload: LoginRequest):
+    # Try to authenticate with email or username
+    user = None
+    if "@" in payload.username:
+        try:
+            user_obj = User.objects.get(email=payload.username)
+            user = authenticate(request, username=user_obj.username, password=payload.password)
+        except User.DoesNotExist:
+            pass
+    else:
+        user = authenticate(request, username=payload.username, password=payload.password)
+    
+    if not user:
+        return 401, {"detail": "Invalid credentials"}
+    
+    if not user.is_active:
+        return 401, {"detail": "Account is inactive"}
+    
+    access_token = create_access_token(user.id)
+    refresh_token = create_refresh_token(user.id)
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@router.get("/me", response=UserResponse, auth=auth, tags=["Authentication"])
+def get_current_user_info(request):
+    return request.auth
+
+
+@router.put("/me", response=UserResponse, auth=auth, tags=["Authentication"])
+def update_current_user(request, payload: UserUpdate):
+    user = request.auth
+    
+    # Update only provided fields
+    for field, value in payload.dict(exclude_unset=True).items():
+        if field == 'username' and User.objects.filter(username=value).exclude(id=user.id).exists():
+            return 400, {"detail": "Username already taken"}
+        setattr(user, field, value)
+    
+    user.save()
+    return user
