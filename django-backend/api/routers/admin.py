@@ -10,6 +10,7 @@ from apps.tags.models import Tag
 from api.schemas.project import AdminProjectResponse, ProjectApproval, ProjectListResponse
 from api.schemas.user import UserResponse
 from api.schemas.tag import TagCreate, TagResponse
+from api.schemas.errors import Error
 from api.auth.security import auth, require_admin
 
 User = get_user_model()
@@ -17,7 +18,7 @@ router = Router()
 
 
 # Project Management
-@router.get("/projects", response=ProjectListResponse, auth=auth, tags=["Admin"])
+@router.get("/projects", response={200: ProjectListResponse, 401: Error, 403: Error}, auth=auth, tags=["Admin"])
 def list_all_projects(
     request,
     status_filter: Optional[ProjectStatus] = Query(None),
@@ -49,7 +50,7 @@ def list_all_projects(
     }
 
 
-@router.get("/projects/{project_id}", response=AdminProjectResponse, auth=auth, tags=["Admin"])
+@router.get("/projects/{project_id}", response={200: AdminProjectResponse, 401: Error, 403: Error, 404: Error}, auth=auth, tags=["Admin"])
 def get_project_for_review(request, project_id: str):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -61,7 +62,7 @@ def get_project_for_review(request, project_id: str):
     return project
 
 
-@router.put("/projects/{project_id}/approve", response=AdminProjectResponse, auth=auth, tags=["Admin"])
+@router.put("/projects/{project_id}/approve", response={200: AdminProjectResponse, 401: Error, 403: Error, 404: Error}, auth=auth, tags=["Admin"])
 def approve_project(request, project_id: str, payload: ProjectApproval):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -84,7 +85,7 @@ def approve_project(request, project_id: str, payload: ProjectApproval):
     return project
 
 
-@router.put("/projects/{project_id}/feature", response=AdminProjectResponse, auth=auth, tags=["Admin"])
+@router.put("/projects/{project_id}/feature", response={200: AdminProjectResponse, 401: Error, 403: Error, 404: Error}, auth=auth, tags=["Admin"])
 def toggle_project_featured(request, project_id: str):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -96,7 +97,7 @@ def toggle_project_featured(request, project_id: str):
 
 
 # User Management
-@router.get("/users", response=List[UserResponse], auth=auth, tags=["Admin"])
+@router.get("/users", response={200: List[UserResponse], 401: Error, 403: Error}, auth=auth, tags=["Admin"])
 def list_users(request, page: int = Query(1), per_page: int = Query(50)):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -106,7 +107,7 @@ def list_users(request, page: int = Query(1), per_page: int = Query(50)):
     return users
 
 
-@router.put("/users/{user_id}/ban", response=UserResponse, auth=auth, tags=["Admin"])
+@router.put("/users/{user_id}/ban", response={200: UserResponse, 401: Error, 403: Error, 404: Error}, auth=auth, tags=["Admin"])
 def toggle_user_ban(request, user_id: str):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -118,7 +119,7 @@ def toggle_user_ban(request, user_id: str):
 
 
 # Tag Management
-@router.post("/tags", response=TagResponse, auth=auth, tags=["Admin"])
+@router.post("/tags", response={201: TagResponse, 400: Error, 401: Error, 403: Error}, auth=auth, tags=["Admin"])
 def create_tag(request, payload: TagCreate):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -133,7 +134,7 @@ def create_tag(request, payload: TagCreate):
     return 201, tag
 
 
-@router.put("/tags/{tag_id}", response=TagResponse, auth=auth, tags=["Admin"])
+@router.put("/tags/{tag_id}", response={200: TagResponse, 400: Error, 401: Error, 403: Error, 404: Error}, auth=auth, tags=["Admin"])
 def update_tag(request, tag_id: str, payload: TagCreate):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -154,7 +155,7 @@ def update_tag(request, tag_id: str, payload: TagCreate):
     return tag
 
 
-@router.delete("/tags/{tag_id}", auth=auth, tags=["Admin"])
+@router.delete("/tags/{tag_id}", response={204: None, 401: Error, 403: Error, 404: Error}, auth=auth, tags=["Admin"])
 def delete_tag(request, tag_id: str):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}
@@ -165,7 +166,7 @@ def delete_tag(request, tag_id: str):
 
 
 # Analytics
-@router.get("/analytics", auth=auth, tags=["Admin"])
+@router.get("/analytics", response={200: dict, 401: Error, 403: Error}, auth=auth, tags=["Admin"])
 def get_platform_analytics(request):
     if not require_admin(request.auth):
         return 403, {"detail": "Admin access required"}

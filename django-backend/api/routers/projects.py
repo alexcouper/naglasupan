@@ -7,12 +7,13 @@ from math import ceil
 from apps.projects.models import Project, ProjectStatus
 from apps.tags.models import Tag
 from api.schemas.project import ProjectResponse, ProjectListResponse
+from api.schemas.errors import Error
 from api.auth.security import auth
 
 router = Router()
 
 
-@router.get("", response=ProjectListResponse, tags=["Projects"])
+@router.get("", response={200: ProjectListResponse}, tags=["Projects"])
 def list_projects(
     request,
     tags: Optional[List[str]] = Query(None),
@@ -59,7 +60,7 @@ def list_projects(
     }
 
 
-@router.get("/featured", response=List[ProjectResponse], tags=["Projects"])
+@router.get("/featured", response={200: List[ProjectResponse]}, tags=["Projects"])
 def get_featured_projects(request):
     projects = Project.objects.filter(
         status=ProjectStatus.APPROVED,
@@ -68,7 +69,7 @@ def get_featured_projects(request):
     return projects
 
 
-@router.get("/trending", response=List[ProjectResponse], tags=["Projects"])
+@router.get("/trending", response={200: List[ProjectResponse]}, tags=["Projects"])
 def get_trending_projects(request):
     # Get projects sorted by monthly visitors
     projects = Project.objects.filter(
@@ -77,7 +78,7 @@ def get_trending_projects(request):
     return projects
 
 
-@router.get("/{project_id}", response=ProjectResponse, auth=auth, tags=["Projects"])
+@router.get("/{project_id}", response={200: ProjectResponse, 401: Error, 404: Error}, auth=auth, tags=["Projects"])
 def get_project(request, project_id: str):
     project = Project.objects.select_related('owner').prefetch_related('tags').get(id=project_id)
     

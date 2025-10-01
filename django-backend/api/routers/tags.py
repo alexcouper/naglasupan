@@ -6,7 +6,7 @@ from api.schemas.tag import TagResponse
 router = Router()
 
 
-@router.get("", response=List[TagResponse], tags=["Tags"])
+@router.get("", response={200: List[TagResponse]}, tags=["Tags"])
 def list_tags(request):
     tags = Tag.objects.all()
     return tags

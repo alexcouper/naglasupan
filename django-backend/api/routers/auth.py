@@ -69,12 +69,12 @@ def login(request, payload: LoginRequest):
     }
 
 
-@router.get("/me", response=UserResponse, auth=auth, tags=["Authentication"])
+@router.get("/me", response={200: UserResponse, 401: Error}, auth=auth, tags=["Authentication"])
 def get_current_user_info(request):
     return request.auth
 
 
-@router.put("/me", response=UserResponse, auth=auth, tags=["Authentication"])
+@router.put("/me", response={200: UserResponse, 400: Error, 401: Error}, auth=auth, tags=["Authentication"])
 def update_current_user(request, payload: UserUpdate):
     user = request.auth
 
