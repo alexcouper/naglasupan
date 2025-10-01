@@ -52,12 +52,20 @@
     "featured": {
       "title": "Featured Projects",
       "subtitle": "Handpicked exceptional projects from our community",
-      "viewAll": "View All Featured"
+      "viewAll": "View All Featured",
+      "pageTitle": "Featured Projects",
+      "pageSubtitle": "Handpicked exceptional projects from our developer community",
+      "noFeatured": "No featured projects",
+      "noFeaturedSubtitle": "Check back soon for featured projects"
     },
     "trending": {
       "title": "Trending This Month",
       "subtitle": "Projects gaining the most traction in our community",
-      "viewAll": "View All Trending"
+      "viewAll": "View All Trending",
+      "pageTitle": "Trending Projects",
+      "pageSubtitle": "Projects gaining the most traction in our community this month",
+      "noTrending": "No trending projects",
+      "noTrendingSubtitle": "Check back soon for trending projects"
     },
     "cta": {
       "title": "Ready to Showcase Your Project?",

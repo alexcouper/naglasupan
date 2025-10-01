@@ -18,18 +18,6 @@ export default function Home() {
   const [featured, setFeatured] = useState<Project[]>([])
   const [trending, setTrending] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
-  
-  // Show loading while translations are loading
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <Code2 className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
 
   useEffect(() => {
     const loadData = async () => {
@@ -57,6 +45,18 @@ export default function Home() {
 
     loadData()
   }, [isDummyMode])
+
+  // Show loading while translations are loading
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <Code2 className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-spin" />
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">

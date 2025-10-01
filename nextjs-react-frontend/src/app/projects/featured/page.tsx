@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react'
 import { Star } from 'lucide-react'
 import { ProjectCard } from '@/components/ProjectCard'
 import { useApp } from '@/contexts/AppContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { Project } from '@/types/api'
 import { featuredProjects } from '@/lib/dummy-data'
 import { apiClient } from '@/lib/api'
 
 export default function FeaturedProjectsPage() {
   const { isDummyMode } = useApp()
+  const { t, isLoaded } = useLanguage()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -34,6 +36,18 @@ export default function FeaturedProjectsPage() {
     loadProjects()
   }, [isDummyMode])
 
+  // Show loading while translations are loading
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <Star className="w-12 h-12 text-yellow-500 mx-auto mb-4 animate-pulse" />
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,10 +55,10 @@ export default function FeaturedProjectsPage() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Star className="h-8 w-8 text-yellow-500" />
-            <h1 className="text-3xl font-bold text-gray-900">Featured Projects</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('home.featured.pageTitle')}</h1>
           </div>
           <p className="text-gray-600">
-            Handpicked exceptional projects from our developer community
+            {t('home.featured.pageSubtitle')}
           </p>
         </div>
 
@@ -64,8 +78,8 @@ export default function FeaturedProjectsPage() {
         ) : (
           <div className="text-center py-12">
             <Star className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No featured projects</h3>
-            <p className="text-gray-600">Check back soon for featured projects</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">{t('home.featured.noFeatured')}</h3>
+            <p className="text-gray-600">{t('home.featured.noFeaturedSubtitle')}</p>
           </div>
         )}
       </div>

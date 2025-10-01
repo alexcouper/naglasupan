@@ -52,12 +52,20 @@
     "featured": {
       "title": "Polecane Projekty",
       "subtitle": "Starannie wybrane wyjątkowe projekty z naszej społeczności",
-      "viewAll": "Zobacz wszystkie polecane"
+      "viewAll": "Zobacz wszystkie polecane",
+      "pageTitle": "Polecane Projekty",
+      "pageSubtitle": "Starannie wybrane wyjątkowe projekty z naszej społeczności programistów",
+      "noFeatured": "Brak polecanych projektów",
+      "noFeaturedSubtitle": "Sprawdź wkrótce polecane projekty"
     },
     "trending": {
       "title": "Popularne w tym miesiącu",
       "subtitle": "Projekty zyskujące największą popularność w naszej społeczności",
-      "viewAll": "Zobacz wszystkie popularne"
+      "viewAll": "Zobacz wszystkie popularne",
+      "pageTitle": "Popularne Projekty",
+      "pageSubtitle": "Projekty zyskujące największą popularność w naszej społeczności w tym miesiącu",
+      "noTrending": "Brak popularnych projektów",
+      "noTrendingSubtitle": "Sprawdź wkrótce popularne projekty"
     },
     "cta": {
       "title": "Gotowy aby pokazać swój projekt?",

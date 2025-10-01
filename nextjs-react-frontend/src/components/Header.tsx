@@ -15,8 +15,20 @@ export function Header() {
   const { user, isAuthenticated, isDummyMode, setIsDummyMode } = useApp()
   const { t, isLoaded } = useLanguage()
   const router = useRouter()
-  
-  // Fallback texts while translations are loading
+
+  const handleLogout = () => {
+    // In dummy mode, just clear the user
+    setShowUserMenu(false)
+    // In real mode, this would call apiClient.clearToken() and redirect
+  }
+
+  const navigation = [
+    { name: t('nav.browseProjects'), href: '/projects' },
+    { name: t('nav.featured'), href: '/projects/featured' },
+    { name: t('nav.trending'), href: '/projects/trending' },
+  ]
+
+  // Fallback while translations are loading
   if (!isLoaded) {
     return (
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -34,18 +46,6 @@ export function Header() {
       </header>
     )
   }
-
-  const handleLogout = () => {
-    // In dummy mode, just clear the user
-    setShowUserMenu(false)
-    // In real mode, this would call apiClient.clearToken() and redirect
-  }
-
-  const navigation = [
-    { name: t('nav.browseProjects'), href: '/projects' },
-    { name: t('nav.featured'), href: '/projects/featured' },
-    { name: t('nav.trending'), href: '/projects/trending' },
-  ]
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">

@@ -80,10 +80,6 @@ export default function ProjectsPage() {
     }
   }
 
-  useEffect(() => {
-    loadData()
-  }, [isDummyMode, filters])
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     // Search will be triggered by the useEffect when filters change
@@ -104,6 +100,10 @@ export default function ProjectsPage() {
       sort_order: prev.sort_order === 'desc' ? 'asc' : 'desc'
     }))
   }
+
+  useEffect(() => {
+    loadData()
+  }, [isDummyMode, filters])
 
   // Show loading while translations are loading
   if (!isLoaded) {

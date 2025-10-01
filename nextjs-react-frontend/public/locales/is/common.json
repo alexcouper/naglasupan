@@ -52,12 +52,20 @@
     "featured": {
       "title": "Úrval verkefni",
       "subtitle": "Handvalin sérstök verkefni úr samfélaginu okkar",
-      "viewAll": "Sjá allt úrval"
+      "viewAll": "Sjá allt úrval",
+      "pageTitle": "Úrval verkefni",
+      "pageSubtitle": "Handvalin sérstök verkefni úr forritarasamfélaginu okkar",
+      "noFeatured": "Engin úrval verkefni",
+      "noFeaturedSubtitle": "Athugaðu aftur bráðum fyrir úrval verkefni"
     },
     "trending": {
       "title": "Vinsæl þennan mánuð",
       "subtitle": "Verkefni sem eru að ná mestri athygli í samfélaginu okkar",
-      "viewAll": "Sjá öll vinsæl"
+      "viewAll": "Sjá öll vinsæl",
+      "pageTitle": "Vinsæl verkefni",
+      "pageSubtitle": "Verkefni sem eru að ná mestri athygli í samfélaginu okkar þennan mánuð",
+      "noTrending": "Engin vinsæl verkefni",
+      "noTrendingSubtitle": "Athugaðu aftur bráðum fyrir vinsæl verkefni"
     },
     "cta": {
       "title": "Tilbúinn að sýna verkefnið þitt?",
