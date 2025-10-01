@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "browseProjects": "Browse Projects",
+    "featured": "Featured",
+    "trending": "Trending",
+    "submitProject": "Submit Project",
+    "myProjects": "My Projects",
+    "profile": "Profile",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout",
+    "signUp": "Sign Up",
+    "demoMode": "Demo Mode"
+  },
+  "common": {
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "sortBy": "Sort by",
+    "clear": "Clear",
+    "all": "All",
+    "visit": "Visit",
+    "visitWebsite": "Visit Website",
+    "viewCode": "View Code",
+    "liveDemo": "Live Demo",
+    "viewDetails": "View Details",
+    "readMore": "Read More"
+  },
+  "home": {
+    "hero": {
+      "badge": "Showcase Your Amazing Projects",
+      "title": "Where Developers",
+      "titleHighlight": "Showcase Excellence",
+      "subtitle": "Join our community of talented developers. Submit your projects, get discovered by peers, and compete for monthly prizes. Your next big break starts here.",
+      "browseProjects": "Browse Projects",
+      "submitProject": "Submit Your Project"
+    },
+    "stats": {
+      "projects": "Amazing Projects",
+      "developers": "Active Developers",
+      "prizes": "In Monthly Prizes"
+    },
+    "featured": {
+      "title": "Featured Projects",
+      "subtitle": "Handpicked exceptional projects from our community",
+      "viewAll": "View All Featured"
+    },
+    "trending": {
+      "title": "Trending This Month",
+      "subtitle": "Projects gaining the most traction in our community",
+      "viewAll": "View All Trending"
+    },
+    "cta": {
+      "title": "Ready to Showcase Your Project?",
+      "subtitle": "Join thousands of developers who have already shared their amazing work with our community.",
+      "button": "Submit Your Project Today"
+    }
+  },
+  "projects": {
+    "title": "Browse Projects",
+    "subtitle": "Discover amazing projects from our developer community",
+    "search": "Search projects...",
+    "filterByTags": "Filter by tags:",
+    "sortBy": "Sort by:",
+    "sortOptions": {
+      "createdAt": "Date Created",
+      "monthlyVisitors": "Monthly Visitors",
+      "title": "Title"
+    },
+    "activeFilters": "Active filters:",
+    "clearAll": "Clear all",
+    "noProjects": "No projects found",
+    "noProjectsSubtitle": "Try adjusting your search criteria or filters",
+    "resultsCount": "{{count}} projects found",
+    "visitorsPerMonth": "{{count}}/mo",
+    "by": "by"
+  },
+  "projectDetail": {
+    "notFound": "Project Not Found",
+    "notFoundSubtitle": "The project you're looking for doesn't exist or has been removed.",
+    "backToProjects": "Back to Projects",
+    "projectOwner": "Project Owner",
+    "verified": "Verified",
+    "screenshots": "Screenshots",
+    "aboutProject": "About This Project",
+    "tags": "Tags",
+    "techStack": "Tech Stack",
+    "visitorsPerMonth": "{{count}} visitors/month",
+    "createdOn": "Created {{date}}"
+  },
+  "submit": {
+    "title": "Submit Your Project",
+    "subtitle": "Share your amazing project with our community. All submissions go through a review process.",
+    "basicInfo": "Basic Information",
+    "projectTitle": "Project Title",
+    "projectTitlePlaceholder": "Enter your project title",
+    "shortDescription": "Short Description",
+    "shortDescriptionPlaceholder": "Brief description of your project (max 500 characters)",
+    "detailedDescription": "Detailed Description",
+    "detailedDescriptionPlaceholder": "Detailed description of your project, its features, and how it works...",
+    "links": "Links",
+    "websiteUrl": "Website URL",
+    "websiteUrlPlaceholder": "https://yourproject.com",
+    "githubUrl": "GitHub URL",
+    "githubUrlPlaceholder": "https://github.com/username/repository",
+    "demoUrl": "Live Demo URL",
+    "demoUrlPlaceholder": "https://demo.yourproject.com",
+    "screenshots": "Screenshots",
+    "screenshotPlaceholder": "Enter screenshot URL",
+    "techStack": "Technology Stack",
+    "techStackPlaceholder": "Add technology (e.g., React, Node.js)",
+    "categories": "Categories",
+    "required": "required",
+    "atLeastOneTech": "At least one technology is required",
+    "atLeastOneCategory": "At least one category is required",
+    "titleRequired": "Title is required",
+    "descriptionRequired": "Description is required",
+    "websiteRequired": "Website URL is required",
+    "submitting": "Submitting...",
+    "submitProject": "Submit Project",
+    "guidelines": "Submission Guidelines",
+    "guidelinesList": [
+      "Projects must be original work or have proper attribution",
+      "Include clear screenshots or demos of your project",
+      "Provide a working website or demo URL",
+      "Write a detailed description explaining what your project does",
+      "All submissions are reviewed before being published"
+    ]
+  },
+  "auth": {
+    "signInTitle": "Sign in to your account",
+    "signInSubtitle": "Access your developer showcase dashboard",
+    "signUpTitle": "Create your account",
+    "signUpSubtitle": "Join the developer showcase community",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "usernameOrEmail": "Username or Email",
+    "enterUsername": "Enter your username or email",
+    "enterPassword": "Enter your password",
+    "enterEmail": "john@example.com",
+    "enterFirstName": "John",
+    "enterLastName": "Doe",
+    "enterUsernameExample": "johndoe",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "signingIn": "Signing in...",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "creatingAccount": "Creating account...",
+    "createAccount": "Create Account",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signUpHere": "Sign up here",
+    "signInHere": "Sign in here",
+    "demoCredentials": "Demo Credentials:",
+    "usernameDemo": "Username:",
+    "passwordDemo": "Password:",
+    "usernameRequired": "Username or email is required",
+    "passwordRequired": "Password is required",
+    "emailRequired": "Email is required",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsDoNotMatch": "Passwords do not match"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage project submissions and platform settings",
+    "stats": {
+      "totalProjects": "Total Projects",
+      "pendingReview": "Pending Review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "filters": {
+      "pendingReview": "Pending Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "allProjects": "All Projects"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "feature": "Feature",
+      "unfeature": "Unfeature"
+    },
+    "status": {
+      "pending": "pending",
+      "approved": "approved",
+      "rejected": "rejected",
+      "featured": "Featured"
+    },
+    "noProjects": "No projects found",
+    "noProjectsSubtitle": "No projects match the current filter",
+    "visitorsPerMonth": "{{count}} visitors/mo"
+  },
+  "errors": {
+    "invalidCredentials": "Invalid credentials. Please try again.",
+    "registrationFailed": "Registration failed. Please try again.",
+    "projectSubmissionFailed": "Error submitting project. Please try again.",
+    "loadingFailed": "Error loading data. Please try again."
+  },
+  "success": {
+    "projectSubmitted": "Project submitted successfully!",
+    "registrationSuccess": "Registration successful! Please sign in with your credentials.",
+    "projectApproved": "Project approved successfully!",
+    "projectRejected": "Project rejected successfully!",
+    "featuredToggled": "Featured status toggled!"
+  }
+}

@@ -7,12 +7,14 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { Project, Tag, ProjectFilters } from '@/types/api'
 import { dummyProjects, dummyTags } from '@/lib/dummy-data'
 import { apiClient } from '@/lib/api'
 
 export default function ProjectsPage() {
   const { isDummyMode } = useApp()
+  const { t, isLoaded } = useLanguage()
   const [projects, setProjects] = useState<Project[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(true)
@@ -103,13 +105,25 @@ export default function ProjectsPage() {
     }))
   }
 
+  // Show loading while translations are loading
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-spin">⚠</div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Browse Projects</h1>
-          <p className="text-gray-600">Discover amazing projects from our developer community</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('projects.title')}</h1>
+          <p className="text-gray-600">{t('projects.subtitle')}</p>
         </div>
 
         {/* Filters */}
@@ -120,20 +134,20 @@ export default function ProjectsPage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 type="text"
-                placeholder="Search projects..."
+                placeholder={t('projects.search')}
                 value={filters.search || ''}
                 onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                 className="pl-10"
               />
             </div>
-            <Button type="submit">Search</Button>
+            <Button type="submit">{t('common.search')}</Button>
           </form>
 
           {/* Tags Filter */}
           <div className="flex flex-wrap gap-2">
             <span className="text-sm font-medium text-gray-700 flex items-center">
               <Filter className="w-4 h-4 mr-1" />
-              Filter by tags:
+              {t('projects.filterByTags')}
             </span>
             {tags.map((tag) => (
               <Badge
@@ -153,15 +167,15 @@ export default function ProjectsPage() {
 
           {/* Sort Controls */}
           <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-gray-700">Sort by:</span>
+            <span className="text-sm font-medium text-gray-700">{t('projects.sortBy')}</span>
             <select
               value={filters.sort_by}
               onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value as any }))}
               className="rounded-md border border-gray-300 px-3 py-1 text-sm"
             >
-              <option value="created_at">Date Created</option>
-              <option value="monthly_visitors">Monthly Visitors</option>
-              <option value="title">Title</option>
+              <option value="created_at">{t('projects.sortOptions.createdAt')}</option>
+              <option value="monthly_visitors">{t('projects.sortOptions.monthlyVisitors')}</option>
+              <option value="title">{t('projects.sortOptions.title')}</option>
             </select>
             <Button
               variant="ghost"
@@ -180,7 +194,7 @@ export default function ProjectsPage() {
           {/* Active Filters */}
           {(filters.tags?.length > 0 || filters.search) && (
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Active filters:</span>
+              <span className="text-sm text-gray-600">{t('projects.activeFilters')}</span>
               {filters.search && (
                 <Badge variant="secondary">
                   Search: {filters.search}
@@ -211,7 +225,7 @@ export default function ProjectsPage() {
                 size="sm"
                 onClick={() => setFilters(prev => ({ ...prev, search: '', tags: [] }))}
               >
-                Clear all
+{t('projects.clearAll')}
               </Button>
             </div>
           )}
@@ -220,7 +234,7 @@ export default function ProjectsPage() {
         {/* Results */}
         <div className="mb-4">
           <p className="text-gray-600">
-            {loading ? 'Loading...' : `${projects.length} projects found`}
+            {loading ? t('common.loading') : t('projects.resultsCount', { count: projects.length })}
           </p>
         </div>
 
@@ -242,8 +256,8 @@ export default function ProjectsPage() {
             <div className="text-gray-400 mb-4">
               <Search className="w-16 h-16 mx-auto" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No projects found</h3>
-            <p className="text-gray-600">Try adjusting your search criteria or filters</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">{t('projects.noProjects')}</h3>
+            <p className="text-gray-600">{t('projects.noProjectsSubtitle')}</p>
           </div>
         )}
       </div>

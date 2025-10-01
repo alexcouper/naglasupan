@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 import { User } from '@/types/api'
+import { LanguageProvider } from './LanguageContext'
 
 interface AppContextType {
   user: User | null
@@ -20,15 +21,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user
 
   return (
-    <AppContext.Provider value={{
-      user,
-      setUser,
-      isAuthenticated,
-      isDummyMode,
-      setIsDummyMode
-    }}>
-      {children}
-    </AppContext.Provider>
+    <LanguageProvider>
+      <AppContext.Provider value={{
+        user,
+        setUser,
+        isAuthenticated,
+        isDummyMode,
+        setIsDummyMode
+      }}>
+        {children}
+      </AppContext.Provider>
+    </LanguageProvider>
   )
 }
 

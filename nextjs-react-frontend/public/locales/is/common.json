@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "browseProjects": "Skoða verkefni",
+    "featured": "Úrval",
+    "trending": "Vinsæl",
+    "submitProject": "Senda inn verkefni",
+    "myProjects": "Mín verkefni",
+    "profile": "Prófíll",
+    "admin": "Stjórnandi",
+    "login": "Innskrá",
+    "logout": "Útskrá",
+    "signUp": "Nýskrá",
+    "demoMode": "Prufustilling"
+  },
+  "common": {
+    "back": "Til baka",
+    "next": "Næsta",
+    "previous": "Fyrri",
+    "submit": "Senda",
+    "cancel": "Hætta við",
+    "save": "Vista",
+    "delete": "Eyða",
+    "edit": "Breyta",
+    "view": "Skoða",
+    "loading": "Hleður...",
+    "search": "Leita",
+    "filter": "Sía",
+    "sortBy": "Raða eftir",
+    "clear": "Hreinsa",
+    "all": "Allt",
+    "visit": "Heimsækja",
+    "visitWebsite": "Heimsækja vefsíðu",
+    "viewCode": "Skoða kóða",
+    "liveDemo": "Lifandi sýnishorn",
+    "viewDetails": "Skoða upplýsingar",
+    "readMore": "Lesa meira"
+  },
+  "home": {
+    "hero": {
+      "badge": "Sýndu þín ótrúlegu verkefni",
+      "title": "Þar sem forritarar",
+      "titleHighlight": "Sýna fram á ágæti",
+      "subtitle": "Taktu þátt í samfélagi hæfileikaríkra forritara. Sendu inn verkefnin þín, vertu uppgötvaður af jafningjum og keppu um mánaðarleg verðlaun. Næsti stóri árangur þinn byrjar hér.",
+      "browseProjects": "Skoða verkefni",
+      "submitProject": "Senda inn verkefnið þitt"
+    },
+    "stats": {
+      "projects": "Ótrúleg verkefni",
+      "developers": "Virkir forritarar",
+      "prizes": "Í mánaðarlegum verðlaunum"
+    },
+    "featured": {
+      "title": "Úrval verkefni",
+      "subtitle": "Handvalin sérstök verkefni úr samfélaginu okkar",
+      "viewAll": "Sjá allt úrval"
+    },
+    "trending": {
+      "title": "Vinsæl þennan mánuð",
+      "subtitle": "Verkefni sem eru að ná mestri athygli í samfélaginu okkar",
+      "viewAll": "Sjá öll vinsæl"
+    },
+    "cta": {
+      "title": "Tilbúinn að sýna verkefnið þitt?",
+      "subtitle": "Taktu þátt með þúsundum forritara sem hafa þegar deilt ótrúlegri vinnu sinni með samfélaginu okkar.",
+      "button": "Sendu inn verkefnið þitt í dag"
+    }
+  },
+  "projects": {
+    "title": "Skoða verkefni",
+    "subtitle": "Uppgötvaðu ótrúleg verkefni úr forritarasam­félaginu okkar",
+    "search": "Leita að verkefnum...",
+    "filterByTags": "Sía eftir merkjum:",
+    "sortBy": "Raða eftir:",
+    "sortOptions": {
+      "createdAt": "Dagsetningu stofnunar",
+      "monthlyVisitors": "Mánaðarlegum gestum",
+      "title": "Titli"
+    },
+    "activeFilters": "Virkar síur:",
+    "clearAll": "Hreinsa allt",
+    "noProjects": "Engin verkefni fundust",
+    "noProjectsSubtitle": "Reyndu að breyta leitarskilyrðum eða síum",
+    "resultsCount": "{{count}} verkefni fundust",
+    "visitorsPerMonth": "{{count}}/mán.",
+    "by": "eftir"
+  },
+  "projectDetail": {
+    "notFound": "Verkefni fannst ekki",
+    "notFoundSubtitle": "Verkefnið sem þú ert að leita að er ekki til eða hefur verið fjarlægt.",
+    "backToProjects": "Til baka í verkefni",
+    "projectOwner": "Eigandi verkefnis",
+    "verified": "Staðfest",
+    "screenshots": "Skjámyndir",
+    "aboutProject": "Um þetta verkefni",
+    "tags": "Merki",
+    "techStack": "Tæknistaðall",
+    "visitorsPerMonth": "{{count}} gestir/mánuð",
+    "createdOn": "Búið til {{date}}"
+  },
+  "submit": {
+    "title": "Senda inn verkefnið þitt",
+    "subtitle": "Deildu ótrúlega verkefninu þínu með samfélaginu okkar. Allar innsendingar fara í gegnum endurskoðun.",
+    "basicInfo": "Grunnupplýsingar",
+    "projectTitle": "Titill verkefnis",
+    "projectTitlePlaceholder": "Sláðu inn titil verkefnisins",
+    "shortDescription": "Stuttur lýsing",
+    "shortDescriptionPlaceholder": "Stuttur lýsing á verkefninu þínu (hámark 500 stafir)",
+    "detailedDescription": "Nákvæm lýsing",
+    "detailedDescriptionPlaceholder": "Nákvæm lýsing á verkefninu þínu, eiginleikum þess og hvernig það virkar...",
+    "links": "Tenglar",
+    "websiteUrl": "Vefslóð",
+    "websiteUrlPlaceholder": "https://þittverkefni.is",
+    "githubUrl": "GitHub vefslóð",
+    "githubUrlPlaceholder": "https://github.com/notandi/geymsla",
+    "demoUrl": "Lifandi sýnishorn vefslóð",
+    "demoUrlPlaceholder": "https://demo.þittverkefni.is",
+    "screenshots": "Skjámyndir",
+    "screenshotPlaceholder": "Sláðu inn vefslóð skjámyndar",
+    "techStack": "Tæknistaðall",
+    "techStackPlaceholder": "Bæta við tækni (t.d. React, Node.js)",
+    "categories": "Flokkar",
+    "required": "nauðsynlegt",
+    "atLeastOneTech": "Að minnsta kosti ein tækni er nauðsynleg",
+    "atLeastOneCategory": "Að minnsta kosti einn flokkur er nauðsynlegur",
+    "titleRequired": "Titill er nauðsynlegur",
+    "descriptionRequired": "Lýsing er nauðsynleg",
+    "websiteRequired": "Vefslóð er nauðsynleg",
+    "submitting": "Sendir inn...",
+    "submitProject": "Senda inn verkefni",
+    "guidelines": "Leiðbeiningar fyrir innsendingar",
+    "guidelinesList": [
+      "Verkefni verða að vera frumleg vinna eða hafa viðeigandi tilvísanir",
+      "Láttu fylgja skýrar skjámyndir eða sýnishorn af verkefninu þínu",
+      "Gefðu upp virka vefslóð eða sýnishorn",
+      "Skrifaðu nákvæma lýsingu sem útskýrir hvað verkefnið þitt gerir",
+      "Allar innsendingar eru skoðaðar áður en þær eru birtar"
+    ]
+  },
+  "auth": {
+    "signInTitle": "Skráðu þig inn á reikninginn þinn",
+    "signInSubtitle": "Fáðu aðgang að forritarastjórnborðinu þínu",
+    "signUpTitle": "Búðu til reikninginn þinn",
+    "signUpSubtitle": "Taktu þátt í forritarasamfélaginu",
+    "username": "Notandanafn",
+    "email": "Netfang",
+    "password": "Lykilorð",
+    "confirmPassword": "Staðfestu lykilorð",
+    "firstName": "Fornafn",
+    "lastName": "Eftirnafn",
+    "usernameOrEmail": "Notandanafn eða netfang",
+    "enterUsername": "Sláðu inn notandanafn eða netfang",
+    "enterPassword": "Sláðu inn lykilorð",
+    "enterEmail": "jon@daemi.is",
+    "enterFirstName": "Jón",
+    "enterLastName": "Jónsson",
+    "enterUsernameExample": "jonjonsson",
+    "confirmPasswordPlaceholder": "Staðfestu lykilorð",
+    "signingIn": "Skrái inn...",
+    "signIn": "Skrá inn",
+    "signUp": "Nýskrá",
+    "creatingAccount": "Búa til reikning...",
+    "createAccount": "Búa til reikning",
+    "dontHaveAccount": "Ertu ekki með reikning?",
+    "alreadyHaveAccount": "Ertu þegar með reikning?",
+    "signUpHere": "Nýskráðu þig hér",
+    "signInHere": "Skráðu þig inn hér",
+    "demoCredentials": "Prufugögn:",
+    "usernameDemo": "Notandanafn:",
+    "passwordDemo": "Lykilorð:",
+    "usernameRequired": "Notandanafn eða netfang er nauðsynlegt",
+    "passwordRequired": "Lykilorð er nauðsynlegt",
+    "emailRequired": "Netfang er nauðsynlegt",
+    "firstNameRequired": "Fornafn er nauðsynlegt",
+    "lastNameRequired": "Eftirnafn er nauðsynlegt",
+    "confirmPasswordRequired": "Vinsamlegast staðfestu lykilorðið",
+    "passwordsDoNotMatch": "Lykilorð passa ekki saman"
+  },
+  "admin": {
+    "title": "Stjórnendastjórnborð",
+    "subtitle": "Stjórnaðu verkefnainnsendingum og stillingar á vefsvæði",
+    "stats": {
+      "totalProjects": "Heildarverkefni",
+      "pendingReview": "Bíður endurskoðunar",
+      "approved": "Samþykkt",
+      "rejected": "Hafnað"
+    },
+    "filters": {
+      "pendingReview": "Bíður endurskoðunar",
+      "approved": "Samþykkt",
+      "rejected": "Hafnað",
+      "allProjects": "Öll verkefni"
+    },
+    "actions": {
+      "approve": "Samþykkja",
+      "reject": "Hafna",
+      "feature": "Setja í úrval",
+      "unfeature": "Fjarlægja úr úrvali"
+    },
+    "status": {
+      "pending": "bíður",
+      "approved": "samþykkt",
+      "rejected": "hafnað",
+      "featured": "Úrval"
+    },
+    "noProjects": "Engin verkefni fundust",
+    "noProjectsSubtitle": "Engin verkefni passa við núverandi síu",
+    "visitorsPerMonth": "{{count}} gestir/mán."
+  },
+  "errors": {
+    "invalidCredentials": "Ógild auðkenni. Vinsamlegast reyndu aftur.",
+    "registrationFailed": "Nýskráning mistókst. Vinsamlegast reyndu aftur.",
+    "projectSubmissionFailed": "Villa við að senda inn verkefni. Vinsamlegast reyndu aftur.",
+    "loadingFailed": "Villa við að hlaða gögnum. Vinsamlegast reyndu aftur."
+  },
+  "success": {
+    "projectSubmitted": "Verkefni sent inn með góðum árangri!",
+    "registrationSuccess": "Nýskráning tókst! Vinsamlegast skráðu þig inn með auðkennunum þínum.",
+    "projectApproved": "Verkefni samþykkt með góðum árangri!",
+    "projectRejected": "Verkefni hafnað með góðum árangri!",
+    "featuredToggled": "Úrvalsstöðu breytt!"
+  }
+}

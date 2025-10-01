@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "browseProjects": "Przeglądaj Projekty",
+    "featured": "Polecane",
+    "trending": "Popularne",
+    "submitProject": "Dodaj Projekt",
+    "myProjects": "Moje Projekty",
+    "profile": "Profil",
+    "admin": "Admin",
+    "login": "Zaloguj",
+    "logout": "Wyloguj",
+    "signUp": "Zarejestruj",
+    "demoMode": "Tryb Demo"
+  },
+  "common": {
+    "back": "Wstecz",
+    "next": "Dalej",
+    "previous": "Poprzedni",
+    "submit": "Wyślij",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "view": "Pokaż",
+    "loading": "Ładowanie...",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "sortBy": "Sortuj według",
+    "clear": "Wyczyść",
+    "all": "Wszystkie",
+    "visit": "Odwiedź",
+    "visitWebsite": "Odwiedź stronę",
+    "viewCode": "Zobacz kod",
+    "liveDemo": "Demo na żywo",
+    "viewDetails": "Zobacz szczegóły",
+    "readMore": "Czytaj więcej"
+  },
+  "home": {
+    "hero": {
+      "badge": "Pokaż swoje niesamowite projekty",
+      "title": "Gdzie programiści",
+      "titleHighlight": "Pokazują doskonałość",
+      "subtitle": "Dołącz do naszej społeczności utalentowanych programistów. Dodawaj swoje projekty, zostań odkryty przez innych i rywalizuj o miesięczne nagrody. Twój następny wielki sukces zaczyna się tutaj.",
+      "browseProjects": "Przeglądaj Projekty",
+      "submitProject": "Dodaj swój projekt"
+    },
+    "stats": {
+      "projects": "Niesamowitych projektów",
+      "developers": "Aktywnych programistów",
+      "prizes": "W miesięcznych nagrodach"
+    },
+    "featured": {
+      "title": "Polecane Projekty",
+      "subtitle": "Starannie wybrane wyjątkowe projekty z naszej społeczności",
+      "viewAll": "Zobacz wszystkie polecane"
+    },
+    "trending": {
+      "title": "Popularne w tym miesiącu",
+      "subtitle": "Projekty zyskujące największą popularność w naszej społeczności",
+      "viewAll": "Zobacz wszystkie popularne"
+    },
+    "cta": {
+      "title": "Gotowy aby pokazać swój projekt?",
+      "subtitle": "Dołącz do tysięcy programistów, którzy już podzielili się swoją niesamowitą pracą z naszą społecznością.",
+      "button": "Dodaj swój projekt już dziś"
+    }
+  },
+  "projects": {
+    "title": "Przeglądaj Projekty",
+    "subtitle": "Odkrywaj niesamowite projekty z naszej społeczności programistów",
+    "search": "Szukaj projektów...",
+    "filterByTags": "Filtruj według tagów:",
+    "sortBy": "Sortuj według:",
+    "sortOptions": {
+      "createdAt": "Data utworzenia",
+      "monthlyVisitors": "Miesięczni odwiedzający",
+      "title": "Tytuł"
+    },
+    "activeFilters": "Aktywne filtry:",
+    "clearAll": "Wyczyść wszystko",
+    "noProjects": "Nie znaleziono projektów",
+    "noProjectsSubtitle": "Spróbuj dostosować kryteria wyszukiwania lub filtry",
+    "resultsCount": "Znaleziono {{count}} projektów",
+    "visitorsPerMonth": "{{count}}/mies.",
+    "by": "przez"
+  },
+  "projectDetail": {
+    "notFound": "Projekt nie znaleziony",
+    "notFoundSubtitle": "Projekt, którego szukasz, nie istnieje lub został usunięty.",
+    "backToProjects": "Powrót do projektów",
+    "projectOwner": "Właściciel projektu",
+    "verified": "Zweryfikowany",
+    "screenshots": "Zrzuty ekranu",
+    "aboutProject": "O tym projekcie",
+    "tags": "Tagi",
+    "techStack": "Stack technologiczny",
+    "visitorsPerMonth": "{{count}} odwiedzających/miesiąc",
+    "createdOn": "Utworzono {{date}}"
+  },
+  "submit": {
+    "title": "Dodaj swój projekt",
+    "subtitle": "Podziel się swoim niesamowitym projektem z naszą społecznością. Wszystkie zgłoszenia przechodzą przez proces recenzji.",
+    "basicInfo": "Podstawowe informacje",
+    "projectTitle": "Tytuł projektu",
+    "projectTitlePlaceholder": "Wprowadź tytuł swojego projektu",
+    "shortDescription": "Krótki opis",
+    "shortDescriptionPlaceholder": "Krótki opis twojego projektu (maks. 500 znaków)",
+    "detailedDescription": "Szczegółowy opis",
+    "detailedDescriptionPlaceholder": "Szczegółowy opis twojego projektu, jego funkcji i sposobu działania...",
+    "links": "Linki",
+    "websiteUrl": "URL strony internetowej",
+    "websiteUrlPlaceholder": "https://twojprojekt.com",
+    "githubUrl": "URL GitHub",
+    "githubUrlPlaceholder": "https://github.com/uzytkownik/repozytorium",
+    "demoUrl": "URL demo na żywo",
+    "demoUrlPlaceholder": "https://demo.twojprojekt.com",
+    "screenshots": "Zrzuty ekranu",
+    "screenshotPlaceholder": "Wprowadź URL zrzutu ekranu",
+    "techStack": "Stack technologiczny",
+    "techStackPlaceholder": "Dodaj technologię (np. React, Node.js)",
+    "categories": "Kategorie",
+    "required": "wymagane",
+    "atLeastOneTech": "Wymagana jest co najmniej jedna technologia",
+    "atLeastOneCategory": "Wymagana jest co najmniej jedna kategoria",
+    "titleRequired": "Tytuł jest wymagany",
+    "descriptionRequired": "Opis jest wymagany",
+    "websiteRequired": "URL strony internetowej jest wymagany",
+    "submitting": "Wysyłanie...",
+    "submitProject": "Wyślij projekt",
+    "guidelines": "Wytyczne dotyczące zgłoszeń",
+    "guidelinesList": [
+      "Projekty muszą być oryginalnymi pracami lub mieć odpowiednie przypisania",
+      "Dołącz wyraźne zrzuty ekranu lub demo swojego projektu",
+      "Podaj działający URL strony internetowej lub demo",
+      "Napisz szczegółowy opis wyjaśniający, co robi twój projekt",
+      "Wszystkie zgłoszenia są sprawdzane przed publikacją"
+    ]
+  },
+  "auth": {
+    "signInTitle": "Zaloguj się do swojego konta",
+    "signInSubtitle": "Uzyskaj dostęp do panelu programisty",
+    "signUpTitle": "Utwórz swoje konto",
+    "signUpSubtitle": "Dołącz do społeczności programistów",
+    "username": "Nazwa użytkownika",
+    "email": "Email",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "usernameOrEmail": "Nazwa użytkownika lub email",
+    "enterUsername": "Wprowadź nazwę użytkownika lub email",
+    "enterPassword": "Wprowadź hasło",
+    "enterEmail": "jan@przykład.pl",
+    "enterFirstName": "Jan",
+    "enterLastName": "Kowalski",
+    "enterUsernameExample": "jankowalski",
+    "confirmPasswordPlaceholder": "Potwierdź hasło",
+    "signingIn": "Logowanie...",
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "creatingAccount": "Tworzenie konta...",
+    "createAccount": "Utwórz konto",
+    "dontHaveAccount": "Nie masz konta?",
+    "alreadyHaveAccount": "Masz już konto?",
+    "signUpHere": "Zarejestruj się tutaj",
+    "signInHere": "Zaloguj się tutaj",
+    "demoCredentials": "Dane demo:",
+    "usernameDemo": "Nazwa użytkownika:",
+    "passwordDemo": "Hasło:",
+    "usernameRequired": "Nazwa użytkownika lub email jest wymagana",
+    "passwordRequired": "Hasło jest wymagane",
+    "emailRequired": "Email jest wymagany",
+    "firstNameRequired": "Imię jest wymagane",
+    "lastNameRequired": "Nazwisko jest wymagane",
+    "confirmPasswordRequired": "Proszę potwierdzić hasło",
+    "passwordsDoNotMatch": "Hasła nie pasują do siebie"
+  },
+  "admin": {
+    "title": "Panel administratora",
+    "subtitle": "Zarządzaj zgłoszeniami projektów i ustawieniami platformy",
+    "stats": {
+      "totalProjects": "Łączna liczba projektów",
+      "pendingReview": "Oczekuje na recenzję",
+      "approved": "Zatwierdzone",
+      "rejected": "Odrzucone"
+    },
+    "filters": {
+      "pendingReview": "Oczekujące na recenzję",
+      "approved": "Zatwierdzone",
+      "rejected": "Odrzucone",
+      "allProjects": "Wszystkie projekty"
+    },
+    "actions": {
+      "approve": "Zatwierdź",
+      "reject": "Odrzuć",
+      "feature": "Poleć",
+      "unfeature": "Usuń z polecanych"
+    },
+    "status": {
+      "pending": "oczekujące",
+      "approved": "zatwierdzone",
+      "rejected": "odrzucone",
+      "featured": "Polecane"
+    },
+    "noProjects": "Nie znaleziono projektów",
+    "noProjectsSubtitle": "Żadne projekty nie pasują do bieżącego filtru",
+    "visitorsPerMonth": "{{count}} odwiedzających/mies."
+  },
+  "errors": {
+    "invalidCredentials": "Nieprawidłowe dane logowania. Spróbuj ponownie.",
+    "registrationFailed": "Rejestracja nie powiodła się. Spróbuj ponownie.",
+    "projectSubmissionFailed": "Błąd podczas wysyłania projektu. Spróbuj ponownie.",
+    "loadingFailed": "Błąd podczas ładowania danych. Spróbuj ponownie."
+  },
+  "success": {
+    "projectSubmitted": "Projekt został pomyślnie wysłany!",
+    "registrationSuccess": "Rejestracja zakończona pomyślnie! Zaloguj się używając swoich danych.",
+    "projectApproved": "Projekt został pomyślnie zatwierdzony!",
+    "projectRejected": "Projekt został pomyślnie odrzucony!",
+    "featuredToggled": "Status polecanych został zmieniony!"
+  }
+}

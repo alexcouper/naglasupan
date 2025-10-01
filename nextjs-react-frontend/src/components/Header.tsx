@@ -5,13 +5,35 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Menu, X, Plus, User, LogOut, Settings, Code2 } from 'lucide-react'
 import { useApp } from '@/contexts/AppContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { Button } from '@/components/ui/Button'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const { user, isAuthenticated, isDummyMode, setIsDummyMode } = useApp()
+  const { t, isLoaded } = useLanguage()
   const router = useRouter()
+  
+  // Fallback texts while translations are loading
+  if (!isLoaded) {
+    return (
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-2">
+                <Code2 className="h-8 w-8 text-blue-600" />
+                <span className="text-xl font-bold text-gray-900">DevShowcase</span>
+              </Link>
+            </div>
+            <div className="text-sm text-gray-500">Loading...</div>
+          </div>
+        </div>
+      </header>
+    )
+  }
 
   const handleLogout = () => {
     // In dummy mode, just clear the user
@@ -20,9 +42,9 @@ export function Header() {
   }
 
   const navigation = [
-    { name: 'Browse Projects', href: '/projects' },
-    { name: 'Featured', href: '/projects/featured' },
-    { name: 'Trending', href: '/projects/trending' },
+    { name: t('nav.browseProjects'), href: '/projects' },
+    { name: t('nav.featured'), href: '/projects/featured' },
+    { name: t('nav.trending'), href: '/projects/trending' },
   ]
 
   return (
@@ -52,6 +74,9 @@ export function Header() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            
             {/* Dummy Mode Toggle */}
             <label className="flex items-center space-x-2 text-sm text-gray-600">
               <input
@@ -60,7 +85,7 @@ export function Header() {
                 onChange={(e) => setIsDummyMode(e.target.checked)}
                 className="rounded"
               />
-              <span>Demo Mode</span>
+              <span>{t('nav.demoMode')}</span>
             </label>
 
             {isAuthenticated ? (
@@ -71,7 +96,7 @@ export function Header() {
                   onClick={() => router.push('/submit')}
                 >
                   <Plus className="w-4 h-4 mr-1" />
-                  Submit Project
+                  {t('nav.submitProject')}
                 </Button>
 
                 <div className="relative">
@@ -92,7 +117,7 @@ export function Header() {
                         onClick={() => setShowUserMenu(false)}
                       >
                         <User className="w-4 h-4 mr-2" />
-                        Profile
+                        {t('nav.profile')}
                       </Link>
                       <Link
                         href="/my-projects"
@@ -100,7 +125,7 @@ export function Header() {
                         onClick={() => setShowUserMenu(false)}
                       >
                         <Code2 className="w-4 h-4 mr-2" />
-                        My Projects
+                        {t('nav.myProjects')}
                       </Link>
                       {user?.username === 'admin' && (
                         <Link
@@ -109,7 +134,7 @@ export function Header() {
                           onClick={() => setShowUserMenu(false)}
                         >
                           <Settings className="w-4 h-4 mr-2" />
-                          Admin
+                          {t('nav.admin')}
                         </Link>
                       )}
                       <button
@@ -117,7 +142,7 @@ export function Header() {
                         className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <LogOut className="w-4 h-4 mr-2" />
-                        Logout
+                        {t('nav.logout')}
                       </button>
                     </div>
                   )}
@@ -126,10 +151,10 @@ export function Header() {
             ) : (
               <div className="flex items-center space-x-3">
                 <Button variant="ghost" size="sm" onClick={() => router.push('/login')}>
-                  Login
+                  {t('nav.login')}
                 </Button>
                 <Button variant="primary" size="sm" onClick={() => router.push('/register')}>
-                  Sign Up
+                  {t('nav.signUp')}
                 </Button>
               </div>
             )}
@@ -162,6 +187,9 @@ export function Header() {
               ))}
               
               <div className="pt-4 pb-2 border-t border-gray-200">
+                <div className="px-3 py-2">
+                  <LanguageSwitcher />
+                </div>
                 <label className="flex items-center space-x-2 text-sm text-gray-600 px-3 py-2">
                   <input
                     type="checkbox"
@@ -169,7 +197,7 @@ export function Header() {
                     onChange={(e) => setIsDummyMode(e.target.checked)}
                     className="rounded"
                   />
-                  <span>Demo Mode</span>
+                  <span>{t('nav.demoMode')}</span>
                 </label>
               </div>
 
@@ -184,7 +212,7 @@ export function Header() {
                     }}
                   >
                     <Plus className="w-4 h-4 mr-1" />
-                    Submit Project
+                    {t('nav.submitProject')}
                   </Button>
                 </div>
               ) : (
@@ -197,7 +225,7 @@ export function Header() {
                       router.push('/login')
                     }}
                   >
-                    Login
+                    {t('nav.login')}
                   </Button>
                   <Button
                     variant="primary"
@@ -207,7 +235,7 @@ export function Header() {
                       router.push('/register')
                     }}
                   >
-                    Sign Up
+                    {t('nav.signUp')}
                   </Button>
                 </div>
               )}

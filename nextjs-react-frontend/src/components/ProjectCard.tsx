@@ -8,6 +8,7 @@ import { Project } from '@/types/api'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { formatNumber, formatDate } from '@/lib/utils'
 
 interface ProjectCardProps {
@@ -17,6 +18,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, showOwner = true, featured = false }: ProjectCardProps) {
+  const { t } = useLanguage()
   const primaryImage = project.screenshot_urls[0] || '/placeholder-project.svg'
 
   return (
@@ -104,7 +106,7 @@ export function ProjectCard({ project, showOwner = true, featured = false }: Pro
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Eye className="w-4 h-4" />
-                <span>{formatNumber(project.monthly_visitors)}/mo</span>
+                <span>{t('projects.visitorsPerMonth', { count: formatNumber(project.monthly_visitors) })}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Calendar className="w-4 h-4" />
@@ -130,7 +132,7 @@ export function ProjectCard({ project, showOwner = true, featured = false }: Pro
               onClick={() => window.open(project.website_url, '_blank')}
             >
               <ExternalLink className="w-4 h-4 mr-1" />
-              Visit
+{t('common.visit')}
             </Button>
             {project.github_url && (
               <Button
