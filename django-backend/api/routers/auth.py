@@ -39,19 +39,25 @@ def login(request, payload: LoginRequest):
     # Try to authenticate with email or username
     user = None
     if "@" in payload.username:
+        # Login with email - use email directly since USERNAME_FIELD = 'email'
+        user = authenticate(request, username=payload.username, password=payload.password)
+    else:
+        # Login with username - need to get the email first
         try:
-            user_obj = User.objects.get(email=payload.username)
-            user = authenticate(request, username=user_obj.username, password=payload.password)
+            user_obj = User.objects.get(username=payload.username)
+            user = authenticate(request, username=user_obj.email, password=payload.password)
         except User.DoesNotExist:
             pass
-    else:
-        user = authenticate(request, username=payload.username, password=payload.password)
 
     if not user:
         return 401, {"detail": "Invalid credentials"}
 
     if not user.is_active:
         return 401, {"detail": "Account is inactive"}
+
+    # Check if user is verified (optional - uncomment if verification is required)
+    # if not user.is_verified:
+    #     return 401, {"detail": "Account is not verified"}
 
     access_token = create_access_token(user.id)
     refresh_token = create_refresh_token(user.id)

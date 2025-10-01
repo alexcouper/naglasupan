@@ -34,6 +34,8 @@ export default function SubmitProjectPage() {
   const [loading, setLoading] = useState(false)
   const [currentScreenshot, setCurrentScreenshot] = useState('')
   const [currentTech, setCurrentTech] = useState('')
+  const [customCategories, setCustomCategories] = useState<string[]>([])
+  const [currentCategory, setCurrentCategory] = useState('')
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
     defaultValues: {
@@ -90,6 +92,17 @@ export default function SubmitProjectPage() {
 
   const removeTech = (tech: string) => {
     setValue('tech_stack', watchedTechStack.filter(t => t !== tech))
+  }
+
+  const addCustomCategory = () => {
+    if (currentCategory.trim() && !customCategories.includes(currentCategory.trim())) {
+      setCustomCategories([...customCategories, currentCategory.trim()])
+      setCurrentCategory('')
+    }
+  }
+
+  const removeCustomCategory = (category: string) => {
+    setCustomCategories(customCategories.filter(c => c !== category))
   }
 
   const toggleTag = (tagId: string) => {
@@ -346,7 +359,41 @@ export default function SubmitProjectPage() {
                   </Badge>
                 ))}
               </div>
-              {watchedTagIds.length === 0 && (
+              
+              {/* Custom Categories Input */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-sm text-gray-600 mb-2">Or add custom categories:</p>
+                <div className="flex gap-2">
+                  <Input
+                    value={currentCategory}
+                    onChange={(e) => setCurrentCategory(e.target.value)}
+                    placeholder="Add custom category"
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomCategory())}
+                  />
+                  <Button type="button" onClick={addCustomCategory}>
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                {customCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {customCategories.map((category) => (
+                      <Badge key={category} variant="default" className="flex items-center gap-1">
+                        {category}
+                        <button
+                          type="button"
+                          onClick={() => removeCustomCategory(category)}
+                          className="hover:text-red-600"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {watchedTagIds.length === 0 && customCategories.length === 0 && (
                 <p className="text-red-600 text-sm mt-2">At least one category is required</p>
               )}
             </CardContent>
@@ -364,7 +411,7 @@ export default function SubmitProjectPage() {
             </Button>
             <Button
               type="submit"
-              disabled={loading || watchedTechStack.length === 0 || watchedTagIds.length === 0}
+              disabled={loading || watchedTechStack.length === 0 || (watchedTagIds.length === 0 && customCategories.length === 0)}
               className="flex-1"
             >
               {loading ? 'Submitting...' : 'Submit Project'}
