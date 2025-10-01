@@ -31,31 +31,7 @@ source .venv/bin/activate
 
 # Install dependencies
 echo "📥 Installing dependencies..."
-# Install core dependencies
-uv pip install \
-    fastapi>=0.104.1 \
-    uvicorn[standard]>=0.24.0 \
-    sqlalchemy>=2.0.23 \
-    asyncpg>=0.29.0 \
-    alembic>=1.12.1 \
-    pydantic[email]>=2.5.0 \
-    python-jose[cryptography]>=3.3.0 \
-    passlib[bcrypt]>=1.7.4 \
-    python-multipart>=0.0.6 \
-    slowapi>=0.1.9 \
-    python-dotenv>=1.0.0 \
-    psycopg2-binary>=2.9.9
-
-# Install dev dependencies
-uv pip install \
-    pytest>=7.4.0 \
-    pytest-asyncio>=0.21.0 \
-    pytest-cov>=4.1.0 \
-    httpx>=0.25.0 \
-    black>=23.0.0 \
-    isort>=5.12.0 \
-    flake8>=6.0.0 \
-    mypy>=1.5.0
+uv sync --dev
 
 # Create .env file if it doesn't exist
 if [ ! -f .env ]; then

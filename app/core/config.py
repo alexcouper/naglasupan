@@ -1,5 +1,4 @@
-import os
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -10,7 +9,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 30
     environment: str = "development"
-    
+
     class Config:
         env_file = ".env"
 

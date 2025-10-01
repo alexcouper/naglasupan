@@ -56,7 +56,7 @@ app/
    
    This will automatically:
    - Create a virtual environment with `uv venv`
-   - Install dependencies with `uv pip install`
+   - Install dependencies with `uv sync --dev`
    - Activate the environment
    - Load environment variables from `.env`
    - Set up helpful aliases
@@ -88,7 +88,7 @@ app/
    ```bash
    uv venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   make dev  # or use make install for just core dependencies
+   uv sync --dev  # or just `uv sync` for production dependencies only
    ```
 
 3. **Set up environment variables**
@@ -268,7 +268,7 @@ uv venv
 source .venv/bin/activate
 
 # Install dependencies
-make dev
+uv sync --dev
 
 # Set up environment
 cp .env.example .env
@@ -313,14 +313,46 @@ pytest -v
 
 FastAPI automatically generates OpenAPI 3.0 specification from your code:
 
-- **Access Schema**: `GET /openapi.json`
+- **Access Schema**: `GET /openapi.json` (when server is running)
+- **Extract Schema**: `make extract-openapi` (without running server)
 - **Generate Client**: Use tools like `openapi-generator` to create frontend clients
+
+### Extract OpenAPI Spec (Offline)
+
+```bash
+# Extract OpenAPI spec to openapi.json file
+make extract-openapi
+
+# Or run the script directly
+python scripts/extract_openapi.py
+
+# Or with direnv alias
+extract-openapi
+```
+
+This creates an `openapi.json` file that can be used for:
+- Frontend client generation
+- API documentation
+- Contract testing
+- Integration with API management tools
+
+### Generate Frontend Client
 
 Example client generation:
 ```bash
+# First extract the schema
+make extract-openapi
+
+# Then generate TypeScript client
 npx @openapitools/openapi-generator-cli generate \
-  -i http://localhost:8000/openapi.json \
+  -i ./openapi.json \
   -g typescript-axios \
+  -o ./generated-client
+
+# Or use other generators
+npx @openapitools/openapi-generator-cli generate \
+  -i ./openapi.json \
+  -g typescript-fetch \
   -o ./generated-client
 ```
 
@@ -343,13 +375,21 @@ This script will:
 This project uses [uv](https://github.com/astral-sh/uv) instead of pip for several advantages:
 
 - **🚀 Speed**: 10-100x faster than pip
-- **🔒 Reliability**: Better dependency resolution
+- **🔒 Reliability**: Better dependency resolution with lockfile (`uv.lock`)
 - **🎯 Simplicity**: Single tool for virtual environments and packages
 - **⚡ Modern**: Built in Rust, designed for modern Python development
+- **🔐 Deterministic**: Lockfile ensures reproducible installs across environments
+
+### uv sync vs pip install
+
+- `uv sync` installs exact versions from `uv.lock` (like npm install or yarn install)
+- Guarantees identical dependency versions across development, staging, and production
+- Much faster than traditional pip workflows
+- Automatic virtual environment management
 
 The `.envrc` file provides automatic environment management:
 - Auto-creates virtual environment
-- Auto-installs dependencies when `pyproject.toml` changes
+- Auto-installs dependencies when `uv.lock` or `pyproject.toml` changes
 - Auto-loads environment variables
 - Provides helpful command aliases
 

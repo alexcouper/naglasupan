@@ -15,12 +15,11 @@ WORKDIR /app
 # Create virtual environment
 RUN uv venv
 
-# Copy project files
-COPY pyproject.toml .
-COPY README.md .
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
 
-# Install dependencies
-RUN uv pip install -e .
+# Install dependencies using uv sync
+RUN uv sync --no-dev
 
 # Copy application code
 COPY app/ app/

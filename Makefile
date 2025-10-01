@@ -1,46 +1,29 @@
-.PHONY: help install dev run test lint clean migrate makemigration docker-build docker-run
+.PHONY: help install dev run test lint clean migrate makemigration docker-build docker-run lock update extract-openapi
 
 # Default target
 help:
 	@echo "Available commands:"
-	@echo "  install       - Install dependencies with uv"
-	@echo "  dev           - Install development dependencies"
+	@echo "  install       - Install production dependencies with uv sync"
+	@echo "  dev           - Install all dependencies (including dev) with uv sync"
+	@echo "  lock          - Update uv.lock file"
+	@echo "  update        - Update dependencies and regenerate lockfile"
 	@echo "  run           - Run the development server"
 	@echo "  test          - Run tests"
 	@echo "  lint          - Run linting and formatting"
 	@echo "  clean         - Clean up cache and build files"
 	@echo "  migrate       - Apply database migrations"
 	@echo "  makemigration - Create new database migration"
+	@echo "  extract-openapi - Extract OpenAPI spec to openapi.json"
 	@echo "  docker-build  - Build Docker image"
 	@echo "  docker-run    - Run with Docker"
 
 # Install dependencies
 install:
-	uv pip install \
-		fastapi>=0.104.1 \
-		uvicorn[standard]>=0.24.0 \
-		sqlalchemy>=2.0.23 \
-		asyncpg>=0.29.0 \
-		alembic>=1.12.1 \
-		pydantic[email]>=2.5.0 \
-		python-jose[cryptography]>=3.3.0 \
-		passlib[bcrypt]>=1.7.4 \
-		python-multipart>=0.0.6 \
-		slowapi>=0.1.9 \
-		python-dotenv>=1.0.0 \
-		psycopg2-binary>=2.9.9
+	uv sync
 
 # Install development dependencies
-dev: install
-	uv pip install \
-		pytest>=7.4.0 \
-		pytest-asyncio>=0.21.0 \
-		pytest-cov>=4.1.0 \
-		httpx>=0.25.0 \
-		black>=23.0.0 \
-		isort>=5.12.0 \
-		flake8>=6.0.0 \
-		mypy>=1.5.0
+dev:
+	uv sync --dev
 
 # Run development server
 run:
@@ -74,6 +57,17 @@ migrate:
 
 makemigration:
 	alembic revision --autogenerate -m "$(MSG)"
+
+# Dependency management
+lock:
+	uv lock
+
+update:
+	uv lock --upgrade
+
+# OpenAPI extraction
+extract-openapi:
+	python scripts/extract_openapi.py
 
 # Docker commands
 docker-build:

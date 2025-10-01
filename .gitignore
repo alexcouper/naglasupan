@@ -171,6 +171,12 @@ logs/
 
 # uv
 .uv_cache/
+.uv/
 
 # Custom
 .deps_installed
+
+# Generated files
+openapi.json
+
+# Note: uv.lock should be committed to ensure reproducible builds
