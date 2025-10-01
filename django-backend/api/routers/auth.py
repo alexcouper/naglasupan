@@ -34,7 +34,7 @@ def register(request, payload: UserCreate):
     return 201, user
 
 
-@router.post("/login", response=Token, tags=["Authentication"])
+@router.post("/login", response={200: Token, 401: Error}, tags=["Authentication"])
 def login(request, payload: LoginRequest):
     # Try to authenticate with email or username
     user = None
