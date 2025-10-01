@@ -10,6 +10,7 @@ import { Input, Textarea } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { dummyTags } from '@/lib/dummy-data'
 import { apiClient } from '@/lib/api'
 
@@ -28,6 +29,7 @@ interface FormData {
 export default function SubmitProjectPage() {
   const router = useRouter()
   const { isAuthenticated, isDummyMode } = useApp()
+  const { t, isLoaded } = useLanguage()
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(false)
   const [currentScreenshot, setCurrentScreenshot] = useState('')
@@ -131,17 +133,17 @@ export default function SubmitProjectPage() {
     }
   }
 
-  if (!isAuthenticated) {
-    return null // Will redirect in useEffect
+  if (!isAuthenticated || !isLoaded) {
+    return null // Will redirect in useEffect or loading translations
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Submit Your Project</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('submit.title')}</h1>
           <p className="text-gray-600">
-            Share your amazing project with our community. All submissions go through a review process.
+            {t('submit.subtitle')}
           </p>
         </div>
 
@@ -149,17 +151,17 @@ export default function SubmitProjectPage() {
           {/* Basic Information */}
           <Card>
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle>{t('submit.basicInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Title *
+                  {t('submit.projectTitle')} *
                 </label>
                 <Input
                   id="title"
-                  {...register('title', { required: 'Title is required', maxLength: 100 })}
-                  placeholder="Enter your project title"
+                  {...register('title', { required: t('submit.titleRequired'), maxLength: 100 })}
+                  placeholder={t('submit.projectTitlePlaceholder')}
                 />
                 {errors.title && (
                   <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
@@ -168,12 +170,12 @@ export default function SubmitProjectPage() {
 
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Short Description *
+                  {t('submit.shortDescription')} *
                 </label>
                 <Textarea
                   id="description"
-                  {...register('description', { required: 'Description is required', maxLength: 500 })}
-                  placeholder="Brief description of your project (max 500 characters)"
+                  {...register('description', { required: t('submit.descriptionRequired'), maxLength: 500 })}
+                  placeholder={t('submit.shortDescriptionPlaceholder')}
                   rows={3}
                 />
                 {errors.description && (
@@ -183,12 +185,12 @@ export default function SubmitProjectPage() {
 
               <div>
                 <label htmlFor="long_description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Detailed Description
+                  {t('submit.detailedDescription')}
                 </label>
                 <Textarea
                   id="long_description"
                   {...register('long_description')}
-                  placeholder="Detailed description of your project, its features, and how it works..."
+                  placeholder={t('submit.detailedDescriptionPlaceholder')}
                   rows={6}
                 />
               </div>
@@ -198,18 +200,18 @@ export default function SubmitProjectPage() {
           {/* URLs */}
           <Card>
             <CardHeader>
-              <CardTitle>Links</CardTitle>
+              <CardTitle>{t('submit.links')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label htmlFor="website_url" className="block text-sm font-medium text-gray-700 mb-1">
-                  Website URL *
+                  {t('submit.websiteUrl')} *
                 </label>
                 <Input
                   id="website_url"
                   type="url"
-                  {...register('website_url', { required: 'Website URL is required' })}
-                  placeholder="https://yourproject.com"
+                  {...register('website_url', { required: t('submit.websiteRequired') })}
+                  placeholder={t('submit.websiteUrlPlaceholder')}
                 />
                 {errors.website_url && (
                   <p className="text-red-600 text-sm mt-1">{errors.website_url.message}</p>

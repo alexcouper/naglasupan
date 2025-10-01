@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useApp } from '@/contexts/AppContext'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { dummyProjects } from '@/lib/dummy-data'
 import { apiClient } from '@/lib/api'
 import { formatNumber, formatDate, getInitials } from '@/lib/utils'
@@ -28,6 +29,7 @@ export default function ProjectDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { isDummyMode } = useApp()
+  const { t, isLoaded } = useLanguage()
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -74,7 +76,8 @@ export default function ProjectDetailPage() {
     }
   }
 
-  if (loading) {
+  // Show loading while translations are loading
+  if (!isLoaded || loading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,11 +96,11 @@ export default function ProjectDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Project Not Found</h1>
-          <p className="text-gray-600 mb-8">The project you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('projectDetail.notFound')}</h1>
+          <p className="text-gray-600 mb-8">{t('projectDetail.notFoundSubtitle')}</p>
           <Button onClick={() => router.push('/projects')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Projects
+            {t('projectDetail.backToProjects')}
           </Button>
         </div>
       </div>
@@ -114,7 +117,7 @@ export default function ProjectDetailPage() {
           className="mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
+          {t('common.back')}
         </Button>
 
         {/* Project Header */}
@@ -126,7 +129,7 @@ export default function ProjectDetailPage() {
                 {project.is_featured && (
                   <Badge variant="warning">
                     <Star className="w-3 h-3 mr-1" />
-                    Featured
+                    {t('admin.status.featured')}
                   </Badge>
                 )}
               </div>
@@ -136,15 +139,15 @@ export default function ProjectDetailPage() {
               <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
-                  <span>{formatNumber(project.monthly_visitors)} visitors/month</span>
+                  <span>{t('projectDetail.visitorsPerMonth', { count: formatNumber(project.monthly_visitors) })}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  <span>Created {formatDate(project.created_at)}</span>
+                  <span>{t('projectDetail.createdOn', { date: formatDate(project.created_at) })}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <User className="w-4 h-4" />
-                  <span>by {project.owner.username}</span>
+                  <span>{t('projects.by')} {project.owner.username}</span>
                 </div>
               </div>
 
@@ -152,25 +155,25 @@ export default function ProjectDetailPage() {
               <div className="flex flex-wrap gap-3">
                 <Button onClick={() => window.open(project.website_url, '_blank')}>
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Visit Website
+                  {t('common.visitWebsite')}
                 </Button>
                 {project.github_url && (
-                  <Button 
-                    variant="outline"
-                    onClick={() => window.open(project.github_url!, '_blank')}
-                  >
-                    <Github className="w-4 h-4 mr-2" />
-                    View Code
-                  </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => window.open(project.github_url!, '_blank')}
+                    >
+                      <Github className="w-4 h-4 mr-2" />
+                      {t('common.viewCode')}
+                    </Button>
                 )}
                 {project.demo_url && (
-                  <Button 
-                    variant="outline"
-                    onClick={() => window.open(project.demo_url!, '_blank')}
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Live Demo
-                  </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => window.open(project.demo_url!, '_blank')}
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      {t('common.liveDemo')}
+                    </Button>
                 )}
               </div>
             </div>
@@ -178,7 +181,7 @@ export default function ProjectDetailPage() {
             {/* Owner Card */}
             <Card className="w-full lg:w-80">
               <CardHeader>
-                <CardTitle className="text-lg">Project Owner</CardTitle>
+                <CardTitle className="text-lg">{t('projectDetail.projectOwner')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
@@ -189,7 +192,7 @@ export default function ProjectDetailPage() {
                     <h3 className="font-semibold">{project.owner.first_name} {project.owner.last_name}</h3>
                     <p className="text-gray-600">@{project.owner.username}</p>
                     {project.owner.is_verified && (
-                      <Badge variant="success" className="text-xs mt-1">Verified</Badge>
+                      <Badge variant="success" className="text-xs mt-1">{t('projectDetail.verified')}</Badge>
                     )}
                   </div>
                 </div>
@@ -202,7 +205,7 @@ export default function ProjectDetailPage() {
         {project.screenshot_urls && project.screenshot_urls.length > 0 && (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Screenshots</CardTitle>
+              <CardTitle>{t('projectDetail.screenshots')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="relative">
@@ -257,7 +260,7 @@ export default function ProjectDetailPage() {
             {project.long_description && (
               <Card>
                 <CardHeader>
-                  <CardTitle>About This Project</CardTitle>
+                  <CardTitle>{t('projectDetail.aboutProject')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-gray max-w-none">
@@ -275,7 +278,7 @@ export default function ProjectDetailPage() {
             {/* Tags */}
             <Card>
               <CardHeader>
-                <CardTitle>Tags</CardTitle>
+                <CardTitle>{t('projectDetail.tags')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
@@ -298,7 +301,7 @@ export default function ProjectDetailPage() {
             {/* Tech Stack */}
             <Card>
               <CardHeader>
-                <CardTitle>Tech Stack</CardTitle>
+                <CardTitle>{t('projectDetail.techStack')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
