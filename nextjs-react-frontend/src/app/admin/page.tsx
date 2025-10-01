@@ -24,6 +24,7 @@ import { apiClient } from '@/lib/api'
 export default function AdminPage() {
   const router = useRouter()
   const { user, isAuthenticated, isLoading: authLoading } = useApp()
+  const [allProjects, setAllProjects] = useState<Project[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [stats, setStats] = useState({
     total: 0,
@@ -44,14 +45,30 @@ export default function AdminPage() {
     }
 
     loadData()
-  }, [isAuthenticated, user, router, filter, authLoading])
+  }, [isAuthenticated, user, router, authLoading])
 
   const loadData = async () => {
     try {
       setLoading(true)
       
       const projectsData = await apiClient.getAdminProjects()
-      setProjects(projectsData.projects)
+      const fetchedProjects = projectsData.projects
+      
+      console.log('Admin projects loaded:', fetchedProjects)
+      console.log('Projects data structure:', projectsData)
+      
+      setAllProjects(fetchedProjects)
+      
+      // Calculate statistics from all projects
+      const newStats = {
+        total: fetchedProjects.length,
+        pending: fetchedProjects.filter(p => p.status === 'pending').length,
+        approved: fetchedProjects.filter(p => p.status === 'approved').length,
+        rejected: fetchedProjects.filter(p => p.status === 'rejected').length
+      }
+      
+      console.log('Calculated stats:', newStats)
+      setStats(newStats)
     } catch (error) {
       console.error('Error loading admin data:', error)
     } finally {
@@ -59,10 +76,19 @@ export default function AdminPage() {
     }
   }
 
+  // Filter projects whenever filter or allProjects changes
+  useEffect(() => {
+    if (filter === 'all') {
+      setProjects(allProjects)
+    } else {
+      setProjects(allProjects.filter(p => p.status === filter))
+    }
+  }, [allProjects, filter])
+
   const handleApproveProject = async (projectId: string, approved: boolean) => {
     try {
       await apiClient.approveProject(projectId, { approved })
-      loadData() // Reload data
+      loadData() // Reload data to get updated stats
     } catch (error) {
       console.error('Error updating project:', error)
       alert('Error updating project')
@@ -72,7 +98,7 @@ export default function AdminPage() {
   const handleToggleFeatured = async (projectId: string) => {
     try {
       await apiClient.toggleProjectFeatured(projectId)
-      loadData() // Reload data
+      loadData() // Reload data to get updated stats
     } catch (error) {
       console.error('Error toggling featured:', error)
       alert('Error updating featured status')

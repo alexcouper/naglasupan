@@ -26,6 +26,20 @@ const nextConfig: NextConfig = {
         hostname: 'picsum.photos',
         port: '',
         pathname: '/**',
+      },
+      // Allow any HTTPS domain for user-uploaded screenshots
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '/**',
+      },
+      // Allow any HTTP domain for user-uploaded screenshots
+      {
+        protocol: 'http',
+        hostname: '**',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

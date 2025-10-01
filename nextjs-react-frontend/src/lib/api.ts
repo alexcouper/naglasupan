@@ -1,13 +1,13 @@
-import { 
-  Project, 
-  ProjectListResponse, 
-  ProjectCreate, 
+import {
+  Project,
+  ProjectListResponse,
+  ProjectCreate,
   ProjectUpdate,
-  Tag, 
-  User, 
-  LoginRequest, 
-  UserCreate, 
-  Token, 
+  Tag,
+  User,
+  LoginRequest,
+  UserCreate,
+  Token,
   ProjectFilters,
   AdminProject,
   ProjectApproval
@@ -70,24 +70,24 @@ class ApiClient {
 
   // Auth methods
   async login(credentials: LoginRequest): Promise<Token> {
-    const token = await this.request<Token>('/auth/login', {
+    const token = await this.request<Token>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     })
-    
+
     this.setToken(token.access_token)
     return token
   }
 
   async register(userData: UserCreate): Promise<User> {
-    return this.request<User>('/auth/register', {
+    return this.request<User>('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     })
   }
 
   async getCurrentUser(): Promise<User> {
-    return this.request<User>('/auth/me')
+    return this.request<User>('/api/auth/me')
   }
 
   async validateToken(): Promise<User | null> {
@@ -120,7 +120,7 @@ class ApiClient {
   // Project methods
   async getProjects(filters?: ProjectFilters): Promise<ProjectListResponse> {
     const params = new URLSearchParams()
-    
+
     if (filters) {
       if (filters.tags?.length) params.append('tags', filters.tags.join(','))
       if (filters.tech_stack?.length) params.append('tech_stack', filters.tech_stack.join(','))
@@ -132,76 +132,76 @@ class ApiClient {
     }
 
     const query = params.toString() ? `?${params.toString()}` : ''
-    return this.request<ProjectListResponse>(`/projects${query}`)
+    return this.request<ProjectListResponse>(`/api/projects${query}`)
   }
 
   async getFeaturedProjects(): Promise<Project[]> {
-    return this.request<Project[]>('/projects/featured')
+    return this.request<Project[]>('/api/projects/featured')
   }
 
   async getTrendingProjects(): Promise<Project[]> {
-    return this.request<Project[]>('/projects/trending')
+    return this.request<Project[]>('/api/projects/trending')
   }
 
   async getProject(id: string): Promise<Project> {
-    return this.request<Project>(`/projects/${id}`)
+    return this.request<Project>(`/api/projects/${id}`)
   }
 
   async getMyProjects(): Promise<Project[]> {
-    return this.request<Project[]>('/my/projects')
+    return this.request<Project[]>('/api/my/projects')
   }
 
   async getUserProjects(): Promise<Project[]> {
-    return this.request<Project[]>('/my/projects')
+    return this.request<Project[]>('/api/my/projects')
   }
 
   async createProject(projectData: ProjectCreate): Promise<Project> {
-    return this.request<Project>('/my/projects', {
+    return this.request<Project>('/api/my/projects', {
       method: 'POST',
       body: JSON.stringify(projectData),
     })
   }
 
   async updateProject(id: string, projectData: ProjectUpdate): Promise<Project> {
-    return this.request<Project>(`/my/projects/${id}`, {
+    return this.request<Project>(`/api/my/projects/${id}`, {
       method: 'PUT',
       body: JSON.stringify(projectData),
     })
   }
 
   async deleteProject(id: string): Promise<void> {
-    await this.request(`/my/projects/${id}`, {
+    await this.request(`/api/my/projects/${id}`, {
       method: 'DELETE',
     })
   }
 
   // Tag methods
   async getTags(): Promise<Tag[]> {
-    return this.request<Tag[]>('/tags')
+    return this.request<Tag[]>('/api/tags')
   }
 
   // Admin methods
   async getAdminProjects(filters?: ProjectFilters): Promise<ProjectListResponse> {
     const params = new URLSearchParams()
-    
+
     if (filters) {
       if (filters.page) params.append('page', filters.page.toString())
       if (filters.per_page) params.append('per_page', filters.per_page.toString())
     }
 
     const query = params.toString() ? `?${params.toString()}` : ''
-    return this.request<ProjectListResponse>(`/admin/projects${query}`)
+    return this.request<ProjectListResponse>(`/api/admin/projects${query}`)
   }
 
   async approveProject(id: string, approval: ProjectApproval): Promise<AdminProject> {
-    return this.request<AdminProject>(`/admin/projects/${id}/approve`, {
+    return this.request<AdminProject>(`/api/admin/projects/${id}/approve`, {
       method: 'PUT',
       body: JSON.stringify(approval),
     })
   }
 
   async toggleProjectFeatured(id: string): Promise<AdminProject> {
-    return this.request<AdminProject>(`/admin/projects/${id}/feature`, {
+    return this.request<AdminProject>(`/api/admin/projects/${id}/feature`, {
       method: 'PUT',
     })
   }
