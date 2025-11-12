@@ -37,40 +37,82 @@
   },
   "home": {
     "hero": {
-      "badge": "Showcase Your Projects",
-      "title": "Iceland Creators Hub",
-      "titleHighlight": "",
-      "subtitle": "Join our community of talented developers. Submit your projects, get discovered by peers, and compete for monthly prizes.",
-      "browseProjects": "Browse Projects",
-      "submitProject": "Submit Your Project"
+      "badge": "Monthly Prize Program",
+      "title": "Share your side projects",
+      "titleHighlight": "Let's build Iceland's future together",
+      "subtitle": "Connect with creators, showcase your side projects, and compete for monthly prizes.",
+      "submitProject": "Submit Your Project",
+      "viewMonthlyPrize": "View Monthly Prize"
     },
-    "stats": {
-      "projects": "Amazing Projects",
-      "developers": "Active Developers",
-      "prizes": "In Monthly Prizes"
+    "mission": {
+      "title": "Why Krí1.is",
+      "problem1": {
+        "title": "Provide exposure to creators",
+        "description": "Many talented developers are building valuable projects, but they lack a platform to showcase their work and gain recognition."
+      },
+      "problem2": {
+        "title": "Provide Oxygen to Projects",
+        "description": "Many projects never see the light of day due to lack of motivation, recognition, or community support."
+      },
+      "problem3": {
+        "title": "Find Opportunities for Collaboration",
+        "description": "We want to foster a culture of collaboration, where creators can easily connect to share experiences and use one another's skills and projects."
+      },
+      "problem4": {
+        "title": "Build for the future",
+        "description": "AI will mean there is an explosion of new projects and ideas. We need a way to surface the best ones and help Iceland benefit from this wave of innovation."
+      },
+      "value": "Krí1.is connects Iceland's creators, makes knowledge transparent, and helps identify opportunities to strengthen Icelandic society."
     },
-    "featured": {
-      "title": "Featured Projects",
-      "subtitle": "Handpicked exceptional projects from our community",
-      "viewAll": "View All Featured",
-      "pageTitle": "Featured Projects",
-      "pageSubtitle": "Handpicked exceptional projects from our developer community",
-      "noFeatured": "No featured projects",
-      "noFeaturedSubtitle": "Check back soon for featured projects"
+    "valueProps": {
+      "title": "Build. Showcase. Win.",
+      "subtitle": "Join Iceland's community of builders",
+      "visibility": {
+        "title": "Visibility for Your Projects",
+        "description": "Get featured in our community and compete for monthly prizes. Your work deserves recognition."
+      },
+      "connect": {
+        "title": "Connect with Fellow Builders",
+        "description": "Find collaborators and learn from Iceland's tech community. Share your expertise and discover new opportunities."
+      },
+      "impact": {
+        "title": "Contribute to Iceland's Growth",
+        "description": "Build projects that strengthen our society. Make a meaningful impact on Iceland."
+      },
+      "prizeCallout": "Every month, outstanding projects are highlighted and rewarded. Your side project could be next."
     },
-    "trending": {
-      "title": "Trending This Month",
-      "subtitle": "Projects gaining the most traction in our community",
-      "viewAll": "View All Trending",
-      "pageTitle": "Trending Projects",
-      "pageSubtitle": "Projects gaining the most traction in our community this month",
-      "noTrending": "No trending projects",
-      "noTrendingSubtitle": "Check back soon for trending projects"
+    "howItWorks": {
+      "title": "The Journey",
+      "subtitle": "From submission to recognition",
+      "step1": {
+        "title": "Submit Your Project",
+        "description": "Share your side project with details about what makes it special and how it helps Iceland."
+      },
+      "step2": {
+        "title": "Showcase to Community",
+        "description": "Your project becomes visible to Iceland's tech community once approved."
+      },
+      "step3": {
+        "title": "Compete for Monthly Prize",
+        "description": "Outstanding projects are featured and highlighted each month."
+      },
+      "step4": {
+        "title": "Gain Recognition",
+        "description": "Build your reputation, attract collaborators, and make an impact."
+      }
+    },
+    "monthlyPrize": {
+      "title": "This Month's Prize",
+      "subtitle": "Recognition for Iceland's builders",
+      "placeholderTitle": "Waiting for Projects",
+      "placeholderDescription": "When projects arrive, the community votes and creators win recognition and prizes. Be among the first to submit your project.",
+      "comingSoon": "First projects will be featured soon",
+      "submitToCompete": "Submit to Compete"
     },
     "cta": {
-      "title": "Ready to Showcase Your Project?",
-      "subtitle": "Join thousands of developers who have already shared their amazing work with our community.",
-      "button": "Submit Your Project Today"
+      "title": "Ready to be Featured?",
+      "subtitle": "Submit your project and compete for this month's prize. Join Iceland's community of builders.",
+      "button": "Submit Your Project Now"
     }
   },
   "projects": {

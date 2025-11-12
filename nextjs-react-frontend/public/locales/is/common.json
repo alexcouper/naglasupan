@@ -37,40 +37,82 @@
   },
   "home": {
     "hero": {
-      "badge": "Sýndu þín ótrúlegu verkefni",
-      "title": "Þar sem forritarar",
-      "titleHighlight": "Sýna fram á ágæti",
-      "subtitle": "Taktu þátt í samfélagi hæfileikaríkra forritara. Sendu inn verkefnin þín, vertu uppgötvaður af jafningjum og keppu um mánaðarleg verðlaun. Næsti stóri árangur þinn byrjar hér.",
-      "browseProjects": "Skoða verkefni",
-      "submitProject": "Senda inn verkefnið þitt"
+      "badge": "Mánaðarleg verðlaunaþátttaka",
+      "title": "Byggjum fyrir Ísland.",
+      "titleHighlight": "Saman.",
+      "subtitle": "Tengstu skapendum, sýndu verkefnin þín og keppu um mánaðarlega viðurkenningu og verðlaun.",
+      "submitProject": "Senda inn verkefnið þitt",
+      "viewMonthlyPrize": "Skoða mánaðarverðlaun"
     },
-    "stats": {
-      "projects": "Ótrúleg verkefni",
-      "developers": "Virkir forritarar",
-      "prizes": "Í mánaðarlegum verðlaunum"
+    "mission": {
+      "title": "Hvers vegna Krí1.is?",
+      "problem1": {
+        "title": "Skapendur vinna einir",
+        "description": "Hæfileikaríkir forritarar eru að byggja verðmæt verkefni, en það er enginn miðlægur vettvangur til að uppgötva, sýna eða samræma þessar aðgerðir."
+      },
+      "problem2": {
+        "title": "Enginn miðlægur staður fyrir íslenskar nýjungar",
+        "description": "Ótrúleg hliðarverkefni eru óþekkt án sérstaks vettvangs til að undirstrika skapendur eða fagna framlegð þeirra."
+      },
+      "problem3": {
+        "title": "Týndar samstarfstækifæri",
+        "description": "Tvöföld vinna og týnd samstarf vegna þess að það er engin leið til að finna viðbótarhæfileika og verkefni."
+      },
+      "problem4": {
+        "title": "Ónýtt möguleiki í samfélaginu",
+        "description": "Engin skipulögð leið til að greina hvaða verkefni myndu raunverulega styrkja íslenskt samfélag og hvar hæfileikar geta haft mest áhrif."
+      },
+      "value": "Krí1.is tengir íslenska skapendur, gerir þekkingu gagnsæja og hjálpar til við að greina tækifæri til að styrkja íslenskt samfélag."
     },
-    "featured": {
-      "title": "Úrval verkefni",
-      "subtitle": "Handvalin sérstök verkefni úr samfélaginu okkar",
-      "viewAll": "Sjá allt úrval",
-      "pageTitle": "Úrval verkefni",
-      "pageSubtitle": "Handvalin sérstök verkefni úr forritarasamfélaginu okkar",
-      "noFeatured": "Engin úrval verkefni",
-      "noFeaturedSubtitle": "Athugaðu aftur bráðum fyrir úrval verkefni"
+    "valueProps": {
+      "title": "Byggja. Sýna. Vinna.",
+      "subtitle": "Taktu þátt í samfélagi íslenskra byggingamanna",
+      "visibility": {
+        "title": "Sýnileiki fyrir verkefnin þín",
+        "description": "Vertu sýndur í samfélaginu okkar og keppu um mánaðarleg verðlaun. Vinna þín á skilið viðurkenningu."
+      },
+      "connect": {
+        "title": "Tengstu samverkamönnum",
+        "description": "Finndu samstarfsaðila og lærðu af tæknisamfélagi Íslands. Byggðu sambönd sem skipta máli."
+      },
+      "impact": {
+        "title": "Leggðu þitt af mörkum til vaxtar Íslands",
+        "description": "Byggðu verkefni sem styrkja samfélag okkar. Gerðu marktæk áhrif á Ísland."
+      },
+      "prizeCallout": "Í hverjum mánuði eru framúrskarandi verkefni undirstrikuð og verðlaunuð. Verkefnið þitt gæti verið næst."
     },
-    "trending": {
-      "title": "Vinsæl þennan mánuð",
-      "subtitle": "Verkefni sem eru að ná mestri athygli í samfélaginu okkar",
-      "viewAll": "Sjá öll vinsæl",
-      "pageTitle": "Vinsæl verkefni",
-      "pageSubtitle": "Verkefni sem eru að ná mestri athygli í samfélaginu okkar þennan mánuð",
-      "noTrending": "Engin vinsæl verkefni",
-      "noTrendingSubtitle": "Athugaðu aftur bráðum fyrir vinsæl verkefni"
+    "howItWorks": {
+      "title": "Ferðalagið",
+      "subtitle": "Frá innsendingu til viðurkenningar",
+      "step1": {
+        "title": "Sendu inn verkefnið þitt",
+        "description": "Deildu hliðarverkefninu þínu með upplýsingum um hvað gerir það sérstakt og hvernig það hjálpar Íslandi."
+      },
+      "step2": {
+        "title": "Sýndu samfélaginu",
+        "description": "Verkefnið þitt verður sýnilegt tæknisamfélagi Íslands þegar það hefur verið samþykkt."
+      },
+      "step3": {
+        "title": "Keppu um mánaðarverðlaun",
+        "description": "Framúrskarandi verkefni eru sýnd og undirstrikuð í hverjum mánuði."
+      },
+      "step4": {
+        "title": "Fáðu viðurkenningu",
+        "description": "Byggðu upp orðspor þitt, laðaðu að samstarfsaðila og gerðu áhrif."
+      }
+    },
+    "monthlyPrize": {
+      "title": "Verðlaun þessa mánaðar",
+      "subtitle": "Viðurkenning fyrir íslenska byggingamenn",
+      "placeholderTitle": "Bíður eftir verkefnum",
+      "placeholderDescription": "Þegar verkefni koma, greiðir samfélagið atkvæði og skapendur vinna viðurkenningu og verðlaun. Vertu meðal hinna fyrstu til að senda inn verkefnið þitt.",
+      "comingSoon": "Fyrstu verkefni verða sýnd bráðum",
+      "submitToCompete": "Sendu inn til að keppa"
     },
     "cta": {
-      "title": "Tilbúinn að sýna verkefnið þitt?",
-      "subtitle": "Taktu þátt með þúsundum forritara sem hafa þegar deilt ótrúlegri vinnu sinni með samfélaginu okkar.",
-      "button": "Sendu inn verkefnið þitt í dag"
+      "title": "Tilbúinn að vera sýndur?",
+      "subtitle": "Sendu inn verkefnið þitt og keppu um verðlaun þessa mánaðar. Taktu þátt í samfélagi íslenskra byggingamanna.",
+      "button": "Sendu inn verkefnið þitt núna"
     }
   },
   "projects": {
