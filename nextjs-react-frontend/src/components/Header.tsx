@@ -26,9 +26,9 @@ export function Header() {
   }
 
   const navigation = [
-    { name: t('nav.browseProjects'), href: '/projects' },
-    { name: t('nav.featured'), href: '/projects/featured' },
-    { name: t('nav.trending'), href: '/projects/trending' },
+    // { name: t('nav.browseProjects'), href: '/projects' },
+    // { name: t('nav.featured'), href: '/projects/featured' },
+    // { name: t('nav.trending'), href: '/projects/trending' },
   ]
 
   // Fallback while translations are loading
@@ -40,7 +40,7 @@ export function Header() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-2">
                 <Code2 className="h-8 w-8 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">DevShowcase</span>
+                <span className="text-xl font-bold text-gray-900">krí1.is</span>
               </Link>
             </div>
             <div className="text-sm text-gray-500">Loading...</div>
@@ -58,7 +58,7 @@ export function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Code2 className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">DevShowcase</span>
+              <span className="text-xl font-bold text-gray-900">krí1.is</span>
             </Link>
           </div>
 
@@ -177,7 +177,7 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
-              
+
               <div className="pt-4 pb-2 border-t border-gray-200">
                 <div className="px-3 py-2">
                   <LanguageSwitcher />

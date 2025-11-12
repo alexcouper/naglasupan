@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DevShowcase - Where Developers Showcase Excellence",
+  title: "krí1.is - Where Developers Showcase Excellence",
   description: "Join our community of talented developers. Submit your projects, get discovered by peers, and compete for monthly prizes.",
 };
 

@@ -62,16 +62,16 @@ export default function Home() {
               <span>{t('home.hero.badge')}</span>
             </div>
           </div>
-          
+
           <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
             {t('home.hero.title')}
             <span className="block text-blue-600">{t('home.hero.titleHighlight')}</span>
           </h1>
-          
+
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             {t('home.hero.subtitle')}
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/projects">
               <Button size="lg" className="w-full sm:w-auto">
@@ -100,7 +100,7 @@ export default function Home() {
                 <p className="text-gray-600">{t('home.stats.projects')}</p>
               </CardContent>
             </Card>
-            
+
             <Card className="text-center">
               <CardContent className="pt-6">
                 <Users className="w-12 h-12 text-green-600 mx-auto mb-4" />
@@ -108,7 +108,7 @@ export default function Home() {
                 <p className="text-gray-600">{t('home.stats.developers')}</p>
               </CardContent>
             </Card>
-            
+
             <Card className="text-center">
               <CardContent className="pt-6">
                 <Award className="w-12 h-12 text-purple-600 mx-auto mb-4" />
@@ -120,7 +120,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Projects */}
+
+{/* //FeaturedProjects
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -135,7 +136,7 @@ export default function Home() {
               </Button>
             </Link>
           </div>
-          
+
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(3)].map((_, i) => (
@@ -152,7 +153,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trending Projects */}
+      // Trending Projects
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -167,7 +168,7 @@ export default function Home() {
               </Button>
             </Link>
           </div>
-          
+
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(3)].map((_, i) => (
@@ -182,7 +183,7 @@ export default function Home() {
             </div>
           )}
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-600">

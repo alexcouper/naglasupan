@@ -1,4 +1,4 @@
-# DevShowcase - Next.js React Frontend
+# Creators.is - Next.js React Frontend
 
 A modern, responsive frontend for the developer project showcasing platform built with Next.js 15, React 18, TypeScript, and Tailwind CSS.
 
@@ -37,7 +37,7 @@ A modern, responsive frontend for the developer project showcasing platform buil
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - npm, yarn, or pnpm
 
 ### Installation
@@ -139,7 +139,7 @@ npm run lint
 
 ## Deployment
 
-The application is ready for deployment on platforms like Vercel, Netlify, or AWS Amplify. 
+The application is ready for deployment on platforms like Vercel, Netlify, or AWS Amplify.
 
 ### Build Output
 ```bash

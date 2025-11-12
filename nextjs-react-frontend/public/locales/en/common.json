@@ -37,10 +37,10 @@
   },
   "home": {
     "hero": {
-      "badge": "Showcase Your Amazing Projects",
-      "title": "Where Developers",
-      "titleHighlight": "Showcase Excellence",
-      "subtitle": "Join our community of talented developers. Submit your projects, get discovered by peers, and compete for monthly prizes. Your next big break starts here.",
+      "badge": "Showcase Your Projects",
+      "title": "Iceland Creators Hub",
+      "titleHighlight": "",
+      "subtitle": "Join our community of talented developers. Submit your projects, get discovered by peers, and compete for monthly prizes.",
       "browseProjects": "Browse Projects",
       "submitProject": "Submit Your Project"
     },
