@@ -11,6 +11,8 @@ import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { UserCreate } from '@/types/api'
 import { apiClient } from '@/lib/api'
+import { Modal } from '@/components/ui/Modal'
+import { useModal } from '@/hooks/useModal'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -18,10 +20,35 @@ export default function RegisterPage() {
   const { t, isLoaded } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [kennitalaDisplay, setKennitalaDisplay] = useState('')
+  const { modalState, showSuccess, closeModal } = useModal()
 
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<UserCreate & { confirmPassword: string }>()
+  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<UserCreate & { confirmPassword: string }>()
 
   const password = watch('password')
+
+  const formatKennitala = (value: string) => {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, '')
+
+    // Limit to 10 digits
+    const limited = digits.slice(0, 10)
+
+    // Add dash after 6 digits
+    if (limited.length > 6) {
+      return `${limited.slice(0, 6)}-${limited.slice(6)}`
+    }
+    return limited
+  }
+
+  const handleKennitalaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatKennitala(e.target.value)
+    setKennitalaDisplay(formatted)
+
+    // Store only digits in the form
+    const digitsOnly = formatted.replace(/\D/g, '')
+    setValue('kennitala', digitsOnly)
+  }
 
   const onSubmit = async (data: UserCreate & { confirmPassword: string }) => {
     try {
@@ -35,8 +62,11 @@ export default function RegisterPage() {
 
       const { confirmPassword, ...userData } = data
       await apiClient.register(userData)
-      alert('Registration successful! Please sign in with your credentials.')
-      router.push('/login')
+      showSuccess(
+        'Registration Successful!',
+        'Your account has been created. Please sign in with your credentials.',
+        () => router.push('/login')
+      )
     } catch (error) {
       console.error('Registration error:', error)
       setError('Registration failed. Please try again.')
@@ -143,6 +173,13 @@ export default function RegisterPage() {
                 </label>
                 <Input
                   id="kennitala"
+                  value={kennitalaDisplay}
+                  onChange={handleKennitalaChange}
+                  placeholder="000000-0000"
+                  maxLength={11}
+                />
+                <input
+                  type="hidden"
                   {...register('kennitala', {
                     required: 'Kennitala is required',
                     pattern: {
@@ -150,8 +187,6 @@ export default function RegisterPage() {
                       message: 'Kennitala must be exactly 10 digits'
                     }
                   })}
-                  placeholder="0000000000"
-                  maxLength={10}
                 />
                 {errors.kennitala && (
                   <p className="text-red-600 text-sm mt-1">{errors.kennitala.message}</p>
@@ -213,6 +248,15 @@ export default function RegisterPage() {
           </p>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   )
 }

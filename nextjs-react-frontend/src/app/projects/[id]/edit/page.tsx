@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { Modal } from '@/components/ui/Modal'
+import { useModal } from '@/hooks/useModal'
 import { apiClient } from '@/lib/api'
 
 interface FormData {
@@ -30,6 +32,7 @@ export default function EditProjectPage() {
   const router = useRouter()
   const { isAuthenticated, user, isLoading: authLoading } = useApp()
   const { t, isLoaded } = useLanguage()
+  const { modalState, showError, showSuccess, closeModal } = useModal()
   const [project, setProject] = useState<Project | null>(null)
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(false)
@@ -70,8 +73,7 @@ export default function EditProjectPage() {
         
         // Check if user owns this project
         if (projectData.owner.id !== user?.id) {
-          alert('You can only edit your own projects')
-          router.push('/my-projects')
+          showError('Access Denied', 'You can only edit your own projects.', () => router.push('/my-projects'))
           return
         }
         
@@ -92,8 +94,7 @@ export default function EditProjectPage() {
         })
       } catch (error) {
         console.error('Error loading project:', error)
-        alert('Error loading project data')
-        router.push('/my-projects')
+        showError('Loading Failed', 'Error loading project data.', () => router.push('/my-projects'))
       } finally {
         setLoadingData(false)
       }
@@ -162,11 +163,10 @@ export default function EditProjectPage() {
       }
       
       await apiClient.updateProject(params.id as string, projectData)
-      alert('Project updated successfully!')
-      router.push('/my-projects')
+      showSuccess('Update Successful!', 'Your project has been updated successfully.', () => router.push('/my-projects'))
     } catch (error) {
       console.error('Error updating project:', error)
-      alert('Error updating project. Please try again.')
+      showError('Update Failed', 'Error updating project. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -482,6 +482,15 @@ export default function EditProjectPage() {
           </div>
         </form>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   )
 }

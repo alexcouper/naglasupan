@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { Modal } from '@/components/ui/Modal'
+import { useModal } from '@/hooks/useModal'
 
 import { apiClient } from '@/lib/api'
 
@@ -30,6 +32,7 @@ export default function SubmitProjectPage() {
   const router = useRouter()
   const { isAuthenticated, isLoading: authLoading } = useApp()
   const { t, isLoaded } = useLanguage()
+  const { modalState, showError, closeModal } = useModal()
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(false)
   const [currentScreenshot, setCurrentScreenshot] = useState('')
@@ -132,7 +135,7 @@ export default function SubmitProjectPage() {
       router.push('/my-projects')
     } catch (error) {
       console.error('Error submitting project:', error)
-      alert('Error submitting project. Please try again.')
+      showError('Submission Failed', 'Error submitting project. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -439,6 +442,15 @@ export default function SubmitProjectPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   )
 }

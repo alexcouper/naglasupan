@@ -18,12 +18,15 @@ import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useApp } from '@/contexts/AppContext'
 import { Project } from '@/types/api'
+import { Modal } from '@/components/ui/Modal'
+import { useModal } from '@/hooks/useModal'
 
 import { apiClient } from '@/lib/api'
 
 export default function AdminPage() {
   const router = useRouter()
   const { user, isAuthenticated, isLoading: authLoading } = useApp()
+  const { modalState, showError, closeModal } = useModal()
   const [allProjects, setAllProjects] = useState<Project[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [stats, setStats] = useState({
@@ -91,7 +94,7 @@ export default function AdminPage() {
       loadData() // Reload data to get updated stats
     } catch (error) {
       console.error('Error updating project:', error)
-      alert('Error updating project')
+      showError('Update Failed', 'Error updating project. Please try again.')
     }
   }
 
@@ -101,7 +104,7 @@ export default function AdminPage() {
       loadData() // Reload data to get updated stats
     } catch (error) {
       console.error('Error toggling featured:', error)
-      alert('Error updating featured status')
+      showError('Update Failed', 'Error updating featured status. Please try again.')
     }
   }
 
@@ -329,6 +332,15 @@ export default function AdminPage() {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   )
 }
