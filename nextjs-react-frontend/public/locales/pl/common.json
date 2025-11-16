@@ -107,7 +107,26 @@
   },
   "submit": {
     "title": "Dodaj swój projekt",
-    "subtitle": "Podziel się swoim niesamowitym projektem z naszą społecznością. Wszystkie zgłoszenia przechodzą przez proces recenzji.",
+    "subtitle": "Podziel się swoim projektem ze społecznością. Po prostu podaj adres URL i opcjonalnie opis - nasz zespół dokona przeglądu i doda szczegóły.",
+    "projectSubmission": "Zgłoszenie projektu",
+    "projectUrl": "URL projektu",
+    "projectUrlPlaceholder": "example.com lub https://example.com",
+    "urlRequired": "URL jest wymagany",
+    "validUrlRequired": "Proszę wprowadzić prawidłowy URL",
+    "urlHelp": "Możesz pominąć http:// lub https:// - dodamy to za Ciebie",
+    "description": "Opis (Opcjonalnie)",
+    "descriptionPlaceholder": "Opowiedz nam o swoim projekcie. Możesz dołączyć:\n• Jaki problem rozwiązuje?\n• Użyty stack technologiczny (React, Django, itp.)\n• Link do repozytorium GitHub\n• Szczególne funkcje lub osiągnięcia\n• Linki do wersji demo lub zrzutów ekranu",
+    "descriptionHelp": "Nasz zespół recenzentów użyje tych informacji, aby właściwie skategoryzować i zaprezentować Twój projekt",
+    "submitting": "Wysyłanie...",
+    "submitProject": "Wyślij projekt",
+    "whatHappensNext": "Co dalej?",
+    "nextSteps": [
+      "Twój projekt zostanie przesłany do recenzji",
+      "Nasz zespół dokona przeglądu Twojego zgłoszenia i doda szczegółowe informacje",
+      "Otrzymasz powiadomienie, gdy Twój projekt zostanie zatwierdzony",
+      "Po zatwierdzeniu Twój projekt będzie widoczny dla społeczności",
+      "Możesz zobaczyć status swojego zgłoszenia w \"Moje Projekty\""
+    ],
     "basicInfo": "Podstawowe informacje",
     "projectTitle": "Tytuł projektu",
     "projectTitlePlaceholder": "Wprowadź tytuł swojego projektu",
@@ -133,8 +152,6 @@
     "titleRequired": "Tytuł jest wymagany",
     "descriptionRequired": "Opis jest wymagany",
     "websiteRequired": "URL strony internetowej jest wymagany",
-    "submitting": "Wysyłanie...",
-    "submitProject": "Wyślij projekt",
     "guidelines": "Wytyczne dotyczące zgłoszeń",
     "guidelinesList": [
       "Projekty muszą być oryginalnymi pracami lub mieć odpowiednie przypisania",
@@ -143,6 +160,19 @@
       "Napisz szczegółowy opis wyjaśniający, co robi twój projekt",
       "Wszystkie zgłoszenia są sprawdzane przed publikacją"
     ]
+  },
+  "profile": {
+    "title": "Ustawienia profilu",
+    "subtitle": "Zarządzaj informacjami o koncie",
+    "personalInfo": "Informacje osobiste",
+    "accountInfo": "Informacje o koncie",
+    "emailReadOnly": "Email nie może być zmieniony",
+    "kennitalaReadOnly": "Kennitala nie może być zmieniona",
+    "updating": "Aktualizowanie...",
+    "updateProfile": "Zaktualizuj profil",
+    "profileUpdated": "Profil zaktualizowany pomyślnie!",
+    "updateFailed": "Nie udało się zaktualizować profilu. Spróbuj ponownie.",
+    "accountCreated": "Konto utworzone {{date}}"
   },
   "auth": {
     "signInTitle": "Zaloguj się do swojego konta",

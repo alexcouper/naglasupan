@@ -149,7 +149,26 @@
   },
   "submit": {
     "title": "Senda inn verkefnið þitt",
-    "subtitle": "Deildu ótrúlega verkefninu þínu með samfélaginu okkar. Allar innsendingar fara í gegnum endurskoðun.",
+    "subtitle": "Deildu verkefninu þínu með samfélaginu. Láttu bara fylgja vefslóð og valfrjálsa lýsingu - teymið okkar mun endurskoða og bæta við smáatriðum.",
+    "projectSubmission": "Verkefnisinnsending",
+    "projectUrl": "Vefslóð verkefnis",
+    "projectUrlPlaceholder": "example.com eða https://example.com",
+    "urlRequired": "Vefslóð er nauðsynleg",
+    "validUrlRequired": "Vinsamlegast sláðu inn gilda vefslóð",
+    "urlHelp": "Þú getur sleppt http:// eða https:// - við bætum því við fyrir þig",
+    "description": "Lýsing (Valfrjálst)",
+    "descriptionPlaceholder": "Segðu okkur frá verkefninu þínu. Þú getur látið fylgja:\n• Hvaða vandamál leysir það?\n• Tæknistaðall notaður (React, Django, o.s.frv.)\n• GitHub geymslutengli\n• Sérstakir eiginleikar eða árangur\n• Tenglar á sýnishorn eða skjámyndir",
+    "descriptionHelp": "Endurskoðunarteymið okkar mun nota þessar upplýsingar til að flokka og sýna verkefnið þitt á réttan hátt",
+    "submitting": "Sendir inn...",
+    "submitProject": "Senda inn verkefni",
+    "whatHappensNext": "Hvað gerist næst?",
+    "nextSteps": [
+      "Verkefnið þitt verður sent til endurskoðunar",
+      "Teymið okkar mun endurskoða innsendinguna þína og bæta við ítarlegum upplýsingum",
+      "Þú færð tilkynningu þegar verkefnið þitt er samþykkt",
+      "Þegar það er samþykkt verður verkefnið þitt sýnilegt fyrir samfélaginu",
+      "Þú getur séð stöðu innsendingar þinnar í \"Verkefnin mín\""
+    ],
     "basicInfo": "Grunnupplýsingar",
     "projectTitle": "Titill verkefnis",
     "projectTitlePlaceholder": "Sláðu inn titil verkefnisins",
@@ -175,8 +194,6 @@
     "titleRequired": "Titill er nauðsynlegur",
     "descriptionRequired": "Lýsing er nauðsynleg",
     "websiteRequired": "Vefslóð er nauðsynleg",
-    "submitting": "Sendir inn...",
-    "submitProject": "Senda inn verkefni",
     "guidelines": "Leiðbeiningar fyrir innsendingar",
     "guidelinesList": [
       "Verkefni verða að vera frumleg vinna eða hafa viðeigandi tilvísanir",
@@ -185,6 +202,19 @@
       "Skrifaðu nákvæma lýsingu sem útskýrir hvað verkefnið þitt gerir",
       "Allar innsendingar eru skoðaðar áður en þær eru birtar"
     ]
+  },
+  "profile": {
+    "title": "Prófílstillingar",
+    "subtitle": "Stjórnaðu reikningsupplýsingum þínum",
+    "personalInfo": "Persónulegar upplýsingar",
+    "accountInfo": "Reikningsupplýsingar",
+    "emailReadOnly": "Ekki er hægt að breyta netfangi",
+    "kennitalaReadOnly": "Ekki er hægt að breyta kennitölu",
+    "updating": "Uppfærir...",
+    "updateProfile": "Uppfæra prófíl",
+    "profileUpdated": "Prófíll uppfærður!",
+    "updateFailed": "Uppfærsla mistókst. Vinsamlegast reyndu aftur.",
+    "accountCreated": "Reikningur búinn til þann {{date}}"
   },
   "auth": {
     "signInTitle": "Skráðu þig inn á reikninginn þinn",

@@ -12,14 +12,14 @@ class ProjectStatus(models.TextChoices):
 
 class Project(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=100, db_index=True)
-    description = models.TextField(max_length=500)
+    title = models.CharField(max_length=100, db_index=True, blank=True)
+    description = models.TextField(max_length=500, blank=True)
     long_description = models.TextField(max_length=5000, blank=True, null=True)
     website_url = models.URLField(max_length=2083)
     github_url = models.URLField(max_length=2083, blank=True, null=True)
     demo_url = models.URLField(max_length=2083, blank=True, null=True)
     screenshot_urls = models.JSONField(default=list, blank=True)
-    tech_stack = models.JSONField(default=list)
+    tech_stack = models.JSONField(default=list, blank=True)
     monthly_visitors = models.PositiveIntegerField(default=0)
     status = models.CharField(
         max_length=20, 

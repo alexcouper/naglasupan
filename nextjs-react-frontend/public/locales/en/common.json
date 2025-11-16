@@ -149,7 +149,26 @@
   },
   "submit": {
     "title": "Submit Your Project",
-    "subtitle": "Share your project with the community. All submissions go through a review process.",
+    "subtitle": "Share your project with the community. Just provide a URL and optionally a description - our team will review and add the details.",
+    "projectSubmission": "Project Submission",
+    "projectUrl": "Project URL",
+    "projectUrlPlaceholder": "example.com or https://example.com",
+    "urlRequired": "URL is required",
+    "validUrlRequired": "Please enter a valid URL",
+    "urlHelp": "",
+    "description": "Description (Optional)",
+    "descriptionPlaceholder": "Tell us about your project. Ideas:\n• What problem does it solve?\n• Tech stack used (React, Django, etc.)\n• AI Agent and tooling used (Claude, Gemini, ChatGPT, Mistral, OpenCode, Github Copilot) \n• GitHub repository link\n• Any special features or achievements\n• Links to demos or screenshots",
+    "descriptionHelp": "Our review team will use this information to properly categorize and showcase your project",
+    "submitting": "Submitting...",
+    "submitProject": "Submit Project",
+    "whatHappensNext": "What happens next?",
+    "nextSteps": [
+      "Your project will be submitted for review",
+      "Our team will review your submission and add detailed information",
+      "You'll be notified when your project is approved",
+      "Once approved, your project will be visible to the community",
+      "You can view the status of your submission in \"My Projects\""
+    ],
     "basicInfo": "Basic Information",
     "projectTitle": "Project Title",
     "projectTitlePlaceholder": "Enter your project title",
@@ -175,8 +194,6 @@
     "titleRequired": "Title is required",
     "descriptionRequired": "Description is required",
     "websiteRequired": "Website URL is required",
-    "submitting": "Submitting...",
-    "submitProject": "Submit Project",
     "guidelines": "Submission Guidelines",
     "guidelinesList": [
       "Projects must be original work or have proper attribution",
@@ -185,6 +202,19 @@
       "Write a detailed description explaining what your project does",
       "All submissions are reviewed before being published"
     ]
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your account information",
+    "personalInfo": "Personal Information",
+    "accountInfo": "Account Information",
+    "emailReadOnly": "Email cannot be changed",
+    "kennitalaReadOnly": "Kennitala cannot be changed",
+    "updating": "Updating...",
+    "updateProfile": "Update Profile",
+    "profileUpdated": "Profile updated successfully!",
+    "updateFailed": "Failed to update profile. Please try again.",
+    "accountCreated": "Account created on {{date}}"
   },
   "auth": {
     "signInTitle": "Sign in to your account",

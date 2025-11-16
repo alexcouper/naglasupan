@@ -47,22 +47,23 @@ export interface ProjectListResponse {
 }
 
 export interface ProjectCreate {
-  title: string;
-  description: string;
+  url: string;
+  description?: string;
+  // Optional fields - will be filled by admin during review
+  title?: string;
   long_description?: string;
-  website_url: string;
   github_url?: string;
   demo_url?: string;
   screenshot_urls?: string[];
-  tech_stack: string[];
-  tag_ids: string[];
+  tech_stack?: string[];
+  tag_ids?: string[];
 }
 
 export interface ProjectUpdate {
-  title?: string;
+  url?: string;
   description?: string;
+  title?: string;
   long_description?: string;
-  website_url?: string;
   github_url?: string;
   demo_url?: string;
   screenshot_urls?: string[];
@@ -94,6 +95,12 @@ export interface UserCreate {
   first_name: string;
   last_name: string;
   kennitala: string;
+}
+
+export interface UserUpdate {
+  first_name?: string;
+  last_name?: string;
+  username?: string;
 }
 
 export interface Token {

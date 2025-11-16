@@ -7,6 +7,7 @@ import {
   User,
   LoginRequest,
   UserCreate,
+  UserUpdate,
   Token,
   ProjectFilters,
   AdminProject,
@@ -88,6 +89,13 @@ class ApiClient {
 
   async getCurrentUser(): Promise<User> {
     return this.request<User>('/api/auth/me')
+  }
+
+  async updateProfile(userData: UserUpdate): Promise<User> {
+    return this.request<User>('/api/auth/me', {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    })
   }
 
   async validateToken(): Promise<User | null> {

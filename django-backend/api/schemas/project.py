@@ -8,15 +8,16 @@ from .tag import TagResponse
 
 
 class ProjectCreate(Schema):
-    title: str
-    description: str
+    url: str
+    description: Optional[str] = None
+    # Optional fields - will be filled by admin during review
+    title: Optional[str] = None
     long_description: Optional[str] = None
-    website_url: str
     github_url: Optional[str] = None
     demo_url: Optional[str] = None
     screenshot_urls: List[str] = []
-    tech_stack: List[str]
-    tag_ids: List[UUID]
+    tech_stack: List[str] = []
+    tag_ids: List[UUID] = []
 
 
 class ProjectResponse(Schema):

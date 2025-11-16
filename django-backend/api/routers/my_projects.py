@@ -21,18 +21,33 @@ def list_my_projects(request):
 
 @router.post("", response={201: ProjectResponse, 400: Error, 401: Error}, auth=auth, tags=["My Projects"])
 def create_project(request, payload: ProjectCreate):
-    # Validate tag IDs exist
+    # Validate tag IDs exist (if provided)
     tag_ids = payload.tag_ids
-    if len(tag_ids) != Tag.objects.filter(id__in=tag_ids).count():
+    if tag_ids and len(tag_ids) != Tag.objects.filter(id__in=tag_ids).count():
         return 400, {"detail": "One or more tag IDs are invalid"}
 
+    # Prepare project data
+    project_data = payload.dict(exclude={'tag_ids', 'url'})
+
+    # Map 'url' to 'website_url'
+    project_data['website_url'] = payload.url
+
+    # Auto-generate title from URL if not provided
+    if not project_data.get('title'):
+        from urllib.parse import urlparse
+        parsed_url = urlparse(payload.url)
+        domain = parsed_url.netloc or parsed_url.path
+        # Clean up the domain (remove www., etc.)
+        domain = domain.replace('www.', '')
+        project_data['title'] = domain or 'Untitled Project'
+
     # Create project
-    project_data = payload.dict(exclude={'tag_ids'})
     project = Project.objects.create(owner=request.auth, **project_data)
 
-    # Add tags
-    tags = Tag.objects.filter(id__in=tag_ids)
-    project.tags.set(tags)
+    # Add tags (if provided)
+    if tag_ids:
+        tags = Tag.objects.filter(id__in=tag_ids)
+        project.tags.set(tags)
 
     return 201, project
 
@@ -51,13 +66,26 @@ def get_my_project(request, project_id: str):
 def update_project(request, project_id: str, payload: ProjectCreate):
     project = get_object_or_404(Project, id=project_id, owner=request.auth)
 
-    # Validate tag IDs exist
+    # Validate tag IDs exist (if provided)
     tag_ids = payload.tag_ids
-    if len(tag_ids) != Tag.objects.filter(id__in=tag_ids).count():
+    if tag_ids and len(tag_ids) != Tag.objects.filter(id__in=tag_ids).count():
         return 400, {"detail": "One or more tag IDs are invalid"}
 
-    # Update project
-    project_data = payload.dict(exclude={'tag_ids'})
+    # Prepare project data
+    project_data = payload.dict(exclude={'tag_ids', 'url'})
+
+    # Map 'url' to 'website_url'
+    project_data['website_url'] = payload.url
+
+    # Auto-generate title from URL if not provided
+    if not project_data.get('title'):
+        from urllib.parse import urlparse
+        parsed_url = urlparse(payload.url)
+        domain = parsed_url.netloc or parsed_url.path
+        domain = domain.replace('www.', '')
+        project_data['title'] = domain or 'Untitled Project'
+
+    # Update project fields
     for field, value in project_data.items():
         setattr(project, field, value)
 
@@ -68,9 +96,12 @@ def update_project(request, project_id: str, payload: ProjectCreate):
 
     project.save()
 
-    # Update tags
-    tags = Tag.objects.filter(id__in=tag_ids)
-    project.tags.set(tags)
+    # Update tags (if provided)
+    if tag_ids:
+        tags = Tag.objects.filter(id__in=tag_ids)
+        project.tags.set(tags)
+    else:
+        project.tags.clear()
 
     return project
 
