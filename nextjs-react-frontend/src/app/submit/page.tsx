@@ -61,9 +61,11 @@ export default function SubmitProjectPage() {
 
       await apiClient.createProject(projectData)
       router.push('/my-projects')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting project:', error)
-      showError('Submission Failed', 'Error submitting project. Please try again.')
+      // Display backend error message if available
+      const errorMessage = error?.message || 'Error submitting project. Please try again.'
+      showError('Submission Failed', errorMessage)
     } finally {
       setLoading(false)
     }

@@ -30,12 +30,14 @@ export default function LoginPage() {
       const tokenData = await apiClient.login(data)
       const userData = await apiClient.getCurrentUser()
       setUser(userData)
-      
+
       const redirect = new URLSearchParams(window.location.search).get('redirect')
-      router.push(redirect || '/')
-    } catch (error) {
+      router.push(redirect || '/my-projects')
+    } catch (error: any) {
       console.error('Login error:', error)
-      setError('Invalid credentials. Please try again.')
+      // Display backend error message if available
+      const errorMessage = error?.message || 'Invalid credentials. Please try again.'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

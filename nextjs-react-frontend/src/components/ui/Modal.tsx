@@ -30,6 +30,10 @@ export function Modal({
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        // Call onConfirm if it exists, then close
+        if (onConfirm) {
+          onConfirm()
+        }
         onClose()
       }
     }
@@ -44,15 +48,20 @@ export function Modal({
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = 'unset'
     }
-  }, [isOpen, onClose])
+  }, [isOpen, onClose, onConfirm])
 
   if (!isOpen) return null
 
-  const handleConfirm = () => {
+  const handleClose = () => {
+    // If there's an onConfirm callback, call it before closing
     if (onConfirm) {
       onConfirm()
     }
     onClose()
+  }
+
+  const handleConfirm = () => {
+    handleClose()
   }
 
   const getIcon = () => {
@@ -81,15 +90,15 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50 transition-opacity"
-        onClick={onClose}
+        className="absolute inset-0 bg-white/20 backdrop-blur-md transition-opacity"
+        onClick={handleClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 animate-in fade-in zoom-in duration-200">
+      <div className="relative bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 animate-in fade-in zoom-in duration-200 border border-gray-200">
         {/* Close button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="Close"
         >
@@ -114,11 +123,11 @@ export function Modal({
           </p>
 
           {/* Actions */}
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-center mt-8">
             <Button
               onClick={handleConfirm}
-              variant={type === 'error' ? 'default' : 'default'}
-              className="min-w-[80px]"
+              variant="default"
+              className="min-w-[120px] text-base font-semibold px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all"
             >
               {confirmText}
             </Button>

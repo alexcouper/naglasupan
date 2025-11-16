@@ -17,9 +17,10 @@ import {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(public status: number, message: string, public detail?: string) {
     super(message)
     this.name = 'ApiError'
+    this.detail = detail
   }
 }
 
@@ -63,7 +64,21 @@ class ApiClient {
           window.dispatchEvent(new CustomEvent('unauthorized'))
         }
       }
-      throw new ApiError(response.status, `HTTP error! status: ${response.status}`)
+
+      // Try to extract error message from response body
+      let errorMessage = `HTTP error! status: ${response.status}`
+      let errorDetail: string | undefined
+      try {
+        const errorData = await response.json()
+        if (errorData.detail) {
+          errorDetail = errorData.detail
+          errorMessage = errorData.detail
+        }
+      } catch (e) {
+        // If parsing fails, use default message
+      }
+
+      throw new ApiError(response.status, errorMessage, errorDetail)
     }
 
     return response.json()

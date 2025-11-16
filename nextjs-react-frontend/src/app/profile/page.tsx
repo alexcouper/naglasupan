@@ -71,9 +71,11 @@ export default function ProfilePage() {
       })
 
       showSuccess(t('profile.profileUpdated'), t('profile.profileUpdated'))
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating profile:', error)
-      showError(t('profile.updateFailed'), t('profile.updateFailed'))
+      // Display backend error message if available
+      const errorMessage = error?.message || t('profile.updateFailed')
+      showError(t('profile.updateFailed'), errorMessage)
     } finally {
       setLoading(false)
     }

@@ -67,9 +67,11 @@ export default function RegisterPage() {
         'Your account has been created. Please sign in with your credentials.',
         () => router.push('/login')
       )
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error)
-      setError('Registration failed. Please try again.')
+      // Display backend error message if available
+      const errorMessage = error?.message || 'Registration failed. Please try again.'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
