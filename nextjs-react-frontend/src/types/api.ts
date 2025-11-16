@@ -6,6 +6,7 @@ export interface User {
   username: string;
   first_name: string;
   last_name: string;
+  kennitala: string;
   is_verified: boolean;
   created_at: string;
 }
@@ -92,6 +93,7 @@ export interface UserCreate {
   password: string;
   first_name: string;
   last_name: string;
+  kennitala: string;
 }
 
 export interface Token {

@@ -10,6 +10,7 @@ class UserCreate(Schema):
     password: str
     first_name: str
     last_name: str
+    kennitala: str
 
 
 class UserResponse(Schema):
@@ -18,6 +19,7 @@ class UserResponse(Schema):
     username: str
     first_name: str
     last_name: str
+    kennitala: str
     is_verified: bool
     created_at: datetime
 

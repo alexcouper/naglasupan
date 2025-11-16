@@ -138,6 +138,27 @@ export default function RegisterPage() {
               </div>
 
               <div>
+                <label htmlFor="kennitala" className="block text-sm font-medium text-gray-700 mb-1">
+                  Kennitala *
+                </label>
+                <Input
+                  id="kennitala"
+                  {...register('kennitala', {
+                    required: 'Kennitala is required',
+                    pattern: {
+                      value: /^\d{10}$/,
+                      message: 'Kennitala must be exactly 10 digits'
+                    }
+                  })}
+                  placeholder="0000000000"
+                  maxLength={10}
+                />
+                {errors.kennitala && (
+                  <p className="text-red-600 text-sm mt-1">{errors.kennitala.message}</p>
+                )}
+              </div>
+
+              <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password *
                 </label>

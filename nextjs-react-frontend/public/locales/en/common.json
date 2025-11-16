@@ -39,7 +39,7 @@
     "hero": {
       "badge": "Monthly Prize Program",
       "title": "Share your side projects",
-      "titleHighlight": "Let's build Iceland's future together",
+      "titleHighlight": "Let's build the future together",
       "subtitle": "Connect with creators, showcase your side projects, and compete for monthly prizes.",
       "submitProject": "Submit Your Project",
       "viewMonthlyPrize": "View Monthly Prize"
@@ -62,14 +62,14 @@
         "title": "Build for the future",
         "description": "AI will mean there is an explosion of new projects and ideas. We need a way to surface the best ones and help Iceland benefit from this wave of innovation."
       },
-      "value": "Krí1.is connects Iceland's creators, makes knowledge transparent, and helps identify opportunities to strengthen Icelandic society."
+      "value": "Krí1.is connects Iceland's creators, makes knowledge transparent, and helps identify opportunities to strengthen creator community and wider society."
     },
     "valueProps": {
       "title": "Build. Showcase. Win.",
       "subtitle": "Join Iceland's community of builders",
       "visibility": {
         "title": "Visibility for Your Projects",
-        "description": "Get featured in our community and compete for monthly prizes. Your work deserves recognition."
+        "description": "Get featured in our community and compete for monthly prizes. Showcase your work."
       },
       "connect": {
         "title": "Connect with Fellow Builders",
@@ -188,9 +188,9 @@
   },
   "auth": {
     "signInTitle": "Sign in to your account",
-    "signInSubtitle": "Access your developer showcase dashboard",
+    "signInSubtitle": "Access your dashboard",
     "signUpTitle": "Create your account",
-    "signUpSubtitle": "Join the developer showcase community",
+    "signUpSubtitle": "Join the creator community",
     "username": "Username",
     "email": "Email",
     "password": "Password",

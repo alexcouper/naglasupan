@@ -32,6 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True, db_index=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    kennitala = models.CharField(max_length=10, unique=True, db_index=True, null=True, blank=False)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -41,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'kennitala']
 
     class Meta:
         db_table = 'users'

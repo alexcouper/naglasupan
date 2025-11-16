@@ -22,6 +22,9 @@ def register(request, payload: UserCreate):
     if User.objects.filter(username=payload.username).exists():
         return 400, Error(detail="Username already taken")
 
+    if User.objects.filter(kennitala=payload.kennitala).exists():
+        return 400, Error(detail="Kennitala already registered")
+
     # Create user
     user = User.objects.create_user(
         email=payload.email,
@@ -29,6 +32,7 @@ def register(request, payload: UserCreate):
         password=payload.password,
         first_name=payload.first_name,
         last_name=payload.last_name,
+        kennitala=payload.kennitala,
     )
 
     return 201, user

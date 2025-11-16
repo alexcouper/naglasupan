@@ -66,6 +66,7 @@ export const dummyUsers: User[] = [
     username: 'alice_dev',
     first_name: 'Alice',
     last_name: 'Johnson',
+    kennitala: '1234567890',
     is_verified: true,
     created_at: '2024-01-15T10:00:00Z'
   },
@@ -75,6 +76,7 @@ export const dummyUsers: User[] = [
     username: 'bob_builder',
     first_name: 'Bob',
     last_name: 'Smith',
+    kennitala: '0987654321',
     is_verified: true,
     created_at: '2024-02-20T14:30:00Z'
   },
@@ -84,6 +86,7 @@ export const dummyUsers: User[] = [
     username: 'carol_codes',
     first_name: 'Carol',
     last_name: 'Williams',
+    kennitala: '1122334455',
     is_verified: true,
     created_at: '2024-03-10T09:15:00Z'
   }
