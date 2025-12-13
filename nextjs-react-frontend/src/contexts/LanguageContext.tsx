@@ -7,7 +7,8 @@ import i18n, { Locale, defaultLocale, loadTranslations } from '@/lib/i18n'
 interface LanguageContextType {
   currentLanguage: Locale
   setLanguage: (language: Locale) => void
-  t: (key: string, options?: unknown) => string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: (key: string, options?: any) => any
   isLoaded: boolean
 }
 

@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { Plus, X, ArrowLeft, Save } from 'lucide-react'
-import { ProjectCreate, ProjectUpdate, Tag, Project } from '@/types/api'
+import { Plus, X, ArrowLeft, Save, Terminal, Rocket, Sparkles } from 'lucide-react'
+import { ProjectUpdate, Tag, Project } from '@/types/api'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { Modal } from '@/components/ui/Modal'
 import { useModal } from '@/hooks/useModal'
 import { apiClient } from '@/lib/api'
@@ -31,7 +32,8 @@ export default function EditProjectPage() {
   const params = useParams()
   const router = useRouter()
   const { isAuthenticated, user, isLoading: authLoading } = useApp()
-  const { t, isLoaded } = useLanguage()
+  const { isLoaded } = useLanguage()
+  const { theme } = useTheme()
   const { modalState, showError, showSuccess, closeModal } = useModal()
   const [project, setProject] = useState<Project | null>(null)
   const [tags, setTags] = useState<Tag[]>([])
@@ -55,9 +57,7 @@ export default function EditProjectPage() {
   const watchedTagIds = watch('tag_ids')
 
   useEffect(() => {
-    // Wait for auth loading to complete
     if (authLoading) return
-
     if (!isAuthenticated) {
       router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
       return
@@ -71,7 +71,6 @@ export default function EditProjectPage() {
           apiClient.getTags()
         ])
         
-        // Check if user owns this project
         if (projectData.owner.id !== user?.id) {
           showError('Access Denied', 'You can only edit your own projects.', () => router.push('/my-projects'))
           return
@@ -80,7 +79,6 @@ export default function EditProjectPage() {
         setProject(projectData)
         setTags(tagsData)
         
-        // Populate form with existing data
         reset({
           title: projectData.title,
           description: projectData.description,
@@ -103,7 +101,7 @@ export default function EditProjectPage() {
     if (params.id && user) {
       loadData()
     }
-  }, [isAuthenticated, params.id, user, router, reset, authLoading])
+  }, [isAuthenticated, params.id, user, router, reset, authLoading, showError])
 
   const addScreenshot = () => {
     if (currentScreenshot.trim()) {
@@ -154,7 +152,7 @@ export default function EditProjectPage() {
         title: data.title,
         description: data.description,
         long_description: data.long_description || undefined,
-        website_url: data.website_url,
+        url: data.website_url,
         github_url: data.github_url || undefined,
         demo_url: data.demo_url || undefined,
         screenshot_urls: data.screenshot_urls,
@@ -172,13 +170,64 @@ export default function EditProjectPage() {
     }
   }
 
+  const getPageStyles = () => {
+    switch (theme) {
+      case 'wip':
+        return {
+          bg: 'bg-[#0d0d0d]',
+          title: 'text-[#e5e5e5] font-mono',
+          subtitle: 'text-[#737373]',
+          label: 'text-[#a3a3a3] font-mono text-xs uppercase tracking-wider',
+          listItem: 'bg-[#262626]',
+          divider: 'border-[#333]',
+          skeleton: 'bg-[#262626]',
+          icon: <Terminal className="w-6 h-6 text-[#22c55e]" />,
+        }
+      case 'futuristic':
+        return {
+          bg: 'bg-[#030712]',
+          title: 'text-white',
+          subtitle: 'text-[#64748b]',
+          label: 'text-[#94a3b8]',
+          listItem: 'bg-[#1e293b]',
+          divider: 'border-[#1e293b]',
+          skeleton: 'bg-[#1e293b]',
+          icon: <Rocket className="w-6 h-6 text-cyan-400" />,
+        }
+      case 'bright':
+        return {
+          bg: 'bg-gradient-to-br from-orange-50 via-white to-pink-50',
+          title: 'text-gray-900',
+          subtitle: 'text-gray-600',
+          label: 'text-gray-700',
+          listItem: 'bg-orange-50',
+          divider: 'border-orange-100',
+          skeleton: 'bg-orange-100',
+          icon: <Sparkles className="w-6 h-6 text-orange-500" />,
+        }
+      default:
+        return {
+          bg: 'bg-gray-50',
+          title: 'text-gray-900',
+          subtitle: 'text-gray-600',
+          label: 'text-gray-700',
+          listItem: 'bg-gray-100',
+          divider: 'border-gray-200',
+          skeleton: 'bg-gray-300',
+          icon: null,
+        }
+    }
+  }
+
+  const styles = getPageStyles()
+
   if (authLoading || !isLoaded || loadingData) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+      <div className={`min-h-screen ${styles.bg} py-8 flex items-center justify-center`}>
         <div className="text-center">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4"></div>
-            <div className="h-4 bg-gray-300 rounded w-96 mx-auto"></div>
+            <div className={`h-8 ${styles.skeleton} rounded w-64 mx-auto mb-4`}></div>
+            <div className={`h-4 ${styles.skeleton} rounded w-96 mx-auto`}></div>
           </div>
         </div>
       </div>
@@ -186,15 +235,15 @@ export default function EditProjectPage() {
   }
 
   if (!isAuthenticated) {
-    return null // Will redirect in useEffect
+    return null
   }
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+      <div className={`min-h-screen ${styles.bg} py-8 flex items-center justify-center`}>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Project not found</h1>
-          <p className="text-gray-600 mb-4">The project you're looking for doesn't exist or you don't have permission to edit it.</p>
+          <h1 className={`text-2xl font-bold mb-2 ${styles.title}`}>Project not found</h1>
+          <p className={`mb-4 ${styles.subtitle}`}>The project you are looking for does not exist or you do not have permission to edit it.</p>
           <Button onClick={() => router.push('/my-projects')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to My Projects
@@ -205,7 +254,7 @@ export default function EditProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className={`min-h-screen ${styles.bg} py-8`}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center gap-4">
           <Button
@@ -216,8 +265,11 @@ export default function EditProjectPage() {
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Project</h1>
-            <p className="text-gray-600">
+            <div className="flex items-center gap-3 mb-1">
+              {styles.icon}
+              <h1 className={`text-3xl font-bold ${styles.title}`}>Edit Project</h1>
+            </div>
+            <p className={styles.subtitle}>
               Update your project details and resubmit for approval
             </p>
           </div>
@@ -231,7 +283,7 @@ export default function EditProjectPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="title" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Project Title *
                 </label>
                 <Input
@@ -240,12 +292,12 @@ export default function EditProjectPage() {
                   placeholder="Enter your project title"
                 />
                 {errors.title && (
-                  <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="description" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Short Description *
                 </label>
                 <Textarea
@@ -255,12 +307,12 @@ export default function EditProjectPage() {
                   rows={3}
                 />
                 {errors.description && (
-                  <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="long_description" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="long_description" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Detailed Description
                 </label>
                 <Textarea
@@ -280,7 +332,7 @@ export default function EditProjectPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label htmlFor="website_url" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="website_url" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Website URL *
                 </label>
                 <Input
@@ -290,12 +342,12 @@ export default function EditProjectPage() {
                   placeholder="https://yourproject.com"
                 />
                 {errors.website_url && (
-                  <p className="text-red-600 text-sm mt-1">{errors.website_url.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.website_url.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="github_url" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="github_url" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   GitHub URL
                 </label>
                 <Input
@@ -307,7 +359,7 @@ export default function EditProjectPage() {
               </div>
 
               <div>
-                <label htmlFor="demo_url" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="demo_url" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Live Demo URL
                 </label>
                 <Input
@@ -341,8 +393,8 @@ export default function EditProjectPage() {
               {watchedScreenshots.length > 0 && (
                 <div className="space-y-2">
                   {watchedScreenshots.map((url, index) => (
-                    <div key={index} className="flex items-center gap-2 bg-gray-100 p-2 rounded">
-                      <span className="flex-1 text-sm truncate">{url}</span>
+                    <div key={index} className={`flex items-center gap-2 p-2 ${styles.listItem} ${theme === 'wip' ? 'rounded-none' : theme === 'bright' ? 'rounded-xl' : 'rounded'}`}>
+                      <span className={`flex-1 text-sm truncate ${styles.subtitle}`}>{url}</span>
                       <Button
                         type="button"
                         variant="ghost"
@@ -394,7 +446,7 @@ export default function EditProjectPage() {
               )}
 
               {watchedTechStack.length === 0 && (
-                <p className="text-red-600 text-sm">At least one technology is required</p>
+                <p className="text-red-500 text-sm">At least one technology is required</p>
               )}
             </CardContent>
           </Card>
@@ -423,8 +475,8 @@ export default function EditProjectPage() {
               </div>
               
               {/* Custom Categories Input */}
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-600 mb-2">Or add custom categories:</p>
+              <div className={`mt-4 pt-4 border-t ${styles.divider}`}>
+                <p className={`text-sm mb-2 ${styles.subtitle}`}>Or add custom categories:</p>
                 <div className="flex gap-2">
                   <Input
                     value={currentCategory}
@@ -456,7 +508,7 @@ export default function EditProjectPage() {
               </div>
 
               {watchedTagIds.length === 0 && customCategories.length === 0 && (
-                <p className="text-red-600 text-sm mt-2">At least one category is required</p>
+                <p className="text-red-500 text-sm mt-2">At least one category is required</p>
               )}
             </CardContent>
           </Card>

@@ -3,12 +3,12 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { UserPlus } from 'lucide-react'
+import { UserPlus, Terminal, Zap, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { useApp } from '@/contexts/AppContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { UserCreate } from '@/types/api'
 import { apiClient } from '@/lib/api'
 import { Modal } from '@/components/ui/Modal'
@@ -16,8 +16,8 @@ import { useModal } from '@/hooks/useModal'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { setUser } = useApp()
   const { t, isLoaded } = useLanguage()
+  const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [kennitalaDisplay, setKennitalaDisplay] = useState('')
@@ -25,16 +25,9 @@ export default function RegisterPage() {
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<UserCreate & { confirmPassword: string }>()
 
-  const password = watch('password')
-
   const formatKennitala = (value: string) => {
-    // Remove all non-digit characters
     const digits = value.replace(/\D/g, '')
-
-    // Limit to 10 digits
     const limited = digits.slice(0, 10)
-
-    // Add dash after 6 digits
     if (limited.length > 6) {
       return `${limited.slice(0, 6)}-${limited.slice(6)}`
     }
@@ -44,8 +37,6 @@ export default function RegisterPage() {
   const handleKennitalaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatKennitala(e.target.value)
     setKennitalaDisplay(formatted)
-
-    // Store only digits in the form
     const digitsOnly = formatted.replace(/\D/g, '')
     setValue('kennitala', digitsOnly)
   }
@@ -60,43 +51,93 @@ export default function RegisterPage() {
         return
       }
 
-      const { confirmPassword, ...userData } = data
+      const { confirmPassword: _, ...userData } = data
       await apiClient.register(userData)
       showSuccess(
         'Registration Successful!',
         'Your account has been created. Please sign in with your credentials.',
         () => router.push('/login')
       )
-    } catch (error: any) {
-      console.error('Registration error:', error)
-      // Display backend error message if available
-      const errorMessage = error?.message || 'Registration failed. Please try again.'
+    } catch (err) {
+      console.error('Registration error:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.'
       setError(errorMessage)
     } finally {
       setLoading(false)
     }
   }
 
-  // Show loading while translations are loading
+  const getPageStyles = () => {
+    switch (theme) {
+      case 'wip':
+        return {
+          bg: 'bg-[#0d0d0d]',
+          title: 'text-[#e5e5e5] font-mono',
+          subtitle: 'text-[#737373]',
+          label: 'text-[#a3a3a3] font-mono text-xs uppercase tracking-wider',
+          error: 'bg-[#dc2626]/10 border border-[#dc2626]/30 text-[#dc2626] rounded-none',
+          link: 'text-[#22c55e] hover:text-[#16a34a]',
+          linkText: 'text-[#737373]',
+          icon: <Terminal className="w-6 h-6 text-[#22c55e]" />,
+        }
+      case 'futuristic':
+        return {
+          bg: 'bg-[#030712]',
+          title: 'text-white',
+          subtitle: 'text-[#64748b]',
+          label: 'text-[#94a3b8]',
+          error: 'bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg',
+          link: 'text-cyan-400 hover:text-cyan-300',
+          linkText: 'text-[#64748b]',
+          icon: <Zap className="w-6 h-6 text-cyan-400" />,
+        }
+      case 'bright':
+        return {
+          bg: 'bg-gradient-to-br from-orange-50 via-white to-pink-50',
+          title: 'text-gray-900',
+          subtitle: 'text-gray-600',
+          label: 'text-gray-700',
+          error: 'bg-red-50 border border-red-200 text-red-600 rounded-xl',
+          link: 'text-orange-600 hover:text-orange-500',
+          linkText: 'text-gray-600',
+          icon: <Sparkles className="w-6 h-6 text-orange-500" />,
+        }
+      default:
+        return {
+          bg: 'bg-gray-50',
+          title: 'text-gray-900',
+          subtitle: 'text-gray-600',
+          label: 'text-gray-700',
+          error: 'bg-red-50 border border-red-200 text-red-600 rounded-md',
+          link: 'text-blue-600 hover:text-blue-500',
+          linkText: 'text-gray-600',
+          icon: <UserPlus className="w-6 h-6 text-blue-600" />,
+        }
+    }
+  }
+
+  const styles = getPageStyles()
+
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen ${styles.bg} flex items-center justify-center`}>
         <div className="text-center">
-          <UserPlus className="w-8 h-8 text-blue-600 mx-auto mb-4 animate-pulse" />
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-pulse">{styles.icon}</div>
+          <p className={styles.subtitle}>Loading...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className={`min-h-screen ${styles.bg} flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8`}>
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <div className="flex justify-center mb-4">{styles.icon}</div>
+          <h2 className={`text-3xl font-bold ${styles.title}`}>
             {t('auth.signUpTitle')}
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className={`mt-2 text-sm ${styles.subtitle}`}>
             {t('auth.signUpSubtitle')}
           </p>
         </div>
@@ -112,7 +153,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="first_name" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                     {t('auth.firstName')} *
                   </label>
                   <Input
@@ -121,12 +162,12 @@ export default function RegisterPage() {
                     placeholder={t('auth.enterFirstName')}
                   />
                   {errors.first_name && (
-                    <p className="text-red-600 text-sm mt-1">{errors.first_name.message}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors.first_name.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="last_name" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                     {t('auth.lastName')} *
                   </label>
                   <Input
@@ -135,13 +176,13 @@ export default function RegisterPage() {
                     placeholder={t('auth.enterLastName')}
                   />
                   {errors.last_name && (
-                    <p className="text-red-600 text-sm mt-1">{errors.last_name.message}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors.last_name.message}</p>
                   )}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Email *
                 </label>
                 <Input
@@ -151,12 +192,12 @@ export default function RegisterPage() {
                   placeholder="john@example.com"
                 />
                 {errors.email && (
-                  <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="username" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Username *
                 </label>
                 <Input
@@ -165,12 +206,12 @@ export default function RegisterPage() {
                   placeholder="johndoe"
                 />
                 {errors.username && (
-                  <p className="text-red-600 text-sm mt-1">{errors.username.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="kennitala" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="kennitala" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Kennitala *
                 </label>
                 <Input
@@ -191,12 +232,12 @@ export default function RegisterPage() {
                   })}
                 />
                 {errors.kennitala && (
-                  <p className="text-red-600 text-sm mt-1">{errors.kennitala.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.kennitala.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Password *
                 </label>
                 <Input
@@ -206,12 +247,12 @@ export default function RegisterPage() {
                   placeholder="Enter password"
                 />
                 {errors.password && (
-                  <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="confirmPassword" className={`block text-sm font-medium mb-1 ${styles.label}`}>
                   Confirm Password *
                 </label>
                 <Input
@@ -221,13 +262,13 @@ export default function RegisterPage() {
                   placeholder="Confirm password"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-red-600 text-sm mt-1">{errors.confirmPassword.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
                 )}
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-md p-3">
-                  <p className="text-red-600 text-sm">{error}</p>
+                <div className={`p-3 ${styles.error}`}>
+                  <p className="text-sm">{error}</p>
                 </div>
               )}
 
@@ -239,11 +280,11 @@ export default function RegisterPage() {
         </Card>
 
         <div className="text-center">
-          <p className="text-sm text-gray-600">
+          <p className={`text-sm ${styles.linkText}`}>
             Already have an account?{' '}
             <button
               onClick={() => router.push('/login')}
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className={`font-medium ${styles.link}`}
             >
               Sign in here
             </button>
