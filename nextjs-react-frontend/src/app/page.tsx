@@ -17,12 +17,12 @@ import { useTheme } from '@/contexts/ThemeContext'
 
 // Status items configuration
 const statusItems = [
-  { label: 'Basic project submission', completed: true },
-  { label: 'Project listing', completed: true },
-  { label: 'Weekly prizes', completed: true },
-  { label: 'Make the site Icelandic first', completed: false },
-  { label: 'User profiles', completed: false },
-  { label: 'Voting system', completed: false },
+  { label: 'Basic project submission', completed: true, inProgress: false },
+  { label: 'Weekly prizes (starting January 2026)', completed: true, inProgress: false },
+  { label: 'Project listing', completed: false, inProgress: true },
+  { label: 'Make the site Icelandic first', completed: false, inProgress: false },
+  { label: 'User profiles', completed: false, inProgress: false },
+  { label: 'Voting system', completed: false, inProgress: false },
 
 ]
 

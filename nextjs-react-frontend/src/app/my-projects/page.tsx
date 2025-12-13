@@ -306,7 +306,7 @@ export default function MyProjectsPage() {
           </div>
         )}
 
-        {/* Stats Summary */}
+        {/* Stats Summary
         {projects.length > 0 && (
           <Card className="mt-8">
             <CardHeader>
@@ -339,7 +339,7 @@ export default function MyProjectsPage() {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
       </div>
     </div>
   )

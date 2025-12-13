@@ -1,7 +1,8 @@
-from ninja import Schema
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
+
+from ninja import Schema
 
 
 class UserCreate(Schema):
@@ -19,7 +20,7 @@ class UserResponse(Schema):
     username: str
     first_name: str
     last_name: str
-    kennitala: str
+    kennitala: str | None
     is_verified: bool
     created_at: datetime
 
