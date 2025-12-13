@@ -172,7 +172,7 @@ export function Header() {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Theme Switcher */}
-            <ThemeSwitcher />
+            { /* <ThemeSwitcher /> */}
 
             {isAuthenticated ? (
               <div className="flex items-center space-x-3">

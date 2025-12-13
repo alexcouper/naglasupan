@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { 
+import {
   Code2, ArrowRight, Terminal, Wrench, Construction,
   Zap, Rocket, Binary, Cpu, Globe,
   Sparkles, Heart, Sun, PartyPopper, Lightbulb
@@ -14,6 +14,18 @@ import { useTheme } from '@/contexts/ThemeContext'
 // Theme 1: Work in Progress
 // Terminal-like, under construction, honest
 // ============================================
+
+// Status items configuration
+const statusItems = [
+  { label: 'Basic project submission', completed: true },
+  { label: 'Project listing', completed: true },
+  { label: 'Weekly prizes', completed: true },
+  { label: 'Make the site Icelandic first', completed: false },
+  { label: 'User profiles', completed: false },
+  { label: 'Voting system', completed: false },
+
+]
+
 function WIPHome() {
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-[#a3a3a3] font-mono">
@@ -40,7 +52,7 @@ function WIPHome() {
           </h1>
 
           <p className="text-lg text-[#737373] mb-8 max-w-2xl leading-relaxed">
-            We&apos;re building something new. Submit your project, get it listed, maybe win a prize eventually. 
+            We&apos;re building something new. Submit your project, get it listed, maybe win a prize eventually.
             It&apos;s early days — expect rough edges.
           </p>
 
@@ -77,29 +89,23 @@ function WIPHome() {
             <div className="border-l-2 border-[#333] pl-4">
               <h2 className="text-xl font-bold text-[#e5e5e5] mb-2"># Current status</h2>
               <ul className="space-y-1 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="text-[#22c55e]">[x]</span> Basic project submission
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-[#22c55e]">[x]</span> Project listing
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-[#fbbf24]">[ ]</span> User profiles
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-[#fbbf24]">[ ]</span> Voting system
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-[#fbbf24]">[ ]</span> Monthly prizes
-                </li>
+                {statusItems.map((item, index) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <span className={item.completed ? "text-[#22c55e]" : item.inProgress ? "text-[#3b82f6]" : "text-[#fbbf24]"}>
+                      {item.completed ? '[x]' : item.inProgress ? '[~]' : '[ ]'}
+                    </span>
+                    {item.label}
+                    {item.inProgress && <span className="text-[#3b82f6] text-xs">[IN PROGRESS]</span>}
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="border-l-2 border-[#333] pl-4">
               <h2 className="text-xl font-bold text-[#e5e5e5] mb-2"># Why?</h2>
               <p>
-                Iceland has a lot of builders making interesting things. 
-                This is an attempt to make them more visible.
+                Iceland has a lot of builders making interesting things.
+                This is an attempt to encourage them to continue, to make them more visible, and to give decent feedback.
               </p>
             </div>
           </div>
@@ -172,7 +178,7 @@ function FuturisticHome() {
       {/* Hero with grid background */}
       <section className="relative pt-20 pb-24 px-4 sm:px-6 lg:px-8">
         {/* Background grid */}
-        <div 
+        <div
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: `
@@ -182,7 +188,7 @@ function FuturisticHome() {
             backgroundSize: '50px 50px'
           }}
         />
-        
+
         {/* Gradient orbs */}
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
@@ -203,7 +209,7 @@ function FuturisticHome() {
           </h1>
 
           <p className="text-xl text-[#64748b] max-w-2xl mx-auto mb-10 leading-relaxed">
-            The launchpad for Iceland&apos;s most ambitious builders. 
+            The launchpad for Iceland&apos;s most ambitious builders.
             Submit your project. Get discovered. Win prizes.
           </p>
 
@@ -352,7 +358,7 @@ function BrightHome() {
           </h1>
 
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Iceland&apos;s happiest corner for side projects. Show off your work, 
+            Iceland&apos;s happiest corner for side projects. Show off your work,
             discover cool stuff, and maybe win something nice!
           </p>
 
