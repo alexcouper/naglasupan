@@ -49,16 +49,16 @@ export default function ProjectsPage() {
   }
 
   const toggleTag = (tagSlug: string) => {
-    setFilters(prev => ({
+    setFilters((prev: ProjectFilters) => ({
       ...prev,
       tags: prev.tags?.includes(tagSlug)
-        ? prev.tags.filter(t => t !== tagSlug)
+        ? prev.tags.filter((t: string) => t !== tagSlug)
         : [...(prev.tags || []), tagSlug]
     }))
   }
 
   const toggleSort = () => {
-    setFilters(prev => ({
+    setFilters((prev: ProjectFilters) => ({
       ...prev,
       sort_order: prev.sort_order === 'desc' ? 'asc' : 'desc'
     }))
@@ -156,7 +156,7 @@ export default function ProjectsPage() {
                 type="text"
                 placeholder={t('projects.search')}
                 value={filters.search || ''}
-                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                onChange={(e) => setFilters((prev: ProjectFilters) => ({ ...prev, search: e.target.value }))}
                 className="pl-10"
               />
             </div>
@@ -190,7 +190,7 @@ export default function ProjectsPage() {
             <span className={`text-sm font-medium ${styles.filterLabel}`}>{t('projects.sortBy')}</span>
             <select
               value={filters.sort_by}
-              onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value as ProjectFilters['sort_by'] }))}
+              onChange={(e) => setFilters((prev: ProjectFilters) => ({ ...prev, sort_by: e.target.value as ProjectFilters['sort_by'] }))}
               className={`${theme === 'wip' ? 'rounded-none' : theme === 'bright' ? 'rounded-xl' : 'rounded-md'} border px-3 py-1 text-sm ${styles.selectBg}`}
             >
               <option value="created_at">{t('projects.sortOptions.createdAt')}</option>
@@ -219,14 +219,14 @@ export default function ProjectsPage() {
                 <Badge variant="secondary">
                   Search: {filters.search}
                   <button
-                    onClick={() => setFilters(prev => ({ ...prev, search: '' }))}
+                    onClick={() => setFilters((prev: ProjectFilters) => ({ ...prev, search: '' }))}
                     className="ml-1 hover:text-red-600"
                   >
                     ×
                   </button>
                 </Badge>
               )}
-              {filters.tags?.map(tagSlug => {
+              {filters.tags?.map((tagSlug: string) => {
                 const tag = tags.find(t => t.slug === tagSlug)
                 return (
                   <Badge key={tagSlug} variant="secondary">
@@ -243,7 +243,7 @@ export default function ProjectsPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setFilters(prev => ({ ...prev, search: '', tags: [] }))}
+                onClick={() => setFilters((prev: ProjectFilters) => ({ ...prev, search: '', tags: [] }))}
               >
                 {t('projects.clearAll')}
               </Button>

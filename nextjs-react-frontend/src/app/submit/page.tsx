@@ -52,7 +52,10 @@ export default function SubmitProjectPage() {
 
       const projectData: ProjectCreate = {
         url: normalizeUrl(data.url),
-        description: data.description || undefined
+        description: data.description || undefined,
+        screenshot_urls: [],
+        tech_stack: [],
+        tag_ids: []
       }
 
       await apiClient.createProject(projectData)

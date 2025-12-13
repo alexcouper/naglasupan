@@ -239,7 +239,7 @@ export default function ProfilePage() {
                 </label>
                 <Input
                   id="kennitala"
-                  value={user.kennitala}
+                  value={user.kennitala || ''}
                   disabled
                   className={styles.disabledInput}
                 />

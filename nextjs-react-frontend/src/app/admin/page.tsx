@@ -79,7 +79,11 @@ export default function AdminPage() {
 
   const handleApproveProject = async (projectId: string, approved: boolean) => {
     try {
-      await apiClient.approveProject(projectId, { approved })
+      const project = allProjects.find(p => p.id === projectId)
+      await apiClient.approveProject(projectId, {
+        approved,
+        is_featured: project?.is_featured || false
+      })
       loadData()
     } catch (error) {
       console.error('Error updating project:', error)
