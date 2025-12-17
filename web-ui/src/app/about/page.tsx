@@ -1,12 +1,12 @@
 import { Navigation } from "@/components/Navigation";
 
-export default function WhyPage() {
+export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white pt-16">
       <Navigation />
 
       <article className="article">
-        <h1>Why This Exists</h1>
+        <h1>About</h1>
 
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
