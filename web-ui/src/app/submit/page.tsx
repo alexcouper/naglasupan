@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth";
 import { apiClient } from "@/lib/api";
+import { Navigation } from "@/components/Navigation";
 
 export default function SubmitPage() {
   const router = useRouter();
@@ -51,14 +52,16 @@ export default function SubmitPage() {
 
   if (authLoading || !isAuthenticated) {
     return (
-      <main className="min-h-screen bg-grid-paper flex items-center justify-center">
+      <main className="min-h-screen bg-grid-paper flex items-center justify-center pt-16">
+        <Navigation />
         <p className="text-gray-600">Loading...</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4 pt-16">
+      <Navigation />
       <div className="w-full max-w-lg">
         <h1 className="font-sketch text-4xl text-center mb-8">Submit Your Project</h1>
 

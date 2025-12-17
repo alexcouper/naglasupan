@@ -1,16 +1,9 @@
-import Link from "next/link";
+import { Navigation } from "@/components/Navigation";
 
 export default function WhyPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <header className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center">
-        <Link href="/" className="text-gray-600 hover:text-gray-900">
-          &larr; Back
-        </Link>
-        <Link href="/login" className="text-accent hover:underline">
-          Log in
-        </Link>
-      </header>
+    <div className="min-h-screen bg-white pt-16">
+      <Navigation />
 
       <article className="article">
         <h1>Why This Exists</h1>

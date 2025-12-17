@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth";
+import { Navigation } from "@/components/Navigation";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -42,7 +43,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4 pt-16">
+      <Navigation />
       <div className="w-full max-w-md">
         <h1 className="font-sketch text-4xl text-center mb-8">Create Account</h1>
 

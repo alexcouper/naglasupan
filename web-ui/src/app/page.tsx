@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Navigation } from "@/components/Navigation";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4 pt-16">
+      <Navigation />
       <h1 className="font-sketch text-4xl md:text-5xl lg:text-6xl text-center text-foreground mb-16">
         All great things start small
       </h1>
