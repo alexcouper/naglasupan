@@ -7,16 +7,16 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'username', 'full_name', 'is_verified', 'is_active', 'is_staff', 'created_at', "kennitala")
+    list_display = ('email', 'full_name', 'is_verified', 'is_active', 'is_staff', 'created_at', "kennitala")
     list_filter = ('is_verified', 'is_active', 'is_staff', 'is_superuser', 'created_at')
-    search_fields = ('email', 'username', 'first_name', 'last_name')
+    search_fields = ('email', 'first_name', 'last_name', 'kennitala')
     ordering = ('-created_at',)
     filter_horizontal = ('groups', 'user_permissions')
     readonly_fields = ('id', 'created_at', 'updated_at', 'last_login')
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('username', 'first_name', 'last_name', "kennitala")}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', "kennitala")}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_verified', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -27,7 +27,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'password1', 'password2'),
+            'fields': ('email', 'kennitala', 'password1', 'password2'),
         }),
     )
 

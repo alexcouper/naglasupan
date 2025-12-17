@@ -1,5 +1,4 @@
 from ninja import Schema
-from typing import Optional
 
 
 class Token(Schema):
@@ -9,5 +8,5 @@ class Token(Schema):
 
 
 class LoginRequest(Schema):
-    username: str
+    email: str
     password: str
