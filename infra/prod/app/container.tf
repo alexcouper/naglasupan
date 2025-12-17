@@ -17,8 +17,7 @@ resource "scaleway_container" "backend" {
   deploy         = true
 
   environment_variables = {
-    DATABASE_HOST     = scaleway_sdb_sql_database.main.endpoint
-    DATABASE_NAME     = scaleway_sdb_sql_database.main.name
+    DATABASE_URL     = scaleway_sdb_sql_database.main.endpoint
   }
 }
 
