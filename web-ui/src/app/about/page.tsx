@@ -1,11 +1,8 @@
-import { Navigation } from "@/components/Navigation";
-
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white pt-16">
-      <Navigation />
+    <div className="min-h-screen bg-grid-paper pt-16">
 
-      <article className="article">
+      <article className="article content-wrapper">
         <h1>About</h1>
 
         <p>

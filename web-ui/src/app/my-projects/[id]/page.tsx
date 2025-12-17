@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth";
 import { apiClient, Project } from "@/lib/api";
-import { Navigation } from "@/components/Navigation";
 
 function StatusBadge({ status }: { status: string }) {
   const styles = {
@@ -63,22 +62,24 @@ export default function MyProjectPage() {
 
   if (authLoading || isLoading) {
     return (
-      <main className="min-h-screen bg-grid-paper flex items-center justify-center pt-16">
-        <Navigation />
-        <p className="text-gray-600">Loading...</p>
+      <main className="min-h-screen bg-grid-paper pt-16">
+        <div className="content-wrapper flex items-center justify-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4 pt-16">
-        <Navigation />
-        <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
-          <Link href="/" className="text-accent hover:underline">
-            &larr; Back to home
-          </Link>
+      <main className="min-h-screen bg-grid-paper pt-16">
+        <div className="content-wrapper flex flex-col items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">{error}</p>
+            <Link href="/" className="text-accent hover:underline">
+              &larr; Back to home
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -86,22 +87,23 @@ export default function MyProjectPage() {
 
   if (!project) {
     return (
-      <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4 pt-16">
-        <Navigation />
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Project not found</p>
-          <Link href="/" className="text-accent hover:underline">
-            &larr; Back to home
-          </Link>
+      <main className="min-h-screen bg-grid-paper pt-16">
+        <div className="content-wrapper flex flex-col items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-600 mb-4">Project not found</p>
+            <Link href="/" className="text-accent hover:underline">
+              &larr; Back to home
+            </Link>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-grid-paper py-12 px-4 pt-20">
-      <Navigation />
-      <div className="max-w-2xl mx-auto">
+    <main className="min-h-screen bg-grid-paper pt-16">
+      <div className="content-wrapper">
+        <div className="max-w-2xl mx-auto">
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="flex items-start justify-between mb-6">
@@ -165,6 +167,7 @@ export default function MyProjectPage() {
           <Link href="/submit" className="text-accent hover:underline">
             Submit another project
           </Link>
+        </div>
         </div>
       </div>
     </main>
