@@ -7,8 +7,8 @@ resource "scaleway_container_namespace" "main" {
 resource "scaleway_container" "backend" {
   name           = "backend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "docker.io/library/nginx:alpine"
-  port           = 80
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:3"
+  port           = 8000
   cpu_limit      = 256
   memory_limit   = 512
   min_scale      = 0

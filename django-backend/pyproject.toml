@@ -8,6 +8,7 @@ dependencies = [
     "django>=4.2",
     "django-cors-headers>=4.9.0",
     "django-ninja>=1.0",
+    "gunicorn>=23.0.0",
     "passlib[bcrypt]>=1.7",
     "psycopg2-binary>=2.9",
     "pyjwt[crypto]>=2.8",

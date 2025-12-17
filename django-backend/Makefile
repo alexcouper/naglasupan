@@ -39,3 +39,9 @@ extract-openapi:
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -type d -exec rm -rf {} +
+
+build:
+	docker build -t rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:$(TAG) --platform=linux/amd64 .
+
+publish:
+	docker push rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:$(TAG)
