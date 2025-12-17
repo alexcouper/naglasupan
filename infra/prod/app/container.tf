@@ -15,4 +15,22 @@ resource "scaleway_container" "backend" {
   max_scale      = 1
   privacy        = "public"
   deploy         = true
+
+  environment_variables = {
+    DATABASE_HOST     = scaleway_sdb_sql_database.main.endpoint
+    DATABASE_NAME     = scaleway_sdb_sql_database.main.name
+  }
+}
+
+resource "scaleway_container" "frontend" {
+  name           = "frontend"
+  namespace_id   = scaleway_container_namespace.main.id
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:1"
+  port           = 3000
+  cpu_limit      = 256
+  memory_limit   = 512
+  min_scale      = 0
+  max_scale      = 1
+  privacy        = "public"
+  deploy         = true
 }
