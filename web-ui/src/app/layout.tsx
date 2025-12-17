@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Caveat } from "next/font/google";
+import { AuthProvider } from "@/contexts/auth";
 import "./globals.css";
 
 const inter = Inter({
@@ -25,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${caveat.variable} antialiased`}>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
