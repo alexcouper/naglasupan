@@ -15,7 +15,7 @@ const caveat = Caveat({
 
 export const metadata: Metadata = {
   title: "Side Projects",
-  description: "All great things started small",
+  description: "All great things start small",
 };
 
 export default function RootLayout({
