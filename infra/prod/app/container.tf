@@ -32,7 +32,7 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:2"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:2.1"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512
@@ -42,6 +42,6 @@ resource "scaleway_container" "frontend" {
   deploy         = true
 
   environment_variables = {
-    NEXT_PUBLIC_API_URL = "https://sideprojectprodaa67l9qf-backend.functions.fnc.fr-par.scw.cloud"
+    API_URL = "https://sideprojectprodaa67l9qf-backend.functions.fnc.fr-par.scw.cloud"
   }
 }
