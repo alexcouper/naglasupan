@@ -66,6 +66,14 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
       setError(result.error);
     } else if (result.project) {
       setProject(result.project);
+      if (!formInitialized) {
+        setFormData({
+          title: result.project.title,
+          website_url: result.project.website_url,
+          description: result.project.description,
+        });
+        setFormInitialized(true);
+      }
     }
     setIsLoading(false);
   };

@@ -1,5 +1,7 @@
+APP:=web-ui
 .PHONY: help install dev build-app lint clean build publish
 
+include ../../scripts/app-common.mk
 help:
 	@echo "Available commands:"
 	@echo "  install       Install dependencies"
@@ -26,8 +28,3 @@ clean:
 	rm -rf .next
 	rm -rf node_modules
 
-build:
-	docker build -t rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:$(TAG) --platform=linux/amd64 .
-
-publish:
-	docker push rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:$(TAG)
