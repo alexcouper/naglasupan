@@ -16,6 +16,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, kennitala: string) => Promise<void>;
   logout: () => void;
+  getToken: () => string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,6 +67,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const getToken = (): string | null => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("access_token");
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -75,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        getToken,
       }}
     >
       {children}
