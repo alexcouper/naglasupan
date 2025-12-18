@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth";
 import { fetchMyProjects } from "@/app/actions";
-import type { Project } from "@/lib/api-server";
+import type { Project } from "@/lib/api";
 
 function StatusBadge({ status }: { status: string }) {
   const styles = {

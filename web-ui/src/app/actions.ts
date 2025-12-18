@@ -1,6 +1,7 @@
 "use server";
 
-import { getMyProjectsServer, getMyProjectServer, Project } from "@/lib/api-server";
+import { getMyProjectsServer, getMyProjectServer } from "@/lib/api-server";
+import type { Project } from "@/lib/api";
 
 export async function fetchMyProjects(token: string): Promise<{ projects?: Project[]; error?: string }> {
   try {
