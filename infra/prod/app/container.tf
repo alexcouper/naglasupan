@@ -19,12 +19,12 @@ resource "scaleway_container" "backend" {
   environment_variables = {
     DATABASE_URL   = scaleway_sdb_sql_database.main.endpoint
     SCW_ACCESS_KEY = scaleway_iam_api_key.backend.access_key
-    PGUSER        = scaleway_iam_application.backend.id
+    PGUSER         = scaleway_iam_application.backend.id
   }
 
   secret_environment_variables = {
     SCW_SECRET_KEY = scaleway_iam_api_key.backend.secret_key
-    PGPASSWORD    = scaleway_iam_api_key.backend.secret_key
+    PGPASSWORD     = scaleway_iam_api_key.backend.secret_key
   }
 }
 

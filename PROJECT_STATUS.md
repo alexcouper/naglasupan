@@ -2,11 +2,6 @@
 
 Things are *almost* working, and yet also quite far.
 
-Database:
- - I can connect to the sql db from my machine, and I've created superuser and run migrate
-
-Web backend:
- - Can't see any logs in scaleway
 
 Web UI:
  - It's running here:http://sideprojectprodaa67l9qf-frontend.functions.fnc.fr-par.scw.cloud/login
