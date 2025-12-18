@@ -159,7 +159,10 @@ JWT_REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = DEBUG
+_cors_origins_env = os.getenv("CORS_ALLOWED_ORIGINS", "")
 CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in _cors_origins_env.split(",") if origin.strip()
+] if _cors_origins_env else [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",

@@ -7,7 +7,7 @@ resource "scaleway_container_namespace" "main" {
 resource "scaleway_container" "backend" {
   name           = "backend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:3.2"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:3.3"
   port           = 8000
   cpu_limit      = 256
   memory_limit   = 512
@@ -17,9 +17,10 @@ resource "scaleway_container" "backend" {
   deploy         = true
 
   environment_variables = {
-    DATABASE_URL   = scaleway_sdb_sql_database.main.endpoint
-    SCW_ACCESS_KEY = scaleway_iam_api_key.backend.access_key
-    PGUSER         = scaleway_iam_application.backend.id
+    DATABASE_URL         = scaleway_sdb_sql_database.main.endpoint
+    SCW_ACCESS_KEY       = scaleway_iam_api_key.backend.access_key
+    PGUSER               = scaleway_iam_application.backend.id
+    CORS_ALLOWED_ORIGINS = "https://sideprojectprodaa67l9qf-frontend.functions.fnc.fr-par.scw.cloud"
   }
 
   secret_environment_variables = {
@@ -31,7 +32,7 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:1"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:2"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512
@@ -39,4 +40,8 @@ resource "scaleway_container" "frontend" {
   max_scale      = 1
   privacy        = "public"
   deploy         = true
+
+  environment_variables = {
+    NEXT_PUBLIC_API_URL = "https://sideprojectprodaa67l9qf-backend.functions.fnc.fr-par.scw.cloud"
+  }
 }
