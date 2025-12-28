@@ -30,6 +30,12 @@ export function Navigation() {
           <Link href="/about" className={linkClass("/about")}>
             About
           </Link>
+          <Link href="/why" className={linkClass("/why")}>
+            Why
+          </Link>
+          <Link href="/prizes" className={linkClass("/prizes")}>
+            Prizes
+          </Link>
           {isAuthenticated && (
             <Link href="/my-projects" className={linkClass("/my-projects")}>
               My Projects
