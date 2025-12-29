@@ -33,14 +33,18 @@ export function Navigation() {
           <Link href="/prizes" className={linkClass("/prizes")}>
             Prizes
           </Link>
+          <span className="text-gray-400 cursor-not-allowed">
+            Projects <span className="text-xs">[Coming Soon]</span>
+          </span>
+
+        </div>
+
+        <div className="flex items-center gap-4">
           {isAuthenticated && (
             <Link href="/my-projects" className={linkClass("/my-projects")}>
               My Projects
             </Link>
           )}
-        </div>
-
-        <div className="flex items-center gap-4">
           {isLoading ? (
             <span className="text-gray-400 text-sm">...</span>
           ) : isAuthenticated ? (

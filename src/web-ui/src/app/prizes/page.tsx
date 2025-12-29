@@ -15,13 +15,9 @@ The starting prize is 50,000 ISK per week, to be awarded to the best project tha
 
 Projects must be built by Iceland-based developers. Projects can be at any stage of development, from idea to launched product.
 
-I'm not 100% sure what the criteria will be at this point, there'll be discussions on that as we go along.
-
 I want to encourage general software development too, so web apps, mobile apps, desktop apps, libraries, CLIs, etc are all fair game.
 
- - Novelty
- - Usefulness
- - Execution quality
+I'm not 100% sure what the judging criteria will be at this point, there'll be discussions on that as we go along.
 
 Initially the focus is on side projects, but if you have a full time project that you're working on that you're willing to share and get feedback on, that's fine too.
 
@@ -29,7 +25,7 @@ I'd like to get to multiple prizes in different categories, but that's for later
 
 ## Prize giving and selection
 
-To begin with I'll be picking the winners of the prizes.
+To begin with I'll be picking the winners of the prizes, and largely making it up as I go along.
 
 Prizes are weekly with a minimum group of 5 projects to judge between at least to begin with.
 
