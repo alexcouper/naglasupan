@@ -108,7 +108,7 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
     <>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
         <div className="flex items-start justify-between mb-6">
-          <h1 className="font-sketch text-3xl">{project.title || "Untitled Project"}</h1>
+          <h1 className="text-3xl">{project.title || "Untitled Project"}</h1>
           <StatusBadge status={project.status} />
         </div>
 

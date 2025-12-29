@@ -19,6 +19,10 @@ export default function Home() {
           Log in
         </Link>
       </p>
+
+      <div className="stamp mt-16">
+        <span className="stamp-text">Inaugural review date: 10 Jan 2026</span>
+      </div>
     </main>
   );
 }

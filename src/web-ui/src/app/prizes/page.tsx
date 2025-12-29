@@ -43,7 +43,6 @@ The prize pot is currently sponsored by Codalens ehf. Later we'll hopefully find
 
 This is an experiment. I have no idea if this will work, or how well it will be received.
 
-Please share your thoughts and feedback to help improve this.
 `
 
 export default async function PrizesPage() {

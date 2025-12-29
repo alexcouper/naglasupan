@@ -16,6 +16,7 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --font-sketch: var(--font-caveat);
+  --font-pt-mono: var(--font-pt-mono);
   --font-body: var(--font-inter);
 }
 
@@ -33,7 +34,7 @@ body {
   background-size: 24px 24px;
 }
 
-/* Sketchy font for headings on landing page */
+/* Typewriter font for headings on landing page */
 .font-sketch {
   font-family: var(--font-caveat), cursive;
 }
@@ -165,5 +166,39 @@ body {
 .btn-sketchy:hover {
   background-color: var(--accent-hover);
   transform: translate(-1px, -1px);
+}
+
+/* Rubber stamp style */
+.stamp {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  border: 3px solid #c41e3a;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  opacity: 0.85;
+  position: relative;
+}
+
+.stamp::before {
+  content: "";
+  position: absolute;
+  border: 2px solid #c41e3a;
+  border-radius: 3px;
+}
+
+.stamp::before {
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+}
+
+.stamp-text {
+  font-family: var(--font-pt-mono), monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #c41e3a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 

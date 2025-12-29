@@ -63,7 +63,7 @@ export default function SubmitPage() {
     <main className="min-h-screen bg-grid-paper pt-16">
       <div className="content-wrapper flex flex-col items-center justify-center">
         <div className="w-full max-w-lg">
-          <h1 className="font-sketch text-4xl text-center mb-8">Submit Your Project</h1>
+          <h1 className="text-3xl text-center mb-8">Submit Your Project</h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
