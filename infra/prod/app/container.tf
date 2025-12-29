@@ -11,7 +11,7 @@ resource "scaleway_container" "backend" {
   port           = 8000
   cpu_limit      = 256
   memory_limit   = 512
-  min_scale      = 0
+  min_scale      = 1
   max_scale      = 1
   privacy        = "public"
   deploy         = true

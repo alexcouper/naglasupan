@@ -88,9 +88,14 @@ export default function SubmitPage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium mb-2">
-                Description
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="description" className="text-sm font-medium">
+                  Description
+                </label>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                  Markdown supported
+                </span>
+              </div>
               <textarea
                 id="description"
                 required
