@@ -20,7 +20,7 @@ resource "scaleway_container" "backend" {
     DATABASE_URL         = scaleway_sdb_sql_database.main.endpoint
     SCW_ACCESS_KEY       = scaleway_iam_api_key.backend.access_key
     PGUSER               = scaleway_iam_application.backend.id
-    CORS_ALLOWED_ORIGINS = "https://sideprojectprodaa67l9qf-frontend.functions.fnc.fr-par.scw.cloud"
+    CORS_ALLOWED_ORIGINS = "https://naglasupan.is"
   }
 
   secret_environment_variables = {
@@ -42,6 +42,6 @@ resource "scaleway_container" "frontend" {
   deploy         = true
 
   environment_variables = {
-    API_URL = "https://sideprojectprodaa67l9qf-backend.functions.fnc.fr-par.scw.cloud"
+    API_URL = "https://api.naglasupan.is"
   }
 }
