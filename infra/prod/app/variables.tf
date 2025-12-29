@@ -21,3 +21,10 @@ variable "environment" {
   type        = string
   default     = "prod"
 }
+
+variable "domain" {
+  description = "Root domain name"
+  type        = string
+  default     = "naglasupan.is"
+}
+
