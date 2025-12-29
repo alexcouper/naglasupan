@@ -27,9 +27,6 @@ export function Navigation() {
           <Link href="/" className={linkClass("/")}>
             Home
           </Link>
-          <Link href="/about" className={linkClass("/about")}>
-            About
-          </Link>
           <Link href="/why" className={linkClass("/why")}>
             Why
           </Link>

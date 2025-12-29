@@ -38,8 +38,11 @@ Iceland would be better off if more of our key services were built and hosted he
 
 We face increasing geopolitical risk, and we need to take steps to mitigate that.
 
-I want to help foster a community of builders that can start to address this initially by incentivizing eg. using Iceland based solutions in the submitted projects. Later, I hope we can swarm on building bigger pieces of infrastructure needed
+I want to begin by encouraging a community of builders to use each other's side projects but later to identify opportunities for and enable swarming on building bigger shared infrastructure.
 
+It's ambitious, but you've got to start somewhere.
+
+So get submitting!
 `
 
 export default async function WhyPage() {

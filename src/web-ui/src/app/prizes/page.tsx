@@ -4,17 +4,12 @@ import { remark } from 'remark';
 
 
 const prizes = `
-
-
 # Prizes
 
 ## Prize pot
 
-The starting prize pot size is 50,000 ISK per week, to be awarded to the best projects that week.
+The starting prize is 50,000 ISK per week, to be awarded to the best project that week.
 
-## Sponsorship
-
-Projects are currently sponsored by Codalens ehf. Hopefully later we can find more companies in the community that are willing to contribute to the prize pot.
 
 ## Eligibility
 
@@ -27,7 +22,6 @@ I want to encourage general software development too, so web apps, mobile apps, 
  - Novelty
  - Usefulness
  - Execution quality
- - Digital sovereignty score (points based on hosting choices)
 
 Initially the focus is on side projects, but if you have a full time project that you're working on that you're willing to share and get feedback on, that's fine too.
 
@@ -40,6 +34,10 @@ To begin with I'll be picking the winners of the prizes.
 Prizes are weekly with a minimum group of 5 projects to judge between at least to begin with.
 
 Prize sizes and quantity will depend on sponsorships, but we're good for few months @ 50k per week.
+
+## Sponsorship
+
+The prize pot is currently sponsored by Codalens ehf. Later we'll hopefully find more companies in the community that are willing to contribute.
 
 ## ATH: Þetta er naglasupa
 
