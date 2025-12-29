@@ -21,6 +21,7 @@ resource "scaleway_container" "backend" {
     SCW_ACCESS_KEY       = scaleway_iam_api_key.backend.access_key
     PGUSER               = scaleway_iam_application.backend.id
     CORS_ALLOWED_ORIGINS = "https://naglasupan.is"
+    ADMIN_ALLOWED_IPS    = "157.97.17.17"
   }
 
   secret_environment_variables = {
