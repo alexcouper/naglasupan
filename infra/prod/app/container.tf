@@ -7,7 +7,7 @@ resource "scaleway_container_namespace" "main" {
 resource "scaleway_container" "backend" {
   name           = "backend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:xvquolsxmlpt-0e9d65ed41af"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:tykrpnkvwztt-6e093f710c5b"
   port           = 8000
   cpu_limit      = 256
   memory_limit   = 512
@@ -34,7 +34,7 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:xvquolsxmlpt-729cb30c3567"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:tykrpnkvwztt-49a4aba568a1"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512

@@ -27,17 +27,13 @@ I'd like to get to multiple prizes in different categories, but that's for later
 
 To begin with I'll be picking the winners of the prizes, and largely making it up as I go along.
 
-Prizes are weekly with a minimum group of 5 projects to judge between at least to begin with.
+Prizes are weekly with a minimum group of 5 projects to judge between, at least to begin with.
 
-Prize sizes and quantity will depend on sponsorships, but we're good for few months @ 50k per week.
-
-## Sponsorship
-
-The prize pot is currently sponsored by Codalens ehf. Later we'll hopefully find more companies in the community that are willing to contribute.
+Prize sizes and quantity will depend on sponsorships, but we're good for a few months @ 50k per week.
 
 ## ATH: Þetta er naglasupa
 
-This is an experiment. I have no idea if this will work, or how well it will be received.
+This is an experiment. I have no idea if this will work. All feedback is welcome.
 
 `
 
