@@ -8,8 +8,7 @@ const prizes = `
 
 ## Prize pot
 
-The starting prize is 50,000 ISK per week, to be awarded to the best project that week.
-
+The starting prize is 50,000 ISK, to be awarded to the best project submitted each prize period.
 
 ## Eligibility
 
@@ -27,13 +26,15 @@ I'd like to get to multiple prizes in different categories, but that's for later
 
 To begin with I'll be picking the winners of the prizes, and largely making it up as I go along.
 
-Prizes are weekly with a minimum group of 5 projects to judge between, at least to begin with.
+Soon though we'll vote on them, or have a panel of judges.
 
-Prize sizes and quantity will depend on sponsorships, but we're good for a few months @ 50k per week.
+Prize frequency will be variable dependent on uptake, but somewhere in the weekly-monthly range.
 
-## ATH: Þetta er naglasupa
+Prize sizes and quantity will depend on sponsorships, but we're good for a few months at least.
 
-This is an experiment. I have no idea if this will work. All feedback is welcome.
+## ATH: Þetta er naglasúpa
+
+This is a community project, and I have no idea if this will work. All feedback is welcome.
 
 `
 

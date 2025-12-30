@@ -21,7 +21,7 @@ const ptMono = PT_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "naglasupan",
+  title: "naglasúpan",
   description: "All great things start small",
 };
 

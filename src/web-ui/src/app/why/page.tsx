@@ -9,7 +9,7 @@ We should be more ambitious in terms of what we can achieve here in Iceland.
 
 I know there are lots of people here with side projects that they’re working on, or with ideas that seem too fragile to see the light of day. But we need them.
 
-We need them for the **solutions** they bring, for the **learning** and **collaboration** opportunities they offer, for the **jobs** they may create, and for the downstream **infrastructure** they may facilitate the creation of.
+We need them for the **solutions** they bring, for the **learning** and **collaboration** opportunities they offer, for the **jobs** they may create, and for the shared **infrastructure** they may facilitate the creation of.
 
 I wanted to build a space that encouraged Iceland-based developers to ship the things they're working on, to show it to others and to get feedback on it.
 

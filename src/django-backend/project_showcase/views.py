@@ -7,7 +7,7 @@ def home(request):
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>naglasupan</title>
+    <title>naglasúpan</title>
     <style>
         body {
             margin: 0;
@@ -24,7 +24,7 @@ def home(request):
     </style>
 </head>
 <body>
-    <img src="/static/naglasupan.svg" alt="Naglasupan">
+    <img src="/static/naglasupan.svg" alt="Naglasúpan">
 </body>
 </html>"""
     return HttpResponse(html)

@@ -34,7 +34,7 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:tykrpnkvwztt-49a4aba568a1"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:vkzqklrtpttw-2d121f8c133d"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512

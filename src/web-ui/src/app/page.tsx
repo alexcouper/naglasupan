@@ -21,7 +21,7 @@ export default function Home() {
       </p>
 
       <div className="stamp mt-16">
-        <span className="stamp-text">Inaugural review date: 10 Jan 2026</span>
+        <span className="stamp-text">Inaugural review date: 24 Jan 2026</span>
       </div>
     </main>
   );
