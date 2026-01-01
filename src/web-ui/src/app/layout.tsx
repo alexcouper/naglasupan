@@ -23,6 +23,24 @@ const ptMono = PT_Mono({
 export const metadata: Metadata = {
   title: "naglasúpan",
   description: "All great things start small",
+  openGraph: {
+    title: "naglasúpan",
+    description: "All great things start small",
+    images: [
+      {
+        url: "/naglasupan.png",
+        width: 595,
+        height: 539,
+        alt: "naglasúpan",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "naglasúpan",
+    description: "All great things start small",
+    images: ["/naglasupan.png"],
+  },
 };
 
 export default function RootLayout({
