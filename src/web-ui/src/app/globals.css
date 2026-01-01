@@ -34,7 +34,7 @@ body {
   background-size: 24px 24px;
 }
 
-/* Typewriter font for headings on landing page */
+/* Sketchy font for headings on landing page */
 .font-sketch {
   font-family: var(--font-caveat), cursive;
 }
@@ -87,7 +87,7 @@ body {
 .article h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-top: 3rem;
+  /* margin-top: 3rem; */
   margin-bottom: 1rem;
   line-height: 1.3;
 }

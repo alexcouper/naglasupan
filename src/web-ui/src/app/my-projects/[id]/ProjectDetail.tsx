@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/auth";
 import { fetchMyProject } from "@/app/actions";
 import type { Project } from "@/lib/api";
@@ -127,7 +128,9 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
 
           <div>
             <h2 className="text-sm font-medium text-gray-500 mb-1">Description</h2>
-            <p className="text-gray-700 whitespace-pre-wrap">{project.description}</p>
+            <article className="article text-gray-700">
+              <ReactMarkdown>{project.description}</ReactMarkdown>
+            </article>
           </div>
 
           <div>
