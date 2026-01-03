@@ -1,14 +1,16 @@
-from ninja import Schema
 from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
+
 from apps.projects.models import ProjectStatus
-from .user import UserResponse
+from ninja import Schema
+
 from .tag import TagResponse
+from .user import UserResponse
 
 
 class ProjectCreate(Schema):
-    url: str
+    website_url: str
     description: Optional[str] = None
     # Optional fields - will be filled by admin during review
     title: Optional[str] = None

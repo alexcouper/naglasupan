@@ -1,7 +1,9 @@
 import json
+
 import pytest
-from hamcrest import assert_that, equal_to, has_entries, has_length, is_, none
 from apps.projects.models import Project, ProjectStatus
+from hamcrest import assert_that, equal_to, has_entries, has_length, is_, none
+
 from tests.factories import ProjectFactory
 
 
@@ -18,7 +20,7 @@ class TestListMyProjects:
 
 class TestCreateProject:
     def test_create_project_with_url(self, client, user, auth_headers):
-        payload = {"url": "https://example.com", "description": "My project"}
+        payload = {"website_url": "https://example.com", "description": "My project"}
 
         response = client.post(
             "/api/my/projects",
@@ -39,7 +41,7 @@ class TestCreateProject:
 
     def test_create_project_with_all_fields(self, client, user, auth_headers, tags):
         payload = {
-            "url": "https://myproject.com",
+            "website_url": "https://myproject.com",
             "title": "My Project",
             "description": "A great project",
             "tag_ids": [str(t.id) for t in tags],
@@ -70,7 +72,7 @@ class TestGetMyProject:
 class TestUpdateProject:
     def test_update_project(self, client, project, auth_headers):
         payload = {
-            "url": "https://updated.com",
+            "website_url": "https://updated.com",
             "title": "Updated Title",
             "description": "Updated description",
         }
@@ -92,7 +94,7 @@ class TestUpdateProject:
         project = ProjectFactory(
             owner=user, status=ProjectStatus.REJECTED, rejection_reason="Bad project"
         )
-        payload = {"url": "https://fixed.com", "title": "Fixed Project", "description": "Updated"}
+        payload = {"website_url": "https://fixed.com", "title": "Fixed Project", "description": "Updated"}
 
         response = client.put(
             f"/api/my/projects/{project.id}",
@@ -182,7 +184,7 @@ class TestAuthorization:
     def test_update_other_users_project_returns_404(self, client, other_project, auth_headers):
         response = client.put(
             f"/api/my/projects/{other_project.id}",
-            data=json.dumps({"url": "https://hacked.com"}),
+            data=json.dumps({"website_url": "https://hacked.com"}),
             content_type="application/json",
             **auth_headers,
         )
@@ -200,3 +202,20 @@ class TestAuthorization:
         response = client.post(f"/api/my/projects/{project.id}/resubmit", **auth_headers)
 
         assert_that(response.status_code, equal_to(404))
+
+
+class TestGetTitleFromUrl:
+    def test_get_title_from_url(self):
+        from api.routers.my_projects import get_title_from_url
+
+        assert_that(get_title_from_url("https://www.example.com/path"), equal_to("example.com"))
+        assert_that(get_title_from_url("http://subdomain.example.com"), equal_to("subdomain.example.com"))
+        assert_that(get_title_from_url("https://example.com"), equal_to("example.com"))
+        assert_that(get_title_from_url("example.com/path"), equal_to("example.com"))
+        assert_that(get_title_from_url("www.example.com"), equal_to("example.com"))
+        assert_that(get_title_from_url(""), equal_to("Untitled Project"))
+
+    def test_special_handling_for_github_projects(self):
+        from api.routers.my_projects import get_title_from_url
+
+        assert_that(get_title_from_url("https://github.com/x/y", ), equal_to("y"))

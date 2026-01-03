@@ -1,4 +1,5 @@
 from typing import List
+from urllib.parse import urlparse
 
 from apps.projects.models import Project, ProjectStatus
 from apps.tags.models import Tag
@@ -19,6 +20,24 @@ def list_my_projects(request):
     return projects
 
 
+def get_title_from_url(url: str) -> str:
+    if not url.startswith(('http://', 'https://')):
+        url = 'http://' + url  # Add scheme if missing for proper parsing
+
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc or parsed_url.path
+
+    # Clean up the domain (remove www., etc.)
+    domain = domain.replace('www.', '')
+    if domain == "github.com":
+        # Special handling for GitHub URLs to extract repo name
+        path_parts = parsed_url.path.strip('/').split('/')
+        if len(path_parts) >= 2:
+            return path_parts[1]  # Return repo name
+
+    return domain or 'Untitled Project'
+
+
 @router.post("", response={201: ProjectResponse, 400: Error, 401: Error}, auth=auth, tags=["My Projects"])
 def create_project(request, payload: ProjectCreate):
     # Validate tag IDs exist (if provided)
@@ -27,19 +46,11 @@ def create_project(request, payload: ProjectCreate):
         return 400, {"detail": "One or more tag IDs are invalid"}
 
     # Prepare project data
-    project_data = payload.dict(exclude={'tag_ids', 'url'})
-
-    # Map 'url' to 'website_url'
-    project_data['website_url'] = payload.url
+    project_data = payload.dict(exclude={'tag_ids'})
 
     # Auto-generate title from URL if not provided
     if not project_data.get('title'):
-        from urllib.parse import urlparse
-        parsed_url = urlparse(payload.url)
-        domain = parsed_url.netloc or parsed_url.path
-        # Clean up the domain (remove www., etc.)
-        domain = domain.replace('www.', '')
-        project_data['title'] = domain or 'Untitled Project'
+        project_data['title'] = get_title_from_url(payload.website_url)
 
     # Create project
     project = Project.objects.create(owner=request.auth, **project_data)
@@ -72,10 +83,7 @@ def update_project(request, project_id: str, payload: ProjectCreate):
         return 400, {"detail": "One or more tag IDs are invalid"}
 
     # Prepare project data
-    project_data = payload.dict(exclude={'tag_ids', 'url'})
-
-    # Map 'url' to 'website_url'
-    project_data['website_url'] = payload.url
+    project_data = payload.dict(exclude={'tag_ids'})
 
     # Auto-generate title from URL if not provided
     if not project_data.get('title'):
