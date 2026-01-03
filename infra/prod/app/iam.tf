@@ -26,3 +26,15 @@ resource "scaleway_iam_policy" "backend_database" {
     permission_set_names = ["ServerlessSQLDatabaseFullAccess"]
   }
 }
+
+# IAM Policy granting Object Storage access to the backend
+resource "scaleway_iam_policy" "backend_object_storage" {
+  name           = "${var.project_name}-${var.environment}-backend-storage-access"
+  description    = "Policy granting backend access to Object Storage for image uploads"
+  application_id = scaleway_iam_application.backend.id
+
+  rule {
+    project_ids          = [data.scaleway_account_project.current.id]
+    permission_set_names = ["ObjectStorageFullAccess"]
+  }
+}

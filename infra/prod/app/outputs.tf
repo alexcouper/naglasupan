@@ -56,3 +56,19 @@ output "cockpit_token_secret_key" {
   sensitive   = true
   value       = scaleway_cockpit_token.containers.secret_key
 }
+
+# Object Storage outputs
+output "project_images_bucket_name" {
+  description = "Name of the bucket for project images"
+  value       = scaleway_object_bucket.project_images.name
+}
+
+output "project_images_bucket_endpoint" {
+  description = "Endpoint URL for the project images bucket"
+  value       = scaleway_object_bucket.project_images.endpoint
+}
+
+output "project_images_public_url" {
+  description = "Public URL base for accessing project images"
+  value       = "https://${scaleway_object_bucket.project_images.name}.s3.${var.region}.scw.cloud"
+}

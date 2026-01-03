@@ -7,7 +7,7 @@ resource "scaleway_container_namespace" "main" {
 resource "scaleway_container" "backend" {
   name           = "backend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:wkylrsxxrruz-fccdd764c222"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:zntzxoxxurml-b69d1eafe1b8"
   port           = 8000
   cpu_limit      = 256
   memory_limit   = 512
@@ -23,6 +23,11 @@ resource "scaleway_container" "backend" {
     PGUSER               = scaleway_iam_application.backend.id
     CORS_ALLOWED_ORIGINS = "https://naglasupan.is"
     ADMIN_ALLOWED_IPS    = "157.97.17.17"
+    # S3/Object Storage settings for image uploads
+    S3_BUCKET_NAME     = scaleway_object_bucket.project_images.name
+    S3_ENDPOINT_URL    = "https://s3.${var.region}.scw.cloud"
+    S3_REGION          = var.region
+    S3_PUBLIC_URL_BASE = "https://${scaleway_object_bucket.project_images.name}.s3.${var.region}.scw.cloud"
   }
 
   secret_environment_variables = {
@@ -34,7 +39,7 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:wkylrsxxrruz-fccdd764c222"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:zntzxoxxurml-b69d1eafe1b8"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512
