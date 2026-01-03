@@ -1,5 +1,6 @@
 import factory
 from django.contrib.auth import get_user_model
+
 from apps.projects.models import Project, ProjectStatus
 from apps.tags.models import Tag
 
@@ -48,7 +49,7 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     submission_month = factory.LazyFunction(lambda: "2025-01")
 
     @factory.post_generation
-    def tags(self, create, extracted, **kwargs):
+    def tags(self, create, extracted, **kwargs) -> None:
         if not create or not extracted:
             return
         self.tags.add(*extracted)

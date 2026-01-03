@@ -1,5 +1,5 @@
 APP:=django-backend
-.PHONY: help install dev migrate makemigrations shell test createsuperuser clean extract-openapi
+.PHONY: help install dev migrate makemigrations shell test createsuperuser clean extract-openapi lint
 
 include ../../scripts/app-common.mk
 
@@ -13,6 +13,7 @@ help:
 	@echo "  test          Run tests"
 	@echo "  createsuperuser Create superuser"
 	@echo "  extract-openapi Extract OpenAPI specification to openapi.json"
+	@echo "  lint          Run ruff linter and formatter check"
 	@echo "  clean         Clean cache files"
 
 install:
@@ -42,3 +43,7 @@ extract-openapi:
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -type d -exec rm -rf {} +
+
+lint:
+	uv run ruff check .
+	uv run ruff format --check .

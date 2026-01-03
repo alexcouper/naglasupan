@@ -1,7 +1,8 @@
 import pytest
 from django.test import Client
+
 from api.auth.jwt import create_access_token, create_refresh_token
-from tests.factories import UserFactory, ProjectFactory, TagFactory
+from tests.factories import ProjectFactory, TagFactory, UserFactory
 
 
 @pytest.fixture

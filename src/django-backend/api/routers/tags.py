@@ -1,12 +1,13 @@
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from ninja import Router
-from typing import List
-from apps.tags.models import Tag
+
 from api.schemas.tag import TagResponse
+from apps.tags.models import Tag
 
 router = Router()
 
 
-@router.get("", response={200: List[TagResponse]}, tags=["Tags"])
-def list_tags(request):
-    tags = Tag.objects.all()
-    return tags
+@router.get("", response={200: list[TagResponse]}, tags=["Tags"])
+def list_tags(request: HttpRequest) -> QuerySet[Tag]:
+    return Tag.objects.all()

@@ -1,5 +1,4 @@
-"""
-ASGI config for project_showcase project.
+"""ASGI config for project_showcase project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

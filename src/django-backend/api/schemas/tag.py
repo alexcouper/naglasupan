@@ -1,18 +1,18 @@
-from ninja import Schema
-from typing import Optional
 from uuid import UUID
+
+from ninja import Schema
 
 
 class TagCreate(Schema):
     name: str
     slug: str
-    description: Optional[str] = None
-    color: Optional[str] = None
+    description: str | None = None
+    color: str | None = None
 
 
 class TagResponse(Schema):
     id: UUID
     name: str
     slug: str
-    description: Optional[str]
-    color: Optional[str]
+    description: str | None
+    color: str | None

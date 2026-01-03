@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from ninja import Schema
@@ -24,5 +23,5 @@ class UserResponse(Schema):
 
 
 class UserUpdate(Schema):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
+    first_name: str | None = None
+    last_name: str | None = None

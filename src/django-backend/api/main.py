@@ -1,10 +1,14 @@
+from typing import Any
+
+from django.http import HttpRequest
 from ninja import NinjaAPI
-from api.routers import auth, projects, my_projects, tags, admin
+
+from api.routers import admin, auth, my_projects, projects, tags
 
 api = NinjaAPI(
     title="Project Showcase API",
     description="API for developer project showcasing platform",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Add routers
@@ -16,10 +20,10 @@ api.add_router("/admin", admin.router)
 
 
 @api.get("/")
-def root(request):
+def root(request: HttpRequest) -> dict[str, Any]:
     return {"message": "Project Showcase API"}
 
 
 @api.get("/health")
-def health_check(request):
+def health_check(request: HttpRequest) -> dict[str, Any]:
     return {"status": "healthy"}

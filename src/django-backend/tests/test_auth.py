@@ -1,8 +1,7 @@
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
-from api.auth.jwt import create_refresh_token, verify_token
 from django.conf import settings
 from hamcrest import (
     assert_that,
@@ -11,13 +10,17 @@ from hamcrest import (
     is_not,
 )
 
+from api.auth.jwt import create_refresh_token, verify_token
 from tests.factories import UserFactory
 
 
 class TestRefreshToken:
     def test_refresh_with_valid_token_returns_new_access_token(
-        self, client, user, refresh_token
-    ):
+        self,
+        client,
+        user,
+        refresh_token,
+    ) -> None:
         response = client.post(
             "/api/auth/refresh",
             data=json.dumps({"refresh_token": refresh_token}),
@@ -36,7 +39,7 @@ class TestRefreshToken:
         assert_that(payload["user_id"], equal_to(str(user.id)))
         assert_that(payload["type"], equal_to("access"))
 
-    def test_refresh_with_invalid_token_returns_401(self, client):
+    def test_refresh_with_invalid_token_returns_401(self, client) -> None:
         response = client.post(
             "/api/auth/refresh",
             data=json.dumps({"refresh_token": "invalid-token"}),
@@ -44,18 +47,23 @@ class TestRefreshToken:
         )
 
         assert_that(response.status_code, equal_to(401))
-        assert_that(response.json(), has_entries(detail="Invalid or expired refresh token"))
+        assert_that(
+            response.json(),
+            has_entries(detail="Invalid or expired refresh token"),
+        )
 
-    def test_refresh_with_expired_token_returns_401(self, client, user):
+    def test_refresh_with_expired_token_returns_401(self, client, user) -> None:
         # Create an expired refresh token
         payload = {
             "user_id": str(user.id),
-            "exp": datetime.now(tz=timezone.utc) - timedelta(days=1),
-            "iat": datetime.now(tz=timezone.utc) - timedelta(days=8),
+            "exp": datetime.now(tz=UTC) - timedelta(days=1),
+            "iat": datetime.now(tz=UTC) - timedelta(days=8),
             "type": "refresh",
         }
         expired_token = jwt.encode(
-            payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+            payload,
+            settings.JWT_SECRET_KEY,
+            algorithm=settings.JWT_ALGORITHM,
         )
 
         response = client.post(
@@ -65,9 +73,12 @@ class TestRefreshToken:
         )
 
         assert_that(response.status_code, equal_to(401))
-        assert_that(response.json(), has_entries(detail="Invalid or expired refresh token"))
+        assert_that(
+            response.json(),
+            has_entries(detail="Invalid or expired refresh token"),
+        )
 
-    def test_refresh_with_access_token_returns_401(self, client, access_token):
+    def test_refresh_with_access_token_returns_401(self, client, access_token) -> None:
         response = client.post(
             "/api/auth/refresh",
             data=json.dumps({"refresh_token": access_token}),
@@ -77,7 +88,7 @@ class TestRefreshToken:
         assert_that(response.status_code, equal_to(401))
         assert_that(response.json(), has_entries(detail="Invalid token type"))
 
-    def test_refresh_with_nonexistent_user_returns_401(self, client, user):
+    def test_refresh_with_nonexistent_user_returns_401(self, client, user) -> None:
         refresh_token = create_refresh_token(user.id)
         user.delete()
 
@@ -90,7 +101,7 @@ class TestRefreshToken:
         assert_that(response.status_code, equal_to(401))
         assert_that(response.json(), has_entries(detail="User not found"))
 
-    def test_refresh_with_inactive_user_returns_401(self, client, db):
+    def test_refresh_with_inactive_user_returns_401(self, client, db) -> None:
         inactive_user = UserFactory(is_active=False)
         refresh_token = create_refresh_token(inactive_user.id)
 
@@ -103,7 +114,12 @@ class TestRefreshToken:
         assert_that(response.status_code, equal_to(401))
         assert_that(response.json(), has_entries(detail="Account is inactive"))
 
-    def test_refresh_returns_token_for_correct_user(self, client, user, other_user):
+    def test_refresh_returns_token_for_correct_user(
+        self,
+        client,
+        user,
+        other_user,
+    ) -> None:
         user_refresh = create_refresh_token(user.id)
         other_refresh = create_refresh_token(other_user.id)
 
@@ -126,7 +142,7 @@ class TestRefreshToken:
 
 
 class TestLogin:
-    def test_login_returns_tokens(self, client, user):
+    def test_login_returns_tokens(self, client, user) -> None:
         response = client.post(
             "/api/auth/login",
             data=json.dumps({"email": user.email, "password": "testpassword123"}),
@@ -143,7 +159,7 @@ class TestLogin:
             ),
         )
 
-    def test_login_with_invalid_credentials_returns_401(self, client, user):
+    def test_login_with_invalid_credentials_returns_401(self, client, user) -> None:
         response = client.post(
             "/api/auth/login",
             data=json.dumps({"email": user.email, "password": "wrongpassword"}),
@@ -153,14 +169,16 @@ class TestLogin:
         assert_that(response.status_code, equal_to(401))
         assert_that(response.json(), has_entries(detail="Invalid credentials"))
 
-    def test_login_with_inactive_user_returns_401(self, client, db):
+    def test_login_with_inactive_user_returns_401(self, client, db) -> None:
         # Django's authenticate() returns None for inactive users,
         # so they get the same error as invalid credentials
         inactive_user = UserFactory(is_active=False)
 
         response = client.post(
             "/api/auth/login",
-            data=json.dumps({"email": inactive_user.email, "password": "testpassword123"}),
+            data=json.dumps(
+                {"email": inactive_user.email, "password": "testpassword123"},
+            ),
             content_type="application/json",
         )
 
@@ -168,7 +186,12 @@ class TestLogin:
 
 
 class TestGetCurrentUser:
-    def test_get_current_user_returns_user_info(self, client, user, auth_headers):
+    def test_get_current_user_returns_user_info(
+        self,
+        client,
+        user,
+        auth_headers,
+    ) -> None:
         response = client.get("/api/auth/me", **auth_headers)
 
         assert_that(response.status_code, equal_to(200))
@@ -182,24 +205,31 @@ class TestGetCurrentUser:
             ),
         )
 
-    def test_get_current_user_without_auth_returns_401(self, client):
+    def test_get_current_user_without_auth_returns_401(self, client) -> None:
         response = client.get("/api/auth/me")
 
         assert_that(response.status_code, equal_to(401))
 
-    def test_get_current_user_with_expired_token_returns_401(self, client, user):
+    def test_get_current_user_with_expired_token_returns_401(
+        self,
+        client,
+        user,
+    ) -> None:
         payload = {
             "user_id": str(user.id),
-            "exp": datetime.now(tz=timezone.utc) - timedelta(minutes=1),
-            "iat": datetime.now(tz=timezone.utc) - timedelta(minutes=31),
+            "exp": datetime.now(tz=UTC) - timedelta(minutes=1),
+            "iat": datetime.now(tz=UTC) - timedelta(minutes=31),
             "type": "access",
         }
         expired_token = jwt.encode(
-            payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+            payload,
+            settings.JWT_SECRET_KEY,
+            algorithm=settings.JWT_ALGORITHM,
         )
 
         response = client.get(
-            "/api/auth/me", HTTP_AUTHORIZATION=f"Bearer {expired_token}"
+            "/api/auth/me",
+            HTTP_AUTHORIZATION=f"Bearer {expired_token}",
         )
 
         assert_that(response.status_code, equal_to(401))

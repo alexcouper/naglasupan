@@ -13,7 +13,10 @@ class Migration(migrations.Migration):
             model_name="user",
             name="kennitala",
             field=models.CharField(
-                db_index=True, max_length=10, null=True, unique=True
+                db_index=True,
+                max_length=10,
+                null=True,
+                unique=True,
             ),
         ),
     ]

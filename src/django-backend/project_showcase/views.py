@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     html = """<!DOCTYPE html>
 <html>
 <head>

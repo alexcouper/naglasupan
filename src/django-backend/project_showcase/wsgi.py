@@ -1,5 +1,4 @@
-"""
-WSGI config for project_showcase project.
+"""WSGI config for project_showcase project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

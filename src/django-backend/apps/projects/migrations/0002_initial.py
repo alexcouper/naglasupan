@@ -39,7 +39,9 @@ class Migration(migrations.Migration):
             model_name="project",
             name="tags",
             field=models.ManyToManyField(
-                blank=True, related_name="projects", to="tags.tag"
+                blank=True,
+                related_name="projects",
+                to="tags.tag",
             ),
         ),
         migrations.AddField(
