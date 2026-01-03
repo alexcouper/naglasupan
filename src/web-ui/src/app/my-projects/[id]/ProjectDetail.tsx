@@ -1,36 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
+import { PencilIcon, EyeIcon, CloudArrowUpIcon, TrashIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "@/contexts/auth";
 import { fetchMyProject } from "@/app/actions";
+import { apiClient } from "@/lib/api";
 import type { Project } from "@/lib/api";
+import { ReadOnlyProjectDetail } from "./ReadOnlyProjectDetail";
+import { EditProjectDetail, type ProjectFormData } from "./EditProjectDetail";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 
-function StatusBadge({ status }: { status: string }) {
-  const styles = {
-    pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
-    approved: "bg-green-100 text-green-800 border-green-200",
-    rejected: "bg-red-100 text-red-800 border-red-200",
-  };
-
-  const labels = {
-    pending: "Pending Review",
-    approved: "Approved",
-    rejected: "Rejected",
-  };
-
-  return (
-    <span
-      className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${
-        styles[status as keyof typeof styles] || styles.pending
-      }`}
-    >
-      {labels[status as keyof typeof labels] || status}
-    </span>
-  );
-}
+type ViewMode = "edit" | "preview";
 
 interface ProjectDetailProps {
   projectId: string;
@@ -42,6 +24,13 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
   const [project, setProject] = useState<Project | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>("edit");
+  const [formData, setFormData] = useState<ProjectFormData | null>(null);
+  const [formInitialized, setFormInitialized] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -79,11 +68,64 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
     setIsLoading(false);
   };
 
+  const handleFormChange = useCallback((data: ProjectFormData) => {
+    setFormData(data);
+  }, []);
+
+  const handleSave = async () => {
+    if (!formData || !project) return;
+
+    setIsSaving(true);
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      const updatedProject = await apiClient.updateProject(project.id, {
+        title: formData.title,
+        description: formData.description,
+        website_url: formData.website_url,
+      });
+      setProject(updatedProject);
+      setSuccessMessage("Project saved successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save project");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!project) return;
+
+    setIsDeleting(true);
+    setError("");
+
+    try {
+      await apiClient.deleteProject(project.id);
+      router.push("/my-projects");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete project");
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  };
+
+  const previewProject: Project | null =
+    project && formData
+      ? {
+          ...project,
+          title: formData.title,
+          website_url: formData.website_url,
+          description: formData.description,
+        }
+      : project;
+
   if (authLoading || isLoading) {
     return <p className="text-gray-600">Loading...</p>;
   }
 
-  if (error) {
+  if (error && !project) {
     return (
       <div className="text-center">
         <p className="text-red-600 mb-4">{error}</p>
@@ -107,71 +149,86 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-        <div className="flex items-start justify-between mb-6">
-          <h1 className="text-3xl">{project.title || "Untitled Project"}</h1>
-          <StatusBadge status={project.status} />
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+          {error}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6">
+          {successMessage}
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex gap-1">
+          <button
+            onClick={() => setViewMode("edit")}
+            title="Edit"
+            className={`p-2 rounded-lg transition-colors ${
+              viewMode === "edit"
+                ? "bg-gray-200 text-gray-900"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            }`}
+          >
+            <PencilIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setViewMode("preview")}
+            title="Preview"
+            className={`p-2 rounded-lg transition-colors ${
+              viewMode === "preview"
+                ? "bg-gray-200 text-gray-900"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            }`}
+          >
+            <EyeIcon className="w-5 h-5" />
+          </button>
         </div>
 
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-sm font-medium text-gray-500 mb-1">URL</h2>
-            <a
-              href={project.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent hover:underline break-all"
-            >
-              {project.website_url}
-            </a>
-          </div>
-
-          <div>
-            <h2 className="text-sm font-medium text-gray-500 mb-1">Description</h2>
-            <article className="article text-gray-700">
-              <ReactMarkdown>{project.description}</ReactMarkdown>
-            </article>
-          </div>
-
-          <div>
-            <h2 className="text-sm font-medium text-gray-500 mb-1">Submitted</h2>
-            <p className="text-gray-700">
-              {new Date(project.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div>
-
-          {project.status === "pending" && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-yellow-800 text-sm">
-                Your project is currently under review. We&apos;ll notify you once it&apos;s been reviewed.
-              </p>
-            </div>
-          )}
-
-          {project.status === "approved" && project.approved_at && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="text-green-800 text-sm">
-                Your project was approved on{" "}
-                {new Date(project.approved_at).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          )}
+        <div className="flex gap-1">
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            title="Save"
+            className="px-3 py-2 rounded-lg text-gray-500 border border-gray-200 hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSaving ? (
+              <ArrowPathIcon className="w-5 h-5 animate-spin" />
+            ) : (
+              <span className="flex items-center gap-1">Save <CloudArrowUpIcon className="w-5 h-5" /></span>
+            )}
+          </button>
+          <button
+            onClick={() => setShowDeleteDialog(true)}
+            title="Delete"
+            className="p-2 rounded-lg text-gray-500 border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+          >
+            <TrashIcon className="w-5 h-5" />
+          </button>
         </div>
       </div>
+
+      {viewMode === "edit" && formData ? (
+        <EditProjectDetail project={project} formData={formData} onChange={handleFormChange} />
+      ) : (
+        previewProject && <ReadOnlyProjectDetail project={previewProject} />
+      )}
 
       <div className="mt-8 text-center">
         <Link href="/my-projects" className="text-accent hover:underline">
           &larr; Back to my projects
         </Link>
       </div>
+
+      <DeleteConfirmationDialog
+        isOpen={showDeleteDialog}
+        projectTitle={project.title || "Untitled Project"}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteDialog(false)}
+        isDeleting={isDeleting}
+      />
     </>
   );
 }

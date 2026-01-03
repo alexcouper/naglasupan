@@ -218,6 +218,26 @@ class ApiClient {
   async getMyProject(id: string): Promise<Project> {
     return this.request<Project>(`/api/my/projects/${id}`);
   }
+
+  async updateProject(
+    id: string,
+    data: {
+      title?: string;
+      description?: string;
+      website_url?: string;
+    }
+  ): Promise<Project> {
+    return this.request<Project>(`/api/my/projects/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    return this.request<void>(`/api/my/projects/${id}`, {
+      method: "DELETE",
+    });
+  }
 }
 
 export const apiClient = new ApiClient();
