@@ -16,7 +16,7 @@ help:
 	@echo "  clean         Clean cache files"
 
 install:
-	uv sync
+	uv sync --all-extras
 
 dev:
 	ADMIN_ALLOWED_IPS=127.0.0.1 uv run python manage.py runserver 0.0.0.0:8000
@@ -31,7 +31,7 @@ shell:
 	uv run python manage.py shell
 
 test:
-	uv run python manage.py test
+	uv run pytest
 
 createsuperuser:
 	uv run python manage.py createsuperuser
