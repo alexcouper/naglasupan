@@ -19,7 +19,7 @@ install:
 	uv sync
 
 dev:
-	uv run python manage.py runserver 0.0.0.0:8000
+	ADMIN_ALLOWED_IPS=127.0.0.1 uv run python manage.py runserver 0.0.0.0:8000
 
 migrate:
 	uv run python manage.py migrate

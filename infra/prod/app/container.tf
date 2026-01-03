@@ -34,11 +34,11 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:vkzqklrtpttw-2d121f8c133d"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:nrmputtzzqpv-8f709433122a"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512
-  min_scale      = 0
+  min_scale      = 1
   max_scale      = 1
   privacy        = "public"
   deploy         = true
