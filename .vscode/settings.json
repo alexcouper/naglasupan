@@ -1,0 +1,9 @@
+{
+  "search.useIgnoreFiles": true,
+  "search.useGlobalIgnoreFiles": true,
+  "search.exclude": {
+    "**/.venv": true,
+    "**/node_modules": true,
+    "**/.git": true
+  }
+}
