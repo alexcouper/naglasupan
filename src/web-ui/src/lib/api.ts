@@ -42,6 +42,8 @@ interface ApiError {
 class ApiClient {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
+  private isRefreshing: boolean = false;
+  private refreshPromise: Promise<boolean> | null = null;
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -59,6 +61,13 @@ class ApiClient {
     }
   }
 
+  private setAccessToken(access: string) {
+    this.accessToken = access;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("access_token", access);
+    }
+  }
+
   clearTokens() {
     this.accessToken = null;
     this.refreshToken = null;
@@ -72,9 +81,47 @@ class ApiClient {
     return !!this.accessToken;
   }
 
+  private async attemptTokenRefresh(): Promise<boolean> {
+    if (!this.refreshToken) {
+      return false;
+    }
+
+    // If already refreshing, wait for that to complete
+    if (this.isRefreshing && this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    this.isRefreshing = true;
+    this.refreshPromise = (async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: this.refreshToken }),
+        });
+
+        if (!response.ok) {
+          return false;
+        }
+
+        const data = await response.json();
+        this.setAccessToken(data.access_token);
+        return true;
+      } catch {
+        return false;
+      } finally {
+        this.isRefreshing = false;
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
+  }
+
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    isRetry: boolean = false
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers: HeadersInit = {
@@ -90,6 +137,19 @@ class ApiClient {
       ...options,
       headers,
     });
+
+    if (response.status === 401 && !isRetry) {
+      const refreshed = await this.attemptTokenRefresh();
+      if (refreshed) {
+        return this.request<T>(endpoint, options, true);
+      }
+
+      this.clearTokens();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("auth:logout"));
+      }
+      throw new Error("Unauthorized");
+    }
 
     if (response.status === 401) {
       this.clearTokens();

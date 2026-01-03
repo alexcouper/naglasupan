@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate, get_user_model
 from ninja import Router
 
-from api.auth.jwt import create_access_token, create_refresh_token
+from api.auth.jwt import create_access_token, create_refresh_token, verify_token
 from api.auth.security import auth
-from api.schemas.auth import LoginRequest, Token
+from api.schemas.auth import AccessToken, LoginRequest, RefreshRequest, Token
 from api.schemas.errors import Error
 from api.schemas.user import UserCreate, UserResponse, UserUpdate
 
@@ -50,6 +50,29 @@ def login(request, payload: LoginRequest):
         "refresh_token": refresh_token,
         "token_type": "bearer"
     }
+
+
+@router.post("/refresh", response={200: AccessToken, 401: Error}, tags=["Authentication"])
+def refresh_token_endpoint(request, payload: RefreshRequest):
+    token_payload = verify_token(payload.refresh_token)
+
+    if not token_payload:
+        return 401, {"detail": "Invalid or expired refresh token"}
+
+    if token_payload.get("type") != "refresh":
+        return 401, {"detail": "Invalid token type"}
+
+    try:
+        user = User.objects.get(id=token_payload["user_id"])
+    except User.DoesNotExist:
+        return 401, {"detail": "User not found"}
+
+    if not user.is_active:
+        return 401, {"detail": "Account is inactive"}
+
+    access_token = create_access_token(user.id)
+
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/me", response={200: UserResponse, 401: Error}, auth=auth, tags=["Authentication"])
