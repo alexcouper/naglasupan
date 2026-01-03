@@ -1,43 +1,12 @@
+import type { components } from "./api-types";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  kennitala: string | null;
-  is_verified: boolean;
-  created_at: string;
-}
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  long_description: string | null;
-  website_url: string;
-  github_url: string | null;
-  demo_url: string | null;
-  screenshot_urls: string[];
-  tech_stack: string[];
-  monthly_visitors: number;
-  status: "pending" | "approved" | "rejected";
-  is_featured: boolean;
-  created_at: string;
-  approved_at: string | null;
-  owner: User;
-  tags: Array<{ id: string; name: string; slug: string; description: string | null; color: string | null }>;
-}
-
-interface ApiError {
-  detail: string;
-}
+type TokenResponse = components["schemas"]["Token"];
+type User = components["schemas"]["UserResponse"];
+type Project = components["schemas"]["ProjectResponse"];
+type ProjectCreate = components["schemas"]["ProjectCreate"];
+type ApiError = components["schemas"]["Error"];
 
 class ApiClient {
   private accessToken: string | null = null;
@@ -201,10 +170,7 @@ class ApiClient {
   }
 
   // Project endpoints
-  async createProject(data: {
-    url: string;
-    description: string;
-  }): Promise<Project> {
+  async createProject(data: ProjectCreate): Promise<Project> {
     return this.request<Project>("/api/my/projects", {
       method: "POST",
       body: JSON.stringify(data),

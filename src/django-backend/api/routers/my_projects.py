@@ -46,7 +46,7 @@ def create_project(request, payload: ProjectCreate):
         return 400, {"detail": "One or more tag IDs are invalid"}
 
     # Prepare project data
-    project_data = payload.dict(exclude={'tag_ids'})
+    project_data = payload.dict(exclude={'tag_ids'}, exclude_none=True)
 
     # Auto-generate title from URL if not provided
     if not project_data.get('title'):
@@ -83,7 +83,7 @@ def update_project(request, project_id: str, payload: ProjectCreate):
         return 400, {"detail": "One or more tag IDs are invalid"}
 
     # Prepare project data
-    project_data = payload.dict(exclude={'tag_ids'})
+    project_data = payload.dict(exclude={'tag_ids'}, exclude_none=True)
 
     # Auto-generate title from URL if not provided
     if not project_data.get('title'):

@@ -1,8 +1,6 @@
 from datetime import datetime
-from typing import List, Optional
 from uuid import UUID
 
-from apps.projects.models import ProjectStatus
 from ninja import Schema
 
 from .tag import TagResponse
@@ -11,38 +9,38 @@ from .user import UserResponse
 
 class ProjectCreate(Schema):
     website_url: str
-    description: Optional[str] = None
-    # Optional fields - will be filled by admin during review
-    title: Optional[str] = None
-    long_description: Optional[str] = None
-    github_url: Optional[str] = None
-    demo_url: Optional[str] = None
-    screenshot_urls: List[str] = []
-    tech_stack: List[str] = []
-    tag_ids: List[UUID] = []
+    description: str | None = None
+    # fields | None- will be filled by admin during review
+    title: str | None = None
+    long_description: str | None = None
+    github_url: str | None = None
+    demo_url: str | None = None
+    screenshot_urls: list[str] | None = None
+    tech_stack: list[str] | None = None
+    tag_ids: list[UUID] | None = None
 
 
 class ProjectResponse(Schema):
     id: UUID
     title: str
     description: str
-    long_description: Optional[str]
+    long_description: str | None
     website_url: str
-    github_url: Optional[str]
-    demo_url: Optional[str]
-    screenshot_urls: List[str]
-    tech_stack: List[str]
+    github_url: str | None
+    demo_url: str | None
+    screenshot_urls: list[str]
+    tech_stack: list[str]
     monthly_visitors: int
     status: str
     is_featured: bool
     created_at: datetime
-    approved_at: Optional[datetime]
+    approved_at: datetime | None
     owner: UserResponse
-    tags: List[TagResponse]
+    tags: list[TagResponse]
 
 
 class ProjectListResponse(Schema):
-    projects: List[ProjectResponse]
+    projects: list[ProjectResponse]
     total: int
     page: int
     per_page: int
@@ -50,12 +48,12 @@ class ProjectListResponse(Schema):
 
 
 class AdminProjectResponse(ProjectResponse):
-    rejection_reason: Optional[str]
-    approved_by: Optional[UserResponse]
+    rejection_reason: str | None
+    approved_by: UserResponse | None
     submission_month: str
 
 
 class ProjectApproval(Schema):
     approved: bool
-    rejection_reason: Optional[str] = None
+    rejection_reason: str | None = None
     is_featured: bool = False

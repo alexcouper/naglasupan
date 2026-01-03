@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "generate-types": "openapi-typescript ../django-backend/openapi.json -o src/lib/api-types.ts",
+    "dev": "npm run generate-types && next dev",
+    "build": "npm run generate-types && next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -26,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
+    "openapi-typescript": "^7.10.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

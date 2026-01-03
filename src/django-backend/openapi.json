@@ -114,6 +114,48 @@
         }
       }
     },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "api_routers_auth_refresh_token_endpoint",
+        "summary": "Refresh Token Endpoint",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
     "/api/auth/me": {
       "get": {
         "operationId": "api_routers_auth_get_current_user_info",
@@ -1509,10 +1551,6 @@
             "title": "Email",
             "type": "string"
           },
-          "username": {
-            "title": "Username",
-            "type": "string"
-          },
           "first_name": {
             "title": "First Name",
             "type": "string"
@@ -1545,7 +1583,6 @@
         "required": [
           "id",
           "email",
-          "username",
           "first_name",
           "last_name",
           "kennitala",
@@ -1574,33 +1611,28 @@
             "title": "Email",
             "type": "string"
           },
-          "username": {
-            "title": "Username",
-            "type": "string"
-          },
           "password": {
             "title": "Password",
-            "type": "string"
-          },
-          "first_name": {
-            "title": "First Name",
-            "type": "string"
-          },
-          "last_name": {
-            "title": "Last Name",
             "type": "string"
           },
           "kennitala": {
             "title": "Kennitala",
             "type": "string"
+          },
+          "first_name": {
+            "default": "",
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "default": "",
+            "title": "Last Name",
+            "type": "string"
           }
         },
         "required": [
           "email",
-          "username",
           "password",
-          "first_name",
-          "last_name",
           "kennitala"
         ],
         "title": "UserCreate",
@@ -1631,8 +1663,8 @@
       },
       "LoginRequest": {
         "properties": {
-          "username": {
-            "title": "Username",
+          "email": {
+            "title": "Email",
             "type": "string"
           },
           "password": {
@@ -1641,10 +1673,41 @@
           }
         },
         "required": [
-          "username",
+          "email",
           "password"
         ],
         "title": "LoginRequest",
+        "type": "object"
+      },
+      "AccessToken": {
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "token_type": {
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "title": "AccessToken",
+        "type": "object"
+      },
+      "RefreshRequest": {
+        "properties": {
+          "refresh_token": {
+            "title": "Refresh Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "refresh_token"
+        ],
+        "title": "RefreshRequest",
         "type": "object"
       },
       "UserUpdate": {
@@ -1670,17 +1733,6 @@
               }
             ],
             "title": "Last Name"
-          },
-          "username": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Username"
           }
         },
         "title": "UserUpdate",
@@ -1899,8 +1951,8 @@
       },
       "ProjectCreate": {
         "properties": {
-          "url": {
-            "title": "Url",
+          "website_url": {
+            "title": "Website Url",
             "type": "string"
           },
           "description": {
@@ -1959,33 +2011,51 @@
             "title": "Demo Url"
           },
           "screenshot_urls": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Screenshot Urls",
-            "type": "array"
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Screenshot Urls"
           },
           "tech_stack": {
-            "default": [],
-            "items": {
-              "type": "string"
-            },
-            "title": "Tech Stack",
-            "type": "array"
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tech Stack"
           },
           "tag_ids": {
-            "default": [],
-            "items": {
-              "format": "uuid",
-              "type": "string"
-            },
-            "title": "Tag Ids",
-            "type": "array"
+            "anyOf": [
+              {
+                "items": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag Ids"
           }
         },
         "required": [
-          "url"
+          "website_url"
         ],
         "title": "ProjectCreate",
         "type": "object"
