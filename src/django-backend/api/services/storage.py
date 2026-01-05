@@ -53,6 +53,7 @@ class StorageService:
                 "Bucket": settings.S3_BUCKET_NAME,
                 "Key": key,
                 "ContentType": content_type,
+                "ACL": "public-read",
             },
             ExpiresIn=expires_in,
             HttpMethod="PUT",
@@ -62,6 +63,7 @@ class StorageService:
             "method": "PUT",
             "headers": {
                 "Content-Type": content_type,
+                "x-amz-acl": "public-read",
             },
         }
 
