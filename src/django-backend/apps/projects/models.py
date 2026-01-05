@@ -22,7 +22,6 @@ class Project(models.Model):
     website_url = models.URLField(max_length=2083)
     github_url = models.URLField(max_length=2083, blank=True, null=True)
     demo_url = models.URLField(max_length=2083, blank=True, null=True)
-    screenshot_urls = models.JSONField(default=list, blank=True)
     tech_stack = models.JSONField(default=list, blank=True)
     monthly_visitors = models.PositiveIntegerField(default=0)
     status = models.CharField(
@@ -85,3 +84,56 @@ class ProjectView(models.Model):
 
     def __str__(self) -> str:
         return f"{self.project} - {self.viewer_ip}"
+
+
+class UploadStatus(models.TextChoices):
+    PENDING = "pending", "Pending Upload"
+    UPLOADED = "uploaded", "Uploaded"
+    FAILED = "failed", "Upload Failed"
+
+
+class ProjectImage(models.Model):
+    """Tracks images uploaded to a project. Uses UUID for non-guessable URLs."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="images",
+    )
+
+    # Storage details
+    storage_key = models.CharField(max_length=500)
+    original_filename = models.CharField(max_length=255)
+    content_type = models.CharField(max_length=100)
+    file_size = models.PositiveIntegerField()
+
+    # Image metadata
+    width = models.PositiveIntegerField(null=True, blank=True)
+    height = models.PositiveIntegerField(null=True, blank=True)
+
+    # Ordering and main image tracking
+    is_main = models.BooleanField(default=False)
+    display_order = models.PositiveIntegerField(default=0)
+
+    # Upload status tracking
+    upload_status = models.CharField(
+        max_length=20,
+        choices=UploadStatus.choices,
+        default=UploadStatus.PENDING,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = "project_images"
+        ordering = ["display_order", "created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.project.title} - {self.original_filename}"
+
+    @property
+    def url(self) -> str:
+        """Returns the public URL for this image."""
+        return f"{settings.S3_PUBLIC_URL_BASE}/{self.storage_key}"

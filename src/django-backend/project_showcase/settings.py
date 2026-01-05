@@ -207,3 +207,11 @@ CORS_ALLOW_CREDENTIALS = True
 
 # API Settings
 API_VERSION = "v1"
+
+# S3/Object Storage Settings (Scaleway)
+S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "")
+S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL", "https://s3.fr-par.scw.cloud")
+S3_REGION = os.getenv("S3_REGION", "fr-par")
+S3_PUBLIC_URL_BASE = os.getenv("S3_PUBLIC_URL_BASE", "")
+SCW_ACCESS_KEY = os.getenv("SCW_ACCESS_KEY", "")
+SCW_SECRET_KEY = os.getenv("SCW_SECRET_KEY", "")
