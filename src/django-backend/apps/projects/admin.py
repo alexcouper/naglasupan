@@ -9,10 +9,57 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
-from .models import Project, ProjectStatus, ProjectView
+from .models import Project, ProjectImage, ProjectStatus, ProjectView
 
 if TYPE_CHECKING:
     from django.utils.safestring import SafeString
+
+
+class ProjectImageInline(admin.TabularInline):
+    model = ProjectImage
+    extra = 0
+    readonly_fields = (
+        "thumbnail",
+        "original_filename",
+        "is_main",
+        "upload_status",
+        "file_size_display",
+        "created_at",
+    )
+    fields = (
+        "thumbnail",
+        "original_filename",
+        "is_main",
+        "upload_status",
+        "file_size_display",
+        "created_at",
+    )
+    can_delete = True
+    ordering = ("display_order",)
+
+    @admin.display(description="Preview")
+    def thumbnail(self, obj: ProjectImage) -> SafeString:
+        return format_html(
+            '<img src="{}" style="max-height: 50px; max-width: 100px;" />',
+            obj.url,
+        )
+
+    @admin.display(description="Size")
+    def file_size_display(self, obj: ProjectImage) -> str:
+        kb = 1024
+        mb = kb * kb
+        if obj.file_size < kb:
+            return f"{obj.file_size} B"
+        if obj.file_size < mb:
+            return f"{obj.file_size / kb:.1f} KB"
+        return f"{obj.file_size / mb:.1f} MB"
+
+    def has_add_permission(
+        self,
+        request: HttpRequest,
+        obj: Project | None = None,
+    ) -> bool:
+        return False
 
 
 class ProjectViewInline(admin.TabularInline):
@@ -46,7 +93,7 @@ class ProjectAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
     readonly_fields = ("id", "view_count", "created_at", "updated_at", "approved_at")
     filter_horizontal = ("tags",)
-    inlines = [ProjectViewInline]
+    inlines = [ProjectImageInline, ProjectViewInline]
 
     fieldsets = (
         (
@@ -179,3 +226,95 @@ class ProjectViewAdmin(admin.ModelAdmin):
         obj: ProjectView | None = None,
     ) -> bool:
         return False
+
+
+@admin.register(ProjectImage)
+class ProjectImageAdmin(admin.ModelAdmin):
+    list_display = (
+        "thumbnail",
+        "original_filename",
+        "project_link",
+        "is_main",
+        "upload_status",
+        "file_size_display",
+        "dimensions",
+        "created_at",
+    )
+    list_filter = ("is_main", "upload_status", "content_type", "created_at")
+    search_fields = ("original_filename", "project__title", "project__owner__email")
+    ordering = ("-created_at",)
+    readonly_fields = (
+        "id",
+        "thumbnail_large",
+        "storage_key",
+        "content_type",
+        "file_size",
+        "width",
+        "height",
+        "created_at",
+        "uploaded_at",
+    )
+
+    fieldsets = (
+        (
+            "Image",
+            {"fields": ("thumbnail_large", "original_filename", "storage_key")},
+        ),
+        (
+            "Project",
+            {"fields": ("project", "is_main", "display_order")},
+        ),
+        (
+            "File Info",
+            {"fields": ("content_type", "file_size", "width", "height")},
+        ),
+        (
+            "Status",
+            {"fields": ("upload_status", "created_at", "uploaded_at")},
+        ),
+        (
+            "System",
+            {"fields": ("id",), "classes": ("collapse",)},
+        ),
+    )
+
+    @admin.display(description="Preview")
+    def thumbnail(self, obj: ProjectImage) -> SafeString:
+        return format_html(
+            '<img src="{}" style="max-height: 50px; max-width: 80px;" />',
+            obj.url,
+        )
+
+    @admin.display(description="Image Preview")
+    def thumbnail_large(self, obj: ProjectImage) -> SafeString:
+        return format_html(
+            '<img src="{}" style="max-height: 300px; max-width: 500px;" />',
+            obj.url,
+        )
+
+    @admin.display(description="Project", ordering="project__title")
+    def project_link(self, obj: ProjectImage) -> SafeString | str:
+        if obj.project:
+            url = reverse("admin:projects_project_change", args=[obj.project.pk])
+            title = obj.project.title or "Untitled"
+            return format_html('<a href="{}">{}</a>', url, title)
+        return "-"
+
+    @admin.display(description="Size")
+    def file_size_display(self, obj: ProjectImage) -> str:
+        kb = 1024
+        mb = kb * kb
+        if obj.file_size < kb:
+            return f"{obj.file_size} B"
+        if obj.file_size < mb:
+            return f"{obj.file_size / kb:.1f} KB"
+        return f"{obj.file_size / mb:.1f} MB"
+
+    @admin.display(description="Dimensions")
+    def dimensions(self, obj: ProjectImage) -> str:
+        if obj.width and obj.height:
+            return f"{obj.width} x {obj.height}"
+        return "-"
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[ProjectImage]:
+        return super().get_queryset(request).select_related("project", "project__owner")
