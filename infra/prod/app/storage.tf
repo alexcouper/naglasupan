@@ -15,6 +15,19 @@ resource "scaleway_object_bucket" "project_images" {
 
     abort_incomplete_multipart_upload_days = 1
   }
+
+  # CORS configuration for browser-based uploads
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "PUT", "HEAD"]
+    allowed_origins = [
+      "https://naglasupan.is",
+      "https://www.naglasupan.is",
+      "http://localhost:3000",
+    ]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3600
+  }
 }
 
 # Bucket ACL - public-read allows public access to objects for viewing
