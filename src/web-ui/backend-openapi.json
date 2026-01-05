@@ -817,6 +817,381 @@
         ]
       }
     },
+    "/api/my/projects/{project_id}/images/upload-url": {
+      "post": {
+        "operationId": "api_routers_my_projects_get_upload_url",
+        "summary": "Get Upload Url",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignedUploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Generate a presigned URL for uploading an image.",
+        "tags": [
+          "Project Images"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PresignedUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
+    "/api/my/projects/{project_id}/images/{image_id}/complete": {
+      "post": {
+        "operationId": "api_routers_my_projects_complete_upload",
+        "summary": "Complete Upload",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "schema": {
+              "title": "Image Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Mark an image upload as complete.",
+        "tags": [
+          "Project Images"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageUploadCompleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
+    "/api/my/projects/{project_id}/images/order": {
+      "post": {
+        "operationId": "api_routers_my_projects_update_image_order",
+        "summary": "Update Image Order",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectImageResponse"
+                  },
+                  "title": "Response",
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Update the display order of images.",
+        "tags": [
+          "Project Images"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageOrderUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
+    "/api/my/projects/{project_id}/images/main": {
+      "post": {
+        "operationId": "api_routers_my_projects_set_main_image",
+        "summary": "Set Main Image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Set the main image for a project.",
+        "tags": [
+          "Project Images"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetMainImageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
+    "/api/my/projects/{project_id}/images/{image_id}": {
+      "delete": {
+        "operationId": "api_routers_my_projects_delete_image",
+        "summary": "Delete Image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "schema": {
+              "title": "Image Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Delete a project image.",
+        "tags": [
+          "Project Images"
+        ],
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
     "/api/tags": {
       "get": {
         "operationId": "api_routers_tags_list_tags",
@@ -1738,6 +2113,86 @@
         "title": "UserUpdate",
         "type": "object"
       },
+      "ProjectImageResponse": {
+        "description": "Response schema for project images.",
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "original_filename": {
+            "title": "Original Filename",
+            "type": "string"
+          },
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "file_size": {
+            "title": "File Size",
+            "type": "integer"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "is_main": {
+            "title": "Is Main",
+            "type": "boolean"
+          },
+          "display_order": {
+            "title": "Display Order",
+            "type": "integer"
+          },
+          "upload_status": {
+            "title": "Upload Status",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "original_filename",
+          "content_type",
+          "file_size",
+          "width",
+          "height",
+          "is_main",
+          "display_order",
+          "upload_status",
+          "created_at"
+        ],
+        "title": "ProjectImageResponse",
+        "type": "object"
+      },
       "ProjectListResponse": {
         "properties": {
           "projects": {
@@ -1826,13 +2281,6 @@
             ],
             "title": "Demo Url"
           },
-          "screenshot_urls": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Screenshot Urls",
-            "type": "array"
-          },
           "tech_stack": {
             "items": {
               "type": "string"
@@ -1878,6 +2326,14 @@
             },
             "title": "Tags",
             "type": "array"
+          },
+          "images": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ProjectImageResponse"
+            },
+            "title": "Images",
+            "type": "array"
           }
         },
         "required": [
@@ -1888,7 +2344,6 @@
           "website_url",
           "github_url",
           "demo_url",
-          "screenshot_urls",
           "tech_stack",
           "monthly_visitors",
           "status",
@@ -2010,20 +2465,6 @@
             ],
             "title": "Demo Url"
           },
-          "screenshot_urls": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Screenshot Urls"
-          },
           "tech_stack": {
             "anyOf": [
               {
@@ -2058,6 +2499,149 @@
           "website_url"
         ],
         "title": "ProjectCreate",
+        "type": "object"
+      },
+      "PresignedUploadResponse": {
+        "description": "Response with presigned upload URL.",
+        "properties": {
+          "image_id": {
+            "format": "uuid",
+            "title": "Image Id",
+            "type": "string"
+          },
+          "upload_url": {
+            "title": "Upload Url",
+            "type": "string"
+          },
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Headers",
+            "type": "object"
+          },
+          "storage_key": {
+            "title": "Storage Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image_id",
+          "upload_url",
+          "method",
+          "headers",
+          "storage_key"
+        ],
+        "title": "PresignedUploadResponse",
+        "type": "object"
+      },
+      "PresignedUploadRequest": {
+        "description": "Request schema for generating presigned upload URL.",
+        "properties": {
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "file_size": {
+            "title": "File Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "filename",
+          "content_type",
+          "file_size"
+        ],
+        "title": "PresignedUploadRequest",
+        "type": "object"
+      },
+      "ImageUploadCompleteRequest": {
+        "description": "Request to confirm upload completion.",
+        "properties": {
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          }
+        },
+        "title": "ImageUploadCompleteRequest",
+        "type": "object"
+      },
+      "ImageOrderUpdate": {
+        "description": "Schema for updating a single image's order.",
+        "properties": {
+          "image_id": {
+            "format": "uuid",
+            "title": "Image Id",
+            "type": "string"
+          },
+          "display_order": {
+            "title": "Display Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "image_id",
+          "display_order"
+        ],
+        "title": "ImageOrderUpdate",
+        "type": "object"
+      },
+      "ImageOrderUpdateRequest": {
+        "description": "Request to update image order.",
+        "properties": {
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ImageOrderUpdate"
+            },
+            "title": "Images",
+            "type": "array"
+          }
+        },
+        "required": [
+          "images"
+        ],
+        "title": "ImageOrderUpdateRequest",
+        "type": "object"
+      },
+      "SetMainImageRequest": {
+        "description": "Request to set main image.",
+        "properties": {
+          "image_id": {
+            "format": "uuid",
+            "title": "Image Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image_id"
+        ],
+        "title": "SetMainImageRequest",
         "type": "object"
       },
       "ProjectStatus": {
@@ -2121,13 +2705,6 @@
             ],
             "title": "Demo Url"
           },
-          "screenshot_urls": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Screenshot Urls",
-            "type": "array"
-          },
           "tech_stack": {
             "items": {
               "type": "string"
@@ -2174,6 +2751,14 @@
             "title": "Tags",
             "type": "array"
           },
+          "images": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ProjectImageResponse"
+            },
+            "title": "Images",
+            "type": "array"
+          },
           "rejection_reason": {
             "anyOf": [
               {
@@ -2208,7 +2793,6 @@
           "website_url",
           "github_url",
           "demo_url",
-          "screenshot_urls",
           "tech_stack",
           "monthly_visitors",
           "status",

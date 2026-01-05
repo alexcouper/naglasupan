@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from uuid import UUID
 
 from ninja import Schema
@@ -15,9 +16,24 @@ class ProjectCreate(Schema):
     long_description: str | None = None
     github_url: str | None = None
     demo_url: str | None = None
-    screenshot_urls: list[str] | None = None
     tech_stack: list[str] | None = None
     tag_ids: list[UUID] | None = None
+
+
+class ProjectImageResponse(Schema):
+    """Response schema for project images."""
+
+    id: UUID
+    url: str
+    original_filename: str
+    content_type: str
+    file_size: int
+    width: int | None
+    height: int | None
+    is_main: bool
+    display_order: int
+    upload_status: str
+    created_at: datetime
 
 
 class ProjectResponse(Schema):
@@ -28,7 +44,6 @@ class ProjectResponse(Schema):
     website_url: str
     github_url: str | None
     demo_url: str | None
-    screenshot_urls: list[str]
     tech_stack: list[str]
     monthly_visitors: int
     status: str
@@ -37,6 +52,56 @@ class ProjectResponse(Schema):
     approved_at: datetime | None
     owner: UserResponse
     tags: list[TagResponse]
+    images: list[ProjectImageResponse] = []
+
+    @staticmethod
+    def resolve_images(obj: Any) -> list[Any]:
+        """Only return uploaded images."""
+        return list(obj.images.filter(upload_status="uploaded"))
+
+
+class PresignedUploadRequest(Schema):
+    """Request schema for generating presigned upload URL."""
+
+    filename: str
+    content_type: str
+    file_size: int
+
+
+class PresignedUploadResponse(Schema):
+    """Response with presigned upload URL."""
+
+    image_id: UUID
+    upload_url: str
+    method: str
+    headers: dict[str, str]
+    storage_key: str
+
+
+class ImageUploadCompleteRequest(Schema):
+    """Request to confirm upload completion."""
+
+    width: int | None = None
+    height: int | None = None
+
+
+class ImageOrderUpdate(Schema):
+    """Schema for updating a single image's order."""
+
+    image_id: UUID
+    display_order: int
+
+
+class ImageOrderUpdateRequest(Schema):
+    """Request to update image order."""
+
+    images: list[ImageOrderUpdate]
+
+
+class SetMainImageRequest(Schema):
+    """Request to set main image."""
+
+    image_id: UUID
 
 
 class ProjectListResponse(Schema):
