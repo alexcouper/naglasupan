@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { StarIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { StarIcon, TrashIcon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import type { ProjectImage } from "@/lib/api";
 
@@ -18,18 +19,60 @@ export function ImageGallery({
   onSetMain,
   onDelete,
 }: ImageGalleryProps) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = useCallback((index: number) => {
+    if (!editable) {
+      setLightboxIndex(index);
+    }
+  }, [editable]);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+  }, []);
+
+  const goToPrevious = useCallback(() => {
+    if (lightboxIndex !== null) {
+      setLightboxIndex((lightboxIndex - 1 + images.length) % images.length);
+    }
+  }, [lightboxIndex, images.length]);
+
+  const goToNext = useCallback(() => {
+    if (lightboxIndex !== null) {
+      setLightboxIndex((lightboxIndex + 1) % images.length);
+    }
+  }, [lightboxIndex, images.length]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goToPrevious();
+      if (e.key === "ArrowRight") goToNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxIndex, closeLightbox, goToPrevious, goToNext]);
+
   if (images.length === 0) {
     return null;
   }
 
   const mainImage = images.find((img) => img.is_main) || images[0];
   const otherImages = images.filter((img) => img.id !== mainImage?.id);
+  const mainImageIndex = images.findIndex((img) => img.id === mainImage?.id);
 
   return (
     <div className="space-y-4">
       {/* Main Image */}
       {mainImage && (
-        <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+        <div
+          className={`relative aspect-video rounded-lg overflow-hidden bg-gray-100 ${!editable ? "cursor-pointer" : ""}`}
+          onClick={() => openLightbox(mainImageIndex)}
+        >
           <Image
             src={mainImage.url}
             alt="Main project image"
@@ -58,38 +101,115 @@ export function ImageGallery({
       {/* Additional Images Grid */}
       {otherImages.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-          {otherImages.map((image) => (
-            <div
-              key={image.id}
-              className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 group"
+          {otherImages.map((image) => {
+            const imageIndex = images.findIndex((img) => img.id === image.id);
+            return (
+              <div
+                key={image.id}
+                className={`relative aspect-square rounded-lg overflow-hidden bg-gray-100 group ${!editable ? "cursor-pointer hover:ring-2 hover:ring-accent/50" : ""}`}
+                onClick={() => openLightbox(imageIndex)}
+              >
+                <Image
+                  src={image.url}
+                  alt={image.original_filename}
+                  fill
+                  className="object-cover"
+                  sizes="150px"
+                />
+                {editable && (
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSetMain?.(image.id);
+                      }}
+                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+                      title="Set as main image"
+                    >
+                      <StarIcon className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete?.(image.id);
+                      }}
+                      className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+                      title="Delete image"
+                    >
+                      <TrashIcon className="w-4 h-4 text-red-500" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Lightbox Dialog */}
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          {/* Close button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors"
+            title="Close (Esc)"
+          >
+            <XMarkIcon className="w-8 h-8" />
+          </button>
+
+          {/* Previous button */}
+          {images.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrevious();
+              }}
+              className="absolute left-4 p-2 text-white/70 hover:text-white transition-colors"
+              title="Previous (Left Arrow)"
             >
-              <Image
-                src={image.url}
-                alt={image.original_filename}
-                fill
-                className="object-cover"
-                sizes="150px"
-              />
-              {editable && (
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <button
-                    onClick={() => onSetMain?.(image.id)}
-                    className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
-                    title="Set as main image"
-                  >
-                    <StarIcon className="w-4 h-4 text-gray-700" />
-                  </button>
-                  <button
-                    onClick={() => onDelete?.(image.id)}
-                    className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
-                    title="Delete image"
-                  >
-                    <TrashIcon className="w-4 h-4 text-red-500" />
-                  </button>
-                </div>
-              )}
+              <ChevronLeftIcon className="w-10 h-10" />
+            </button>
+          )}
+
+          {/* Image */}
+          <div
+            className="relative max-w-[90vw] max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={images[lightboxIndex].url}
+              alt={images[lightboxIndex].original_filename}
+              width={images[lightboxIndex].width || 1200}
+              height={images[lightboxIndex].height || 800}
+              className="max-w-[90vw] max-h-[90vh] object-contain"
+              priority
+            />
+          </div>
+
+          {/* Next button */}
+          {images.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNext();
+              }}
+              className="absolute right-4 p-2 text-white/70 hover:text-white transition-colors"
+              title="Next (Right Arrow)"
+            >
+              <ChevronRightIcon className="w-10 h-10" />
+            </button>
+          )}
+
+          {/* Image counter */}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+              {lightboxIndex + 1} / {images.length}
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>

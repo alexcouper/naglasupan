@@ -18,17 +18,24 @@ export function ImageDropZone({
 }: ImageDropZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dragCounterRef = useRef(0);
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(true);
+    dragCounterRef.current++;
+    if (dragCounterRef.current === 1) {
+      setIsDragging(true);
+    }
   }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(false);
+    dragCounterRef.current--;
+    if (dragCounterRef.current === 0) {
+      setIsDragging(false);
+    }
   }, []);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -40,6 +47,7 @@ export function ImageDropZone({
     (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
+      dragCounterRef.current = 0;
       setIsDragging(false);
 
       if (disabled) return;
@@ -76,8 +84,8 @@ export function ImageDropZone({
     <div
       className={`
         relative border-2 border-dashed rounded-lg p-8 text-center
-        transition-colors duration-200 cursor-pointer
-        ${isDragging ? "border-accent bg-accent/5" : "border-gray-300 hover:border-gray-400"}
+        transition-all duration-200 cursor-pointer
+        ${isDragging ? "border-accent bg-accent/10 ring-4 ring-accent/20 scale-[1.02]" : "border-gray-300 hover:border-gray-400"}
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
       `}
       onDragEnter={handleDragEnter}
