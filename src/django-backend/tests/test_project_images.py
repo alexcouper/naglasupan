@@ -10,7 +10,6 @@ from hamcrest import (
     contains_string,
     equal_to,
     has_entries,
-    has_length,
     is_,
 )
 from moto import mock_aws
@@ -395,67 +394,6 @@ class TestSetMainImage:
         image2.refresh_from_db()
         assert_that(image1.is_main, is_(False))
         assert_that(image2.is_main, is_(True))
-
-
-class TestUpdateImageOrder:
-    def test_updates_image_order(
-        self,
-        client,
-        project,
-        auth_headers,
-    ) -> None:
-        image1 = ProjectImage.objects.create(
-            project=project,
-            storage_key="test/img1.png",
-            original_filename="img1.png",
-            content_type="image/png",
-            file_size=1024,
-            upload_status=UploadStatus.UPLOADED,
-            display_order=0,
-        )
-        image2 = ProjectImage.objects.create(
-            project=project,
-            storage_key="test/img2.png",
-            original_filename="img2.png",
-            content_type="image/png",
-            file_size=1024,
-            upload_status=UploadStatus.UPLOADED,
-            display_order=1,
-        )
-        image3 = ProjectImage.objects.create(
-            project=project,
-            storage_key="test/img3.png",
-            original_filename="img3.png",
-            content_type="image/png",
-            file_size=1024,
-            upload_status=UploadStatus.UPLOADED,
-            display_order=2,
-        )
-
-        payload = {
-            "images": [
-                {"image_id": str(image3.id), "display_order": 0},
-                {"image_id": str(image1.id), "display_order": 1},
-                {"image_id": str(image2.id), "display_order": 2},
-            ]
-        }
-
-        response = client.post(
-            f"/api/my/projects/{project.id}/images/order",
-            data=json.dumps(payload),
-            content_type="application/json",
-            **auth_headers,
-        )
-
-        assert_that(response.status_code, equal_to(200))
-        assert_that(response.json(), has_length(3))
-
-        image1.refresh_from_db()
-        image2.refresh_from_db()
-        image3.refresh_from_db()
-        assert_that(image1.display_order, equal_to(1))
-        assert_that(image2.display_order, equal_to(2))
-        assert_that(image3.display_order, equal_to(0))
 
 
 class TestImageAuthorization:

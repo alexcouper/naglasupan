@@ -258,18 +258,6 @@ class ApiClient {
     );
   }
 
-  async updateImageOrder(
-    projectId: string,
-    images: Array<{ image_id: string; display_order: number }>
-  ): Promise<ProjectImage[]> {
-    return this.request<ProjectImage[]>(
-      `/api/my/projects/${projectId}/images/order`,
-      {
-        method: "POST",
-        body: JSON.stringify({ images }),
-      }
-    );
-  }
 }
 
 export const apiClient = new ApiClient();

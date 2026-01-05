@@ -10,7 +10,6 @@ from ninja import Router
 from api.auth.security import auth
 from api.schemas.errors import Error
 from api.schemas.project import (
-    ImageOrderUpdateRequest,
     ImageUploadCompleteRequest,
     PresignedUploadRequest,
     PresignedUploadResponse,
@@ -302,29 +301,6 @@ def complete_upload(
 
     image.save()
     return image
-
-
-@router.post(
-    "/{project_id}/images/order",
-    response={200: list[ProjectImageResponse], 401: Error, 404: Error},
-    auth=auth,
-    tags=["Project Images"],
-)
-def update_image_order(
-    request: HttpRequest,
-    project_id: str,
-    payload: ImageOrderUpdateRequest,
-) -> list[ProjectImage]:
-    """Update the display order of images."""
-    project = get_object_or_404(Project, id=project_id, owner=request.auth)
-
-    for item in payload.images:
-        ProjectImage.objects.filter(
-            id=item.image_id,
-            project=project,
-        ).update(display_order=item.display_order)
-
-    return list(project.images.filter(upload_status=UploadStatus.UPLOADED))
 
 
 @router.post(
