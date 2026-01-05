@@ -6,6 +6,8 @@ type TokenResponse = components["schemas"]["Token"];
 type User = components["schemas"]["UserResponse"];
 type Project = components["schemas"]["ProjectResponse"];
 type ProjectCreate = components["schemas"]["ProjectCreate"];
+type ProjectImage = components["schemas"]["ProjectImageResponse"];
+type PresignedUploadResponse = components["schemas"]["PresignedUploadResponse"];
 type ApiError = components["schemas"]["Error"];
 
 class ApiClient {
@@ -204,7 +206,71 @@ class ApiClient {
       method: "DELETE",
     });
   }
+
+  // Image upload endpoints
+  async getImageUploadUrl(
+    projectId: string,
+    filename: string,
+    contentType: string,
+    fileSize: number
+  ): Promise<PresignedUploadResponse> {
+    return this.request<PresignedUploadResponse>(
+      `/api/my/projects/${projectId}/images/upload-url`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          filename,
+          content_type: contentType,
+          file_size: fileSize,
+        }),
+      }
+    );
+  }
+
+  async completeImageUpload(
+    projectId: string,
+    imageId: string,
+    dimensions?: { width: number; height: number }
+  ): Promise<ProjectImage> {
+    return this.request<ProjectImage>(
+      `/api/my/projects/${projectId}/images/${imageId}/complete`,
+      {
+        method: "POST",
+        body: JSON.stringify(dimensions || {}),
+      }
+    );
+  }
+
+  async deleteImage(projectId: string, imageId: string): Promise<void> {
+    return this.request<void>(
+      `/api/my/projects/${projectId}/images/${imageId}`,
+      { method: "DELETE" }
+    );
+  }
+
+  async setMainImage(projectId: string, imageId: string): Promise<ProjectImage> {
+    return this.request<ProjectImage>(
+      `/api/my/projects/${projectId}/images/main`,
+      {
+        method: "POST",
+        body: JSON.stringify({ image_id: imageId }),
+      }
+    );
+  }
+
+  async updateImageOrder(
+    projectId: string,
+    images: Array<{ image_id: string; display_order: number }>
+  ): Promise<ProjectImage[]> {
+    return this.request<ProjectImage[]>(
+      `/api/my/projects/${projectId}/images/order`,
+      {
+        method: "POST",
+        body: JSON.stringify({ images }),
+      }
+    );
+  }
 }
 
 export const apiClient = new ApiClient();
-export type { User, Project, TokenResponse };
+export type { User, Project, ProjectImage, TokenResponse };
