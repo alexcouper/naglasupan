@@ -2,6 +2,7 @@
 
 import ReactMarkdown from "react-markdown";
 import type { Project } from "@/lib/api";
+import { ImageGallery } from "@/components/ImageUpload";
 
 function StatusBadge({ status }: { status: string }) {
   const styles = {
@@ -38,6 +39,12 @@ export function ReadOnlyProjectDetail({ project }: ReadOnlyProjectDetailProps) {
         <h1 className="text-3xl">{project.title || "Untitled Project"}</h1>
         <StatusBadge status={project.status} />
       </div>
+
+      {project.images && project.images.length > 0 && (
+        <div className="mb-6">
+          <ImageGallery images={project.images} />
+        </div>
+      )}
 
       <div className="space-y-6">
         <div>

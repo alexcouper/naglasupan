@@ -1,6 +1,7 @@
 "use client";
 
-import type { Project } from "@/lib/api";
+import type { Project, ProjectImage } from "@/lib/api";
+import { ImageDropZone, ImageGallery, UploadProgress } from "@/components/ImageUpload";
 
 export interface ProjectFormData {
   title: string;
@@ -8,16 +9,42 @@ export interface ProjectFormData {
   description: string;
 }
 
+interface UploadProgressItem {
+  imageId: string;
+  filename: string;
+  progress: number;
+  status: "pending" | "uploading" | "processing" | "complete" | "error";
+  error?: string;
+}
+
 interface EditProjectDetailProps {
   project: Project;
   formData: ProjectFormData;
   onChange: (data: ProjectFormData) => void;
+  images: ProjectImage[];
+  uploads: UploadProgressItem[];
+  isUploading: boolean;
+  onFilesSelected: (files: FileList) => void;
+  onSetMainImage: (imageId: string) => void;
+  onDeleteImage: (imageId: string) => void;
 }
 
-export function EditProjectDetail({ project, formData, onChange }: EditProjectDetailProps) {
+export function EditProjectDetail({
+  project,
+  formData,
+  onChange,
+  images,
+  uploads,
+  isUploading,
+  onFilesSelected,
+  onSetMainImage,
+  onDeleteImage,
+}: EditProjectDetailProps) {
   const handleChange = (field: keyof ProjectFormData, value: string) => {
     onChange({ ...formData, [field]: value });
   };
+
+  const MAX_IMAGES = 10;
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
@@ -69,6 +96,27 @@ export function EditProjectDetail({ project, formData, onChange }: EditProjectDe
             className="input resize-none"
             placeholder="Tell us about your project..."
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Project Images
+          </label>
+          <ImageGallery
+            images={images}
+            editable
+            onSetMain={onSetMainImage}
+            onDelete={onDeleteImage}
+          />
+          <div className="mt-4">
+            <ImageDropZone
+              onFilesSelected={onFilesSelected}
+              disabled={isUploading || images.length >= MAX_IMAGES}
+              maxFiles={MAX_IMAGES}
+              currentCount={images.length}
+            />
+          </div>
+          <UploadProgress uploads={uploads} />
         </div>
 
         <div className="text-sm text-gray-500">

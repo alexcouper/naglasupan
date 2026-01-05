@@ -7,10 +7,11 @@ import { PencilIcon, EyeIcon, CloudArrowUpIcon, TrashIcon, ArrowPathIcon } from 
 import { useAuth } from "@/contexts/auth";
 import { fetchMyProject } from "@/app/actions";
 import { apiClient } from "@/lib/api";
-import type { Project } from "@/lib/api";
+import type { Project, ProjectImage } from "@/lib/api";
 import { ReadOnlyProjectDetail } from "./ReadOnlyProjectDetail";
 import { EditProjectDetail, type ProjectFormData } from "./EditProjectDetail";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 type ViewMode = "edit" | "preview";
 
@@ -31,6 +32,18 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [images, setImages] = useState<ProjectImage[]>([]);
+
+  // Image upload hook
+  const { uploads, uploadFiles, isUploading } = useImageUpload({
+    projectId,
+    onUploadComplete: (image) => {
+      setImages((prev) => [...prev, image]);
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -56,6 +69,7 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
       setError(result.error);
     } else if (result.project) {
       setProject(result.project);
+      setImages(result.project.images || []);
       if (!formInitialized) {
         setFormData({
           title: result.project.title,
@@ -111,6 +125,33 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
     }
   };
 
+  const handleSetMainImage = async (imageId: string) => {
+    try {
+      const updatedImage = await apiClient.setMainImage(projectId, imageId);
+      setImages((prev) =>
+        prev.map((img) => ({
+          ...img,
+          is_main: img.id === updatedImage.id,
+        }))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to set main image");
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    try {
+      await apiClient.deleteImage(projectId, imageId);
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete image");
+    }
+  };
+
+  const handleFilesSelected = (files: FileList) => {
+    uploadFiles(files);
+  };
+
   const previewProject: Project | null =
     project && formData
       ? {
@@ -118,6 +159,7 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
           title: formData.title,
           website_url: formData.website_url,
           description: formData.description,
+          images: images,
         }
       : project;
 
@@ -211,7 +253,17 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
       </div>
 
       {viewMode === "edit" && formData ? (
-        <EditProjectDetail project={project} formData={formData} onChange={handleFormChange} />
+        <EditProjectDetail
+          project={project}
+          formData={formData}
+          onChange={handleFormChange}
+          images={images}
+          uploads={uploads}
+          isUploading={isUploading}
+          onFilesSelected={handleFilesSelected}
+          onSetMainImage={handleSetMainImage}
+          onDeleteImage={handleDeleteImage}
+        />
       ) : (
         previewProject && <ReadOnlyProjectDetail project={previewProject} />
       )}
