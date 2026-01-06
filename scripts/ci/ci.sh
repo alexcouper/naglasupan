@@ -8,9 +8,13 @@ source "$SCRIPT_DIR/../common.sh"
 
 echo "=== Running CI for TAG: $TAG ==="
 
+# Clear any inherited VIRTUAL_ENV to prevent conflicts with subdirectory venvs
+unset VIRTUAL_ENV
+
 echo ""
 echo "=== Building and testing django-backend ==="
 cd "$ROOT_DIR/src/django-backend"
+uv sync --all-extras
 make build
 make test
 make publish
