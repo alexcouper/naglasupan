@@ -1,14 +1,17 @@
 from math import ceil
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from django.db.models import Q, QuerySet
 from django.http import HttpRequest
 from ninja import Query, Router
 
-from api.auth.security import optional_auth
+from api.auth.jwt import get_user_from_token
 from api.schemas.errors import Error
 from api.schemas.project import ProjectListResponse, ProjectResponse
 from apps.projects.models import Project, ProjectStatus
+
+if TYPE_CHECKING:
+    from apps.users.models import User
 
 router = Router()
 
@@ -87,10 +90,18 @@ def get_trending_projects(
     )
 
 
+def _get_user_from_request(request: HttpRequest) -> "User | None":
+    """Extract user from Authorization header if present."""
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:]
+        return get_user_from_token(token)
+    return None
+
+
 @router.get(
     "/{project_id}",
     response={200: ProjectResponse, 404: Error},
-    auth=optional_auth,
     tags=["Projects"],
 )
 def get_project(
@@ -111,7 +122,7 @@ def get_project(
         return project
 
     # Non-approved projects only visible to owner or admin
-    user = request.auth
+    user = _get_user_from_request(request)
     if user and (project.owner == user or user.is_superuser):
         return project
 
