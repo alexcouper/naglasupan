@@ -16,7 +16,12 @@ install:
 	npm install
 
 dev:
-	npm run dev
+	@if [ -f ../../.backend-port ]; then \
+		export NEXT_PUBLIC_API_URL="http://localhost:$$(cat ../../.backend-port)"; \
+	fi && \
+	PORT=$$(../../scripts/find-free-port.sh 3000) && \
+	echo "Starting Next.js on port $$PORT (backend at $${NEXT_PUBLIC_API_URL:-http://localhost:8000})" && \
+	PORT=$$PORT npm run dev
 
 build-app:
 	npm run build
