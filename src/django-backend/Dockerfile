@@ -16,14 +16,11 @@ RUN pip install uv
 # Set work directory
 WORKDIR /app
 
-# Copy dependency files
+# Copy dependency files (uv.lock from workspace root)
 COPY pyproject.toml uv.lock ./
 
-# Install Python dependencies
-RUN uv sync --frozen --no-install-project
-
-# Install gunicorn
-RUN uv add gunicorn
+# Install Python dependencies for this package only
+RUN uv sync --package django-backend --frozen --no-editable --no-dev
 
 # Copy project files
 COPY . .

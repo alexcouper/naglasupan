@@ -45,3 +45,6 @@ media/
 
 # Static files (if collected)
 staticfiles/
+
+# Copied from workspace root during build
+uv.lock

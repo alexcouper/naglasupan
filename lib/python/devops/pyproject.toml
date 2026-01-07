@@ -1,0 +1,18 @@
+[project]
+name = "devops"
+version = "0.1.0"
+description = "DevOps tools and scripts for naglasupan infrastructure"
+requires-python = ">=3.12"
+dependencies = [
+    "scaleway>=0.22",
+]
+
+[project.scripts]
+cleanup-registry = "devops.cleanup_registry:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/devops"]
