@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, PT_Mono, Caveat } from "next/font/google";
+import { Suspense } from "react";
 import { AuthProvider } from "@/contexts/auth";
 import { Navigation } from "@/components/Navigation";
 import "./globals.css";
@@ -52,7 +53,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${caveat.variable} ${ptMono.variable} antialiased`}>
         <AuthProvider>
-          <Navigation />
+          <Suspense>
+            <Navigation />
+          </Suspense>
           {children}
         </AuthProvider>
       </body>

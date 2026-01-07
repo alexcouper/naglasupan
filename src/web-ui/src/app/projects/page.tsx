@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ProjectsListing } from "./ProjectsListing";
 
 export default function ProjectsPage() {
@@ -6,7 +7,9 @@ export default function ProjectsPage() {
       <div className="content-wrapper">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl mb-8">Projects</h1>
-          <ProjectsListing />
+          <Suspense fallback={<p className="text-gray-600">Loading...</p>}>
+            <ProjectsListing />
+          </Suspense>
         </div>
       </div>
     </main>
