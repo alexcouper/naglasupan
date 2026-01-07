@@ -1,5 +1,5 @@
 APP:=web-ui
-.PHONY: help install dev build-app lint clean build publish
+.PHONY: help install dev build-app lint clean build publish e2e
 
 include ../../scripts/app-common.mk
 help:
@@ -8,6 +8,7 @@ help:
 	@echo "  dev           Run development server"
 	@echo "  build-app     Build the Next.js application"
 	@echo "  lint          Run linter"
+	@echo "  e2e           Run Playwright e2e tests"
 	@echo "  clean         Clean build artifacts"
 	@echo "  build         Build Docker image (requires TAG=xxx)"
 	@echo "  publish       Push Docker image to registry (requires TAG=xxx)"
@@ -28,6 +29,12 @@ build-app:
 
 lint:
 	npm run lint
+
+e2e:
+	@if [ -f ../../.backend-port ]; then \
+		export TEST_APP_URL="http://localhost:$$(../../scripts/find-free-port.sh 3000 | head -1)"; \
+	fi && \
+	npm run test:e2e
 
 clean:
 	rm -rf .next
