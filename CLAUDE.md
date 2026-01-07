@@ -18,6 +18,8 @@ Workspaces:
 
 ## Development Workflow
 
+**ALWAYS start by doing `jj new main -m "<change description>"`**
+
 ## TDD
 
 Backend: Write tests first.
@@ -121,13 +123,15 @@ When testing authenticated features:
 
 ## Standard Development Flow
 
+JJ auto commits, but we need to set a description for the work we're doing. We do that at the START of the work
+
 1. Verify you're in a workspace (`jj workspace list`)
-2. Start by running `jj new main` giving you a first changeset that you'll work from and isolating your changes
+2. Start by running `jj new main -m <description>` giving you a first changeset that you'll work from and isolating your changes
 3. Understand the task
 4. Write code
 5. Run lint (`make lint` in django-backend, `npm run lint` in web-ui)
 6. Run tests (`make test` in django-backend)
 7. If API changed: regenerate OpenAPI types
-8. `jj commit -m "description"`
+8. `jj new -m "description"`
 9. If needed: test in browser with Playwright
-10. `jj commit -m "verified working"` after browser testing
+
