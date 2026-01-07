@@ -5,7 +5,7 @@ from django.db.models import Q, QuerySet
 from django.http import HttpRequest
 from ninja import Query, Router
 
-from api.auth.security import auth
+from api.auth.security import optional_auth
 from api.schemas.errors import Error
 from api.schemas.project import ProjectListResponse, ProjectResponse
 from apps.projects.models import Project, ProjectStatus
@@ -89,26 +89,30 @@ def get_trending_projects(
 
 @router.get(
     "/{project_id}",
-    response={200: ProjectResponse, 401: Error, 404: Error},
-    auth=auth,
+    response={200: ProjectResponse, 404: Error},
+    auth=optional_auth,
     tags=["Projects"],
 )
 def get_project(
     request: HttpRequest,
     project_id: str,
 ) -> Project | tuple[int, dict[str, str]]:
-    project = (
-        Project.objects.select_related("owner")
-        .prefetch_related("tags")
-        .get(id=project_id)
-    )
-
-    # Only show approved projects unless owner or admin
-    if (
-        project.status != ProjectStatus.APPROVED
-        and project.owner != request.auth
-        and not request.auth.is_superuser
-    ):
+    try:
+        project = (
+            Project.objects.select_related("owner")
+            .prefetch_related("tags")
+            .get(id=project_id)
+        )
+    except Project.DoesNotExist:
         return 404, {"detail": "Project not found"}
 
-    return project
+    # Approved projects are visible to everyone
+    if project.status == ProjectStatus.APPROVED:
+        return project
+
+    # Non-approved projects only visible to owner or admin
+    user = request.auth
+    if user and (project.owner == user or user.is_superuser):
+        return project
+
+    return 404, {"detail": "Project not found"}

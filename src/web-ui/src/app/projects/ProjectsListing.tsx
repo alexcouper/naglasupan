@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 type SortBy = "created_at" | "title";
 type ViewMode = "list" | "competition";
@@ -101,20 +102,20 @@ export function ProjectsListing() {
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode("list")}
-            className={`px-3 py-1 rounded transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               viewMode === "list"
-                ? "bg-gray-900 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
+                ? "bg-accent text-white"
+                : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
             }`}
           >
             List
           </button>
           <button
             onClick={() => setViewMode("competition")}
-            className={`px-3 py-1 rounded transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               viewMode === "competition"
-                ? "bg-gray-900 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
+                ? "bg-accent text-white"
+                : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
             }`}
           >
             By Competition
@@ -125,7 +126,7 @@ export function ProjectsListing() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortBy)}
-            className="border rounded px-2 py-1 bg-white"
+            className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700"
           >
             <option value="created_at">Date Added</option>
             <option value="title">Name</option>
@@ -178,7 +179,10 @@ function ProjectCard({ project }: { project: Project }) {
     project.images?.find((img) => img.is_main) || project.images?.[0];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <Link
+      href={`/projects/${project.id}`}
+      className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-gray-300 transition-all"
+    >
       <div className="relative aspect-video bg-gray-100">
         {mainImage ? (
           <Image
@@ -197,13 +201,16 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="p-3">
         <h3 className="font-medium truncate">{project.title || "Untitled"}</h3>
       </div>
-    </div>
+    </Link>
   );
 }
 
 function CompetitionProjectCard({ project }: { project: CompetitionProject }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <Link
+      href={`/projects/${project.id}`}
+      className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:border-gray-300 transition-all"
+    >
       <div className="relative aspect-video bg-gray-100">
         {project.main_image_url ? (
           <Image
@@ -222,6 +229,6 @@ function CompetitionProjectCard({ project }: { project: CompetitionProject }) {
       <div className="p-3">
         <h3 className="font-medium truncate">{project.title || "Untitled"}</h3>
       </div>
-    </div>
+    </Link>
   );
 }

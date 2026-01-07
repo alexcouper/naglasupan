@@ -30,14 +30,15 @@ function StatusBadge({ status }: { status: string }) {
 
 interface ReadOnlyProjectDetailProps {
   project: Project;
+  showStatus?: boolean;
 }
 
-export function ReadOnlyProjectDetail({ project }: ReadOnlyProjectDetailProps) {
+export function ReadOnlyProjectDetail({ project, showStatus = true }: ReadOnlyProjectDetailProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
       <div className="flex items-start justify-between mb-6">
         <h1 className="text-3xl">{project.title || "Untitled Project"}</h1>
-        <StatusBadge status={project.status} />
+        {showStatus && <StatusBadge status={project.status} />}
       </div>
 
       {project.images && project.images.length > 0 && (
@@ -77,7 +78,7 @@ export function ReadOnlyProjectDetail({ project }: ReadOnlyProjectDetailProps) {
           </p>
         </div>
 
-        {project.status === "pending" && (
+        {showStatus && project.status === "pending" && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <p className="text-yellow-800 text-sm">
               Your project is currently under review. We&apos;ll notify you once it&apos;s been reviewed.
@@ -85,7 +86,7 @@ export function ReadOnlyProjectDetail({ project }: ReadOnlyProjectDetailProps) {
           </div>
         )}
 
-        {project.status === "approved" && project.approved_at && (
+        {showStatus && project.status === "approved" && project.approved_at && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <p className="text-green-800 text-sm">
               Your project was approved on{" "}
