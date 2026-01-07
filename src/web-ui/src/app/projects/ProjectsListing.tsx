@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Squares2X2Icon,
+  TrophyIcon,
+  ArrowsUpDownIcon,
+} from "@heroicons/react/24/outline";
 
 type SortBy = "created_at" | "title";
 type ViewMode = "list" | "competition";
@@ -44,6 +49,8 @@ export function ProjectsListing() {
   const [sortBy, setSortBy] = useState<SortBy>("created_at");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isPreview) {
@@ -79,6 +86,20 @@ export function ProjectsListing() {
     fetchData();
   }, [isPreview, viewMode, sortBy]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        sortDropdownRef.current &&
+        !sortDropdownRef.current.contains(event.target as Node)
+      ) {
+        setSortDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   if (!isPreview) {
     return (
       <div className="text-center py-12">
@@ -98,40 +119,67 @@ export function ProjectsListing() {
   return (
     <div>
       {/* Controls */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex gap-1">
           <button
             onClick={() => setViewMode("list")}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            title="All projects"
+            className={`p-2 rounded-lg transition-colors ${
               viewMode === "list"
-                ? "bg-accent text-white"
-                : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                ? "bg-gray-200 text-gray-900"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             }`}
           >
-            List
+            <Squares2X2Icon className="w-5 h-5" />
           </button>
           <button
             onClick={() => setViewMode("competition")}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            title="By competition"
+            className={`p-2 rounded-lg transition-colors ${
               viewMode === "competition"
-                ? "bg-accent text-white"
-                : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                ? "bg-gray-200 text-gray-900"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             }`}
           >
-            By Competition
+            <TrophyIcon className="w-5 h-5" />
           </button>
         </div>
 
-        {viewMode === "list" && (
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortBy)}
-            className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-700"
+        <div className="relative" ref={sortDropdownRef}>
+          <button
+            onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+            title="Sort order"
+            className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
           >
-            <option value="created_at">Date Added</option>
-            <option value="title">Name</option>
-          </select>
-        )}
+            <ArrowsUpDownIcon className="w-5 h-5" />
+          </button>
+          {sortDropdownOpen && (
+            <div className="absolute right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10 min-w-[140px]">
+              <button
+                onClick={() => {
+                  setSortBy("created_at");
+                  setSortDropdownOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                  sortBy === "created_at" ? "text-gray-900 font-medium" : "text-gray-700"
+                }`}
+              >
+                Date added
+              </button>
+              <button
+                onClick={() => {
+                  setSortBy("title");
+                  setSortDropdownOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                  sortBy === "title" ? "text-gray-900 font-medium" : "text-gray-700"
+                }`}
+              >
+                Name
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Project Cards */}
