@@ -1,3 +1,15 @@
+# Read container image versions from S3
+# This file is updated by CI before terraform apply
+data "aws_s3_object" "versions" {
+  provider = aws.scaleway_s3
+  bucket   = "sideproject-tfstate"
+  key      = "versions.json"
+}
+
+locals {
+  versions = jsondecode(data.aws_s3_object.versions.body)
+}
+
 resource "scaleway_container_namespace" "main" {
   name        = "${var.project_name}-${var.environment}"
   description = "Container namespace for ${var.project_name}"
@@ -7,7 +19,7 @@ resource "scaleway_container_namespace" "main" {
 resource "scaleway_container" "backend" {
   name           = "backend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:krltxtplnxmu-49fa691cb73d"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/django-backend:${local.versions.backend}"
   port           = 8000
   cpu_limit      = 256
   memory_limit   = 512
@@ -39,7 +51,7 @@ resource "scaleway_container" "backend" {
 resource "scaleway_container" "frontend" {
   name           = "frontend"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:krltxtplnxmu-49fa691cb73d"
+  registry_image = "rg.fr-par.scw.cloud/funcscwsideprojectprodaa67l9qf/web-ui:${local.versions["web-ui"]}"
   port           = 3000
   cpu_limit      = 256
   memory_limit   = 512

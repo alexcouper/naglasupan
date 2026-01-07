@@ -6,7 +6,9 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 source "$SCRIPT_DIR/../common.sh"
 
-CONTAINER_TF="$ROOT_DIR/infra/prod/app/container.tf"
+S3_BUCKET="sideproject-tfstate"
+S3_ENDPOINT="https://s3.fr-par.scw.cloud"
+AWS_PROFILE="naglasupan-prod"
 
 echo "=== Running CI-Ship for TAG: $TAG ==="
 
@@ -14,15 +16,15 @@ echo "=== Running CI-Ship for TAG: $TAG ==="
 "$SCRIPT_DIR/ci.sh"
 
 echo ""
-echo "=== Updating container.tf with new image tags ==="
+echo "=== Updating versions.json in S3 ==="
 
-# Update the backend image tag
-sed -i '' "s|funcscwsideprojectprodaa67l9qf/django-backend:[^\"]*|funcscwsideprojectprodaa67l9qf/django-backend:$TAG|g" "$CONTAINER_TF"
+# Write versions to S3 (Terraform reads this to get container image tags)
+echo "{\"backend\":\"$TAG\",\"web-ui\":\"$TAG\"}" | \
+  aws s3 cp - "s3://$S3_BUCKET/versions.json" \
+  --endpoint-url "$S3_ENDPOINT" \
+  --profile "$AWS_PROFILE"
 
-# Update the frontend image tag
-sed -i '' "s|funcscwsideprojectprodaa67l9qf/web-ui:[^\"]*|funcscwsideprojectprodaa67l9qf/web-ui:$TAG|g" "$CONTAINER_TF"
-
-echo "Updated container.tf with TAG: $TAG"
+echo "Updated versions.json with TAG: $TAG"
 
 echo ""
 echo "=== Running Terraform Apply ==="
