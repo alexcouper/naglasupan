@@ -173,5 +173,8 @@ logs/
 # Custom
 .deps_installed
 
+# Claude Code credentials
+.env.claude
+
 
 # Note: uv.lock should be committed to ensure reproducible builds
