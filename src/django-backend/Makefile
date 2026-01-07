@@ -1,12 +1,13 @@
 APP:=django-backend
-.PHONY: help install dev migrate makemigrations shell test createsuperuser clean extract-openapi lint
+.PHONY: help install dev migrate makemigrations shell test createsuperuser clean extract-openapi lint bootstrap
 
 include ../../scripts/app-common.mk
 
 help:
 	@echo "Available commands:"
 	@echo "  install       Install dependencies"
-	@echo "  dev           Run development server"
+	@echo "  dev           Run development server (auto-bootstraps if no db)"
+	@echo "  bootstrap     Initialize database with migrations and default users"
 	@echo "  migrate       Run database migrations"
 	@echo "  makemigrations Create new migrations"
 	@echo "  shell         Open Django shell"
@@ -20,7 +21,14 @@ install:
 	uv sync --all-extras
 
 dev:
+	@if [ ! -f db.sqlite3 ]; then \
+		echo "No database found, running bootstrap..."; \
+		$(MAKE) bootstrap; \
+	fi
 	uv run python manage.py runserver 0.0.0.0:8000
+
+bootstrap:
+	uv run python scripts/bootstrap_db.py
 
 migrate:
 	uv run python manage.py migrate
