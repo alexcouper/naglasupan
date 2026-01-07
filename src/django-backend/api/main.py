@@ -3,7 +3,7 @@ from typing import Any
 from django.http import HttpRequest
 from ninja import NinjaAPI
 
-from api.routers import admin, auth, my_projects, projects, tags
+from api.routers import admin, auth, competitions, my_projects, projects, tags
 
 api = NinjaAPI(
     title="Project Showcase API",
@@ -17,6 +17,7 @@ api.add_router("/projects", projects.router)
 api.add_router("/my/projects", my_projects.router)
 api.add_router("/tags", tags.router)
 api.add_router("/admin", admin.router)
+api.add_router("/competitions", competitions.router)
 
 
 @api.get("/")

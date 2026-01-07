@@ -137,3 +137,20 @@ class ProjectImage(models.Model):
     def url(self) -> str:
         """Returns the public URL for this image."""
         return f"{settings.S3_PUBLIC_URL_BASE}/{self.storage_key}"
+
+
+class Competition(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, db_index=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    projects = models.ManyToManyField(Project, related_name="competitions", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "competitions"
+        ordering = ["-start_date"]
+
+    def __str__(self) -> str:
+        return self.name

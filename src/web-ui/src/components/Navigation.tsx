@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/auth";
 
 export function Navigation() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { isAuthenticated, isLoading, logout } = useAuth();
+  const isPreview = searchParams.get("preview") === "True";
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -33,9 +35,15 @@ export function Navigation() {
           <Link href="/prizes" className={linkClass("/prizes")}>
             Prizes
           </Link>
-          <span className="text-gray-400 cursor-not-allowed">
-            Projects <span className="text-xs">[Coming Soon]</span>
-          </span>
+          {isPreview ? (
+            <Link href="/projects?preview=True" className={linkClass("/projects")}>
+              Projects
+            </Link>
+          ) : (
+            <span className="text-gray-400 cursor-not-allowed">
+              Projects <span className="text-xs">[Coming Soon]</span>
+            </span>
+          )}
 
         </div>
 

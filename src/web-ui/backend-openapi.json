@@ -982,78 +982,6 @@
         ]
       }
     },
-    "/api/my/projects/{project_id}/images/order": {
-      "post": {
-        "operationId": "api_routers_my_projects_update_image_order",
-        "summary": "Update Image Order",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "project_id",
-            "schema": {
-              "title": "Project Id",
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ProjectImageResponse"
-                  },
-                  "title": "Response",
-                  "type": "array"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "description": "Update the display order of images.",
-        "tags": [
-          "Project Images"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ImageOrderUpdateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "security": [
-          {
-            "JWTAuth": []
-          }
-        ]
-      }
-    },
     "/api/my/projects/{project_id}/images/main": {
       "post": {
         "operationId": "api_routers_my_projects_set_main_image",
@@ -1911,6 +1839,70 @@
           }
         ]
       }
+    },
+    "/api/competitions": {
+      "get": {
+        "operationId": "api_routers_competitions_list_competitions",
+        "summary": "List Competitions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompetitionListResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Competitions"
+        ]
+      }
+    },
+    "/api/competitions/{competition_id}": {
+      "get": {
+        "operationId": "api_routers_competitions_get_competition",
+        "summary": "Get Competition",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "competition_id",
+            "schema": {
+              "title": "Competition Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompetitionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Competitions"
+        ]
+      }
     }
   },
   "components": {
@@ -2592,43 +2584,6 @@
         "title": "ImageUploadCompleteRequest",
         "type": "object"
       },
-      "ImageOrderUpdate": {
-        "description": "Schema for updating a single image's order.",
-        "properties": {
-          "image_id": {
-            "format": "uuid",
-            "title": "Image Id",
-            "type": "string"
-          },
-          "display_order": {
-            "title": "Display Order",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "image_id",
-          "display_order"
-        ],
-        "title": "ImageOrderUpdate",
-        "type": "object"
-      },
-      "ImageOrderUpdateRequest": {
-        "description": "Request to update image order.",
-        "properties": {
-          "images": {
-            "items": {
-              "$ref": "#/components/schemas/ImageOrderUpdate"
-            },
-            "title": "Images",
-            "type": "array"
-          }
-        },
-        "required": [
-          "images"
-        ],
-        "title": "ImageOrderUpdateRequest",
-        "type": "object"
-      },
       "SetMainImageRequest": {
         "description": "Request to set main image.",
         "properties": {
@@ -2875,6 +2830,91 @@
           "slug"
         ],
         "title": "TagCreate",
+        "type": "object"
+      },
+      "CompetitionListResponse": {
+        "properties": {
+          "competitions": {
+            "items": {
+              "$ref": "#/components/schemas/CompetitionResponse"
+            },
+            "title": "Competitions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "competitions"
+        ],
+        "title": "CompetitionListResponse",
+        "type": "object"
+      },
+      "CompetitionProjectResponse": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "main_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Main Image Url"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "CompetitionProjectResponse",
+        "type": "object"
+      },
+      "CompetitionResponse": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/CompetitionProjectResponse"
+            },
+            "title": "Projects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "projects"
+        ],
+        "title": "CompetitionResponse",
         "type": "object"
       }
     },

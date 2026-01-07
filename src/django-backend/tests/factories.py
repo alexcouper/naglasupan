@@ -1,7 +1,9 @@
+from datetime import date
+
 import factory
 from django.contrib.auth import get_user_model
 
-from apps.projects.models import Project, ProjectStatus
+from apps.projects.models import Competition, Project, ProjectStatus
 from apps.tags.models import Tag
 
 User = get_user_model()
@@ -53,3 +55,18 @@ class ProjectFactory(factory.django.DjangoModelFactory):
         if not create or not extracted:
             return
         self.tags.add(*extracted)
+
+
+class CompetitionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Competition
+
+    name = factory.Sequence(lambda n: f"Competition {n}")
+    start_date = factory.LazyFunction(lambda: date(2025, 1, 1))
+    end_date = factory.LazyFunction(lambda: date(2025, 1, 31))
+
+    @factory.post_generation
+    def projects(self, create, extracted, **kwargs) -> None:
+        if not create or not extracted:
+            return
+        self.projects.add(*extracted)
