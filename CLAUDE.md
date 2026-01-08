@@ -18,7 +18,7 @@ Workspaces:
 
 ## Development Workflow
 
-**ALWAYS start by doing `jj new main -m "<change description>"`**
+**ALWAYS start by doing `jj new -m "<change description>"`**
 
 ## TDD
 
@@ -125,8 +125,8 @@ When testing authenticated features:
 
 JJ auto commits, but we need to set a description for the work we're doing. We do that at the START of the work
 
-1. Verify you're in a workspace (`jj workspace list`)
-2. Start by running `jj new main -m <description>` giving you a first changeset that you'll work from and isolating your changes
+1. Verify you're in a workspace (`jj workspace list`).
+2. Start by running `jj new -m <description>` giving you a first changeset that you'll work from and isolating your changes
 3. Understand the task
 4. Write code
 5. Run lint (`make lint` in django-backend, `npm run lint` in web-ui)
