@@ -25,9 +25,12 @@ export default function Home() {
         <span className="stamp-text">Inaugural prize date: 24 Jan 2026</span>
       </div>
 
-      <div className="mt-6 bg-yellow-300 text-foreground font-bold px-4 py-2 rounded-full shadow-md border-2 border-yellow-400">
+      <Link
+        href="/prizes"
+        className="mt-6 bg-yellow-300 text-foreground font-bold px-4 py-2 rounded-full shadow-md border-2 border-yellow-400 hover:bg-yellow-400 transition-colors"
+      >
         50,000 ISK Prize
-      </div>
+      </Link>
 
       {/* What is it section */}
       <section className="mt-24 w-full max-w-4xl px-4">
