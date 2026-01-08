@@ -30,7 +30,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-grid-paper pt-16">
-      <div className="content-wrapper flex flex-col items-center justify-center">
+      <div className="content-wrapper flex flex-col items-center pt-8">
         <div className="w-full max-w-md">
           <h1 className="text-3xl text-center mb-8">Log In</h1>
 
