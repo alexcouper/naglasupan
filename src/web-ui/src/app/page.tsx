@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="min-h-screen bg-grid-paper flex flex-col items-center justify-center px-4 pt-32 pb-24">
-      <h1 className="font-sketch text-5xl md:text-6xl lg:text-7xl text-center text-foreground mb-4">
+      <h1 className="text-5xl md:text-6xl lg:text-7xl text-center text-foreground mb-4 font-semibold">
         Shine a light on your work
       </h1>
       <p className="font-sketch text-2xl md:text-3xl text-center text-gray-600 mb-12">
@@ -22,7 +22,11 @@ export default function Home() {
       </p>
 
       <div className="stamp mt-16">
-        <span className="stamp-text">Inaugural review date: 24 Jan 2026</span>
+        <span className="stamp-text">Inaugural prize date: 24 Jan 2026</span>
+      </div>
+
+      <div className="mt-6 bg-yellow-300 text-foreground font-bold px-4 py-2 rounded-full shadow-md border-2 border-yellow-400">
+        50,000 ISK Prize
       </div>
 
       {/* What is it section */}
@@ -69,10 +73,10 @@ export default function Home() {
         {/* CTA Banner */}
         <div className="mt-12 bg-accent/5 border-2 border-dashed border-accent/30 rounded-lg p-6 md:p-8 text-center">
           <p className="text-lg md:text-xl font-medium text-foreground mb-4">
-            Submit your project today and enter the next round of cash prize competitions!
+            Submit your project today
           </p>
           <Link href="/register" className="btn-sketchy inline-block">
-            Enter Competition
+            Join community
           </Link>
         </div>
       </section>
