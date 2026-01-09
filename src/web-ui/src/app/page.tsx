@@ -63,7 +63,7 @@ export default function Home() {
                 Get Feedback
               </h3>
               <p className="text-gray-600">
-                Receive valuable feedback&mdash;both initial and ongoing&mdash;from fellow builders and experienced developers. And win prizes.
+                Receive valuable feedback&mdash;both initial and ongoing&mdash;from fellow builders. And win prizes.
               </p>
             </div>
 
@@ -76,7 +76,7 @@ export default function Home() {
                 Share & Grow
               </h3>
               <p className="text-gray-600">
-                Share your experience and skills. Learn from others. Grow together as a community.
+                Share your experience and skills. Learn from others. Grow your project with the community.
               </p>
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function Home() {
               Submit your project today
             </p>
             <Link href="/register" className="btn-sketchy inline-block">
-              Join community
+              Sign up
             </Link>
           </div>
         </div>
