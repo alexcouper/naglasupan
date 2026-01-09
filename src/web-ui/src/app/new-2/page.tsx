@@ -21,16 +21,16 @@ export default function NewDesign2() {
             <Link href="/register" className="btn-sketchy text-lg">
               Submit Your Project
             </Link>
-            <Link
-              href="/prizes"
-              className="bg-yellow-300 text-foreground font-bold px-6 py-3 rounded-full shadow-md border-2 border-yellow-400 hover:bg-yellow-400 transition-colors"
-            >
-              50,000 ISK Prize
-            </Link>
           </div>
 
-          <div className="stamp inline-block">
+          <div className="stamp inline-block relative">
             <span className="stamp-text">Inaugural prize date: 24 Jan 2026</span>
+            <Link
+              href="/prizes"
+              className="absolute -top-2 -right-8 rotate-22 bg-yellow-300 text-foreground text-xs font-bold px-2 py-1 rounded shadow border border-yellow-400 hover:bg-yellow-400 transition-colors whitespace-nowrap"
+            >
+              50.000 ISK
+            </Link>
           </div>
         </div>
       </section>
