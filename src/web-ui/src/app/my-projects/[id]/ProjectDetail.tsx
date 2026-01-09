@@ -234,7 +234,7 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
             onClick={handleSave}
             disabled={isSaving}
             title="Save"
-            className="px-3 py-2 rounded-lg text-gray-500 border border-gray-200 hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-sketchy disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving ? (
               <ArrowPathIcon className="w-5 h-5 animate-spin" />

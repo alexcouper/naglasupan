@@ -87,7 +87,7 @@ export function ProjectsList() {
       {projects.length === 0 ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
           <p className="text-gray-600 mb-4">You haven&apos;t submitted any projects yet.</p>
-          <Link href="/submit" className="btn-primary inline-block">
+          <Link href="/submit" className="btn-sketchy inline-block">
             Submit Your First Project
           </Link>
         </div>
@@ -137,12 +137,6 @@ export function ProjectsList() {
           })}
         </div>
       )}
-
-      <div className="mt-8 text-center">
-        <Link href="/submit" className="text-accent hover:underline">
-          Submit another project
-        </Link>
-      </div>
     </>
   );
 }

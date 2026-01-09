@@ -48,7 +48,6 @@ export function EditProjectDetail({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-      <h2 className="text-2xl mb-6">Edit Project</h2>
 
       <div className="space-y-6">
         <div>

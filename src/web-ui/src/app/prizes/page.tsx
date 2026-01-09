@@ -50,7 +50,7 @@ export default async function PrizesPage() {
             Prizes
           </h1>
           <p className="font-sketch text-2xl md:text-3xl text-gray-600 mb-10">
-            Rewarding Iceland&apos;s builders
+
           </p>
 
           <div className="stamp inline-block relative">
@@ -67,16 +67,18 @@ export default async function PrizesPage() {
 
       {/* Prize Pot Section */}
       <section className="py-16 px-4 bg-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="w-16 h-16 mx-auto mb-6 bg-yellow-100 rounded-full flex items-center justify-center">
-            <span className="text-3xl">&#127942;</span>
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center shrink-0">
+              <span className="text-2xl">&#127942;</span>
+            </div>
+            <h2 className="font-sketch text-3xl text-foreground">
+              Prize pot
+            </h2>
           </div>
-          <h2 className="font-sketch text-3xl text-foreground mb-4">
-            Prize pot
-          </h2>
-          <p className="text-lg text-gray-600 max-w-xl mx-auto">
-            The starting prize is 50,000 ISK, to be awarded to the best project submitted each prize period.
-          </p>
+          <article className="article p-0">
+            <p>The starting prize is 50,000 ISK, to be awarded to the best project submitted each prize period.</p>
+          </article>
         </div>
       </section>
 
