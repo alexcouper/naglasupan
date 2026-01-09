@@ -108,14 +108,6 @@ export function ProjectsListing() {
     );
   }
 
-  if (isLoading) {
-    return <p className="text-gray-600">Loading...</p>;
-  }
-
-  if (error) {
-    return <p className="text-red-600">{error}</p>;
-  }
-
   return (
     <div>
       {/* Controls */}
@@ -182,8 +174,12 @@ export function ProjectsListing() {
         </div>
       </div>
 
-      {/* Project Cards */}
-      {viewMode === "list" ? (
+      {/* Content Area */}
+      {isLoading ? (
+        <p className="text-gray-600">Loading...</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
+      ) : viewMode === "list" ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
