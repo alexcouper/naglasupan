@@ -34,7 +34,7 @@ resource "scaleway_container" "backend" {
     SCW_ACCESS_KEY       = scaleway_iam_api_key.backend.access_key
     PGUSER               = scaleway_iam_application.backend.id
     CORS_ALLOWED_ORIGINS = "https://naglasupan.is"
-    ADMIN_ALLOWED_IPS    = "157.97.17.17"
+    ADMIN_ALLOWED_IPS    = "157.97.17.17,178.43.233.34"  # alex home, poland
     # S3/Object Storage settings for image uploads
     S3_BUCKET_NAME     = scaleway_object_bucket.project_images.name
     S3_ENDPOINT_URL    = "https://s3.${var.region}.scw.cloud"
