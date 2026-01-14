@@ -32,4 +32,4 @@ RUN uv run python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Run the application with gunicorn
-CMD ["uv", "run", "gunicorn", "--bind", "0.0.0.0:8000", "--access-logfile", "-", "--error-logfile", "-", "project_showcase.wsgi:application"]
+CMD ["uv", "run", "gunicorn", "-c", "gunicorn.conf.py", "project_showcase.wsgi:application"]
