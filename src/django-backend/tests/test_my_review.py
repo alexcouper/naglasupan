@@ -1,7 +1,10 @@
+import json
+
 import pytest
 from hamcrest import assert_that, contains_inanyorder, equal_to, has_entries, has_length
 
 from api.auth.jwt import create_access_token
+from apps.projects.models import ProjectRanking
 from tests.factories import (
     CompetitionFactory,
     CompetitionReviewerFactory,
@@ -158,5 +161,150 @@ class TestGetMyReviewCompetition:
         competition = CompetitionFactory()
 
         response = client.get(f"/api/my-review/competitions/{competition.id}")
+
+        assert_that(response.status_code, equal_to(401))
+
+
+@pytest.mark.django_db
+class TestUpdateRankings:
+    def test_returns_404_when_not_assigned_to_competition(
+        self, client, user, auth_headers
+    ) -> None:
+        project = ProjectFactory()
+        competition = CompetitionFactory(projects=[project])
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({"project_ids": [str(project.id)]}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(404))
+
+    def test_returns_400_when_project_not_in_competition(
+        self, client, user, auth_headers
+    ) -> None:
+        project_in_competition = ProjectFactory()
+        project_not_in_competition = ProjectFactory()
+        competition = CompetitionFactory(projects=[project_in_competition])
+        CompetitionReviewerFactory(user=user, competition=competition)
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({"project_ids": [str(project_not_in_competition.id)]}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(400))
+        assert_that(response.json()["detail"], equal_to(
+            "One or more projects do not belong to this competition"
+        ))
+
+    def test_successfully_creates_rankings(self, client, user, auth_headers) -> None:
+        project1 = ProjectFactory()
+        project2 = ProjectFactory()
+        project3 = ProjectFactory()
+        competition = CompetitionFactory(projects=[project1, project2, project3])
+        CompetitionReviewerFactory(user=user, competition=competition)
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({
+                "project_ids": [str(project2.id), str(project1.id), str(project3.id)]
+            }),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(200))
+
+        # Verify rankings were created in database
+        rankings = ProjectRanking.objects.filter(
+            reviewer=user, competition=competition
+        ).order_by("position")
+
+        assert_that(list(rankings.values_list("project_id", "position")), equal_to([
+            (project2.id, 1),
+            (project1.id, 2),
+            (project3.id, 3),
+        ]))
+
+    def test_replaces_existing_rankings(self, client, user, auth_headers) -> None:
+        project1 = ProjectFactory()
+        project2 = ProjectFactory()
+        competition = CompetitionFactory(projects=[project1, project2])
+        CompetitionReviewerFactory(user=user, competition=competition)
+
+        # Create initial rankings
+        ProjectRankingFactory(
+            reviewer=user, competition=competition, project=project1, position=1
+        )
+        ProjectRankingFactory(
+            reviewer=user, competition=competition, project=project2, position=2
+        )
+
+        # Update with reversed order
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({
+                "project_ids": [str(project2.id), str(project1.id)]
+            }),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(200))
+
+        # Verify rankings were replaced
+        rankings = ProjectRanking.objects.filter(
+            reviewer=user, competition=competition
+        ).order_by("position")
+
+        assert_that(list(rankings.values_list("project_id", "position")), equal_to([
+            (project2.id, 1),
+            (project1.id, 2),
+        ]))
+
+    def test_returns_updated_competition_detail(
+        self, client, user, auth_headers
+    ) -> None:
+        project1 = ProjectFactory(title="First")
+        project2 = ProjectFactory(title="Second")
+        competition = CompetitionFactory(projects=[project1, project2])
+        CompetitionReviewerFactory(user=user, competition=competition)
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({
+                "project_ids": [str(project1.id), str(project2.id)]
+            }),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(200))
+        data = response.json()
+
+        # Response should include competition details
+        assert_that(data["id"], equal_to(str(competition.id)))
+        assert_that(data["name"], equal_to(competition.name))
+
+        # Projects should have rankings
+        project1_data = next(p for p in data["projects"] if p["id"] == str(project1.id))
+        project2_data = next(p for p in data["projects"] if p["id"] == str(project2.id))
+
+        assert_that(project1_data["my_ranking"], equal_to(1))
+        assert_that(project2_data["my_ranking"], equal_to(2))
+
+    def test_returns_401_when_not_authenticated(self, client) -> None:
+        competition = CompetitionFactory()
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({"project_ids": []}),
+            content_type="application/json",
+        )
 
         assert_that(response.status_code, equal_to(401))

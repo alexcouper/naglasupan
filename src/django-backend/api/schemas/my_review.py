@@ -49,3 +49,9 @@ class ReviewCompetitionDetailResponse(Schema):
     start_date: date
     end_date: date
     projects: list[ReviewProjectResponse]
+
+
+class RankingUpdateRequest(Schema):
+    """Request to update rankings for a competition."""
+
+    project_ids: list[UUID]

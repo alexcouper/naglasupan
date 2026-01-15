@@ -443,16 +443,6 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -466,11 +456,6 @@
         },
         "tags": [
           "Projects"
-        ],
-        "security": [
-          {
-            "JWTAuth": []
-          }
         ]
       }
     },
@@ -1903,6 +1888,150 @@
           "Competitions"
         ]
       }
+    },
+    "/api/my-review/competitions": {
+      "get": {
+        "operationId": "api_routers_my_review_list_my_review_competitions",
+        "summary": "List My Review Competitions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCompetitionListResponse"
+                }
+              }
+            }
+          }
+        },
+        "description": "List all competitions the current user is assigned to review.",
+        "tags": [
+          "My Review"
+        ],
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
+    "/api/my-review/competitions/{competition_id}": {
+      "get": {
+        "operationId": "api_routers_my_review_get_my_review_competition",
+        "summary": "Get My Review Competition",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "competition_id",
+            "schema": {
+              "title": "Competition Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCompetitionDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Get competition details with projects and reviewer's rankings.",
+        "tags": [
+          "My Review"
+        ],
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
+    },
+    "/api/my-review/competitions/{competition_id}/rankings": {
+      "put": {
+        "operationId": "api_routers_my_review_update_rankings",
+        "summary": "Update Rankings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "competition_id",
+            "schema": {
+              "title": "Competition Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCompetitionDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Update rankings for projects in a competition.",
+        "tags": [
+          "My Review"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RankingUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2915,6 +3044,169 @@
           "projects"
         ],
         "title": "CompetitionResponse",
+        "type": "object"
+      },
+      "ReviewCompetitionListResponse": {
+        "properties": {
+          "competitions": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewCompetitionResponse"
+            },
+            "title": "Competitions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "competitions"
+        ],
+        "title": "ReviewCompetitionListResponse",
+        "type": "object"
+      },
+      "ReviewCompetitionResponse": {
+        "description": "Competition that the current user is assigned to review.",
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "project_count": {
+            "title": "Project Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "project_count"
+        ],
+        "title": "ReviewCompetitionResponse",
+        "type": "object"
+      },
+      "ReviewCompetitionDetailResponse": {
+        "description": "Competition detail with projects and reviewer's rankings.",
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewProjectResponse"
+            },
+            "title": "Projects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "start_date",
+          "end_date",
+          "projects"
+        ],
+        "title": "ReviewCompetitionDetailResponse",
+        "type": "object"
+      },
+      "ReviewProjectResponse": {
+        "description": "Project within a competition being reviewed, with ranking info.",
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "website_url": {
+            "title": "Website Url",
+            "type": "string"
+          },
+          "main_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Main Image Url"
+          },
+          "my_ranking": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "My Ranking"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "website_url"
+        ],
+        "title": "ReviewProjectResponse",
+        "type": "object"
+      },
+      "RankingUpdateRequest": {
+        "description": "Request to update rankings for a competition.",
+        "properties": {
+          "project_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Project Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "project_ids"
+        ],
+        "title": "RankingUpdateRequest",
         "type": "object"
       }
     },
