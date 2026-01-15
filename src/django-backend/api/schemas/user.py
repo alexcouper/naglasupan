@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from uuid import UUID
 
 from ninja import Schema
@@ -20,6 +21,11 @@ class UserResponse(Schema):
     kennitala: str | None
     is_verified: bool
     created_at: datetime
+    groups: list[str]
+
+    @staticmethod
+    def resolve_groups(obj: Any) -> list[str]:
+        return list(obj.groups.values_list("name", flat=True))
 
 
 class UserUpdate(Schema):

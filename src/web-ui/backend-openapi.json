@@ -2074,6 +2074,13 @@
             "format": "date-time",
             "title": "Created At",
             "type": "string"
+          },
+          "groups": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Groups",
+            "type": "array"
           }
         },
         "required": [
@@ -2083,7 +2090,8 @@
           "last_name",
           "kennitala",
           "is_verified",
-          "created_at"
+          "created_at",
+          "groups"
         ],
         "title": "UserResponse",
         "type": "object"

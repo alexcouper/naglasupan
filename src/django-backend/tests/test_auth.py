@@ -3,14 +3,16 @@ from datetime import UTC, datetime, timedelta
 
 import jwt
 from django.conf import settings
+from django.contrib.auth.models import Group
 from hamcrest import (
     assert_that,
+    contains_inanyorder,
     equal_to,
     has_entries,
     is_not,
 )
 
-from api.auth.jwt import create_refresh_token, verify_token
+from api.auth.jwt import create_access_token, create_refresh_token, verify_token
 from tests.factories import UserFactory
 
 
@@ -233,3 +235,32 @@ class TestGetCurrentUser:
         )
 
         assert_that(response.status_code, equal_to(401))
+
+    def test_get_current_user_returns_empty_groups_when_user_has_none(
+        self,
+        client,
+        user,
+        auth_headers,
+    ) -> None:
+        response = client.get("/api/auth/me", **auth_headers)
+
+        assert_that(response.status_code, equal_to(200))
+        assert_that(response.json(), has_entries(groups=[]))
+
+    def test_get_current_user_returns_group_names(self, client, db) -> None:
+        reviewers, _ = Group.objects.get_or_create(name="reviewers")
+        editors, _ = Group.objects.get_or_create(name="editors")
+
+        user = UserFactory()
+        user.groups.add(reviewers, editors)
+
+        token = create_access_token(user.id)
+        headers = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
+
+        response = client.get("/api/auth/me", **headers)
+
+        assert_that(response.status_code, equal_to(200))
+        assert_that(
+            response.json()["groups"],
+            contains_inanyorder("reviewers", "editors"),
+        )
