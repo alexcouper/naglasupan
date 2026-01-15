@@ -4,7 +4,7 @@ import pytest
 from hamcrest import assert_that, contains_inanyorder, equal_to, has_entries, has_length
 
 from api.auth.jwt import create_access_token
-from apps.projects.models import ProjectRanking
+from apps.projects.models import CompetitionReviewer, ProjectRanking, ReviewStatus
 from tests.factories import (
     CompetitionFactory,
     CompetitionReviewerFactory,
@@ -49,6 +49,34 @@ class TestListMyReviewCompetitions:
 
         assert_that(response.status_code, equal_to(401))
 
+    def test_includes_my_review_status_in_response(
+        self, client, user, auth_headers
+    ) -> None:
+        competition = CompetitionFactory()
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.IN_PROGRESS
+        )
+
+        response = client.get("/api/my-review/competitions", **auth_headers)
+
+        assert_that(response.status_code, equal_to(200))
+        competitions = response.json()["competitions"]
+        assert_that(competitions[0]["my_review_status"], equal_to("in_progress"))
+
+    def test_includes_completed_status_in_response(
+        self, client, user, auth_headers
+    ) -> None:
+        competition = CompetitionFactory()
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.COMPLETED
+        )
+
+        response = client.get("/api/my-review/competitions", **auth_headers)
+
+        assert_that(response.status_code, equal_to(200))
+        competitions = response.json()["competitions"]
+        assert_that(competitions[0]["my_review_status"], equal_to("completed"))
+
 
 @pytest.mark.django_db
 class TestGetMyReviewCompetition:
@@ -71,9 +99,7 @@ class TestGetMyReviewCompetition:
         project2 = ProjectFactory(title="Project in other competition")
 
         competition1 = CompetitionFactory(name="My Competition", projects=[project1])
-        competition2 = CompetitionFactory(
-            name="Other Competition", projects=[project2]
-        )
+        competition2 = CompetitionFactory(name="Other Competition", projects=[project2])
 
         CompetitionReviewerFactory(user=user, competition=competition1)
         # Note: user is NOT assigned to competition2
@@ -164,6 +190,21 @@ class TestGetMyReviewCompetition:
 
         assert_that(response.status_code, equal_to(401))
 
+    def test_includes_my_review_status_in_response(
+        self, client, user, auth_headers
+    ) -> None:
+        competition = CompetitionFactory()
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.COMPLETED
+        )
+
+        response = client.get(
+            f"/api/my-review/competitions/{competition.id}", **auth_headers
+        )
+
+        assert_that(response.status_code, equal_to(200))
+        assert_that(response.json()["my_review_status"], equal_to("completed"))
+
 
 @pytest.mark.django_db
 class TestUpdateRankings:
@@ -198,9 +239,10 @@ class TestUpdateRankings:
         )
 
         assert_that(response.status_code, equal_to(400))
-        assert_that(response.json()["detail"], equal_to(
-            "One or more projects do not belong to this competition"
-        ))
+        assert_that(
+            response.json()["detail"],
+            equal_to("One or more projects do not belong to this competition"),
+        )
 
     def test_successfully_creates_rankings(self, client, user, auth_headers) -> None:
         project1 = ProjectFactory()
@@ -211,9 +253,9 @@ class TestUpdateRankings:
 
         response = client.put(
             f"/api/my-review/competitions/{competition.id}/rankings",
-            data=json.dumps({
-                "project_ids": [str(project2.id), str(project1.id), str(project3.id)]
-            }),
+            data=json.dumps(
+                {"project_ids": [str(project2.id), str(project1.id), str(project3.id)]}
+            ),
             content_type="application/json",
             **auth_headers,
         )
@@ -225,11 +267,16 @@ class TestUpdateRankings:
             reviewer=user, competition=competition
         ).order_by("position")
 
-        assert_that(list(rankings.values_list("project_id", "position")), equal_to([
-            (project2.id, 1),
-            (project1.id, 2),
-            (project3.id, 3),
-        ]))
+        assert_that(
+            list(rankings.values_list("project_id", "position")),
+            equal_to(
+                [
+                    (project2.id, 1),
+                    (project1.id, 2),
+                    (project3.id, 3),
+                ]
+            ),
+        )
 
     def test_replaces_existing_rankings(self, client, user, auth_headers) -> None:
         project1 = ProjectFactory()
@@ -248,9 +295,7 @@ class TestUpdateRankings:
         # Update with reversed order
         response = client.put(
             f"/api/my-review/competitions/{competition.id}/rankings",
-            data=json.dumps({
-                "project_ids": [str(project2.id), str(project1.id)]
-            }),
+            data=json.dumps({"project_ids": [str(project2.id), str(project1.id)]}),
             content_type="application/json",
             **auth_headers,
         )
@@ -262,10 +307,15 @@ class TestUpdateRankings:
             reviewer=user, competition=competition
         ).order_by("position")
 
-        assert_that(list(rankings.values_list("project_id", "position")), equal_to([
-            (project2.id, 1),
-            (project1.id, 2),
-        ]))
+        assert_that(
+            list(rankings.values_list("project_id", "position")),
+            equal_to(
+                [
+                    (project2.id, 1),
+                    (project1.id, 2),
+                ]
+            ),
+        )
 
     def test_returns_updated_competition_detail(
         self, client, user, auth_headers
@@ -277,9 +327,7 @@ class TestUpdateRankings:
 
         response = client.put(
             f"/api/my-review/competitions/{competition.id}/rankings",
-            data=json.dumps({
-                "project_ids": [str(project1.id), str(project2.id)]
-            }),
+            data=json.dumps({"project_ids": [str(project1.id), str(project2.id)]}),
             content_type="application/json",
             **auth_headers,
         )
@@ -304,6 +352,100 @@ class TestUpdateRankings:
         response = client.put(
             f"/api/my-review/competitions/{competition.id}/rankings",
             data=json.dumps({"project_ids": []}),
+            content_type="application/json",
+        )
+
+        assert_that(response.status_code, equal_to(401))
+
+
+@pytest.mark.django_db
+class TestUpdateReviewStatus:
+    def test_returns_404_when_not_assigned_to_competition(
+        self, client, user, auth_headers
+    ) -> None:
+        competition = CompetitionFactory()
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/status",
+            data=json.dumps({"status": "completed"}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(404))
+
+    def test_successfully_updates_status_to_completed(
+        self, client, user, auth_headers
+    ) -> None:
+        competition = CompetitionFactory()
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.IN_PROGRESS
+        )
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/status",
+            data=json.dumps({"status": "completed"}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(200))
+
+        # Verify status was updated in database
+        assignment = CompetitionReviewer.objects.get(user=user, competition=competition)
+        assert_that(assignment.status, equal_to(ReviewStatus.COMPLETED))
+
+    def test_successfully_updates_status_to_in_progress(
+        self, client, user, auth_headers
+    ) -> None:
+        competition = CompetitionFactory()
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.COMPLETED
+        )
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/status",
+            data=json.dumps({"status": "in_progress"}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(200))
+
+        # Verify status was updated in database
+        assignment = CompetitionReviewer.objects.get(user=user, competition=competition)
+        assert_that(assignment.status, equal_to(ReviewStatus.IN_PROGRESS))
+
+    def test_returns_updated_competition_detail(
+        self, client, user, auth_headers
+    ) -> None:
+        project = ProjectFactory()
+        competition = CompetitionFactory(projects=[project])
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.IN_PROGRESS
+        )
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/status",
+            data=json.dumps({"status": "completed"}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(200))
+        data = response.json()
+
+        assert_that(data["id"], equal_to(str(competition.id)))
+        assert_that(data["name"], equal_to(competition.name))
+        assert_that(data["my_review_status"], equal_to("completed"))
+        assert_that(data["projects"], has_length(1))
+
+    def test_returns_401_when_not_authenticated(self, client) -> None:
+        competition = CompetitionFactory()
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/status",
+            data=json.dumps({"status": "completed"}),
             content_type="application/json",
         )
 

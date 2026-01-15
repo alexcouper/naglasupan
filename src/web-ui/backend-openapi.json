@@ -2032,6 +2032,64 @@
           }
         ]
       }
+    },
+    "/api/my-review/competitions/{competition_id}/status": {
+      "put": {
+        "operationId": "api_routers_my_review_update_review_status",
+        "summary": "Update Review Status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "competition_id",
+            "schema": {
+              "title": "Competition Id",
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewCompetitionDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Update the reviewer's status for a competition.",
+        "tags": [
+          "My Review"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "JWTAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -3095,6 +3153,9 @@
           "project_count": {
             "title": "Project Count",
             "type": "integer"
+          },
+          "my_review_status": {
+            "$ref": "#/components/schemas/ReviewStatusEnum"
           }
         },
         "required": [
@@ -3102,10 +3163,19 @@
           "name",
           "start_date",
           "end_date",
-          "project_count"
+          "project_count",
+          "my_review_status"
         ],
         "title": "ReviewCompetitionResponse",
         "type": "object"
+      },
+      "ReviewStatusEnum": {
+        "enum": [
+          "in_progress",
+          "completed"
+        ],
+        "title": "ReviewStatusEnum",
+        "type": "string"
       },
       "ReviewCompetitionDetailResponse": {
         "description": "Competition detail with projects and reviewer's rankings.",
@@ -3129,6 +3199,9 @@
             "title": "End Date",
             "type": "string"
           },
+          "my_review_status": {
+            "$ref": "#/components/schemas/ReviewStatusEnum"
+          },
           "projects": {
             "items": {
               "$ref": "#/components/schemas/ReviewProjectResponse"
@@ -3142,6 +3215,7 @@
           "name",
           "start_date",
           "end_date",
+          "my_review_status",
           "projects"
         ],
         "title": "ReviewCompetitionDetailResponse",
@@ -3215,6 +3289,19 @@
           "project_ids"
         ],
         "title": "RankingUpdateRequest",
+        "type": "object"
+      },
+      "StatusUpdateRequest": {
+        "description": "Request to update the reviewer's status for a competition.",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ReviewStatusEnum"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "StatusUpdateRequest",
         "type": "object"
       }
     },

@@ -1,8 +1,14 @@
 from datetime import date
+from enum import Enum
 from typing import Any
 from uuid import UUID
 
 from ninja import Schema
+
+
+class ReviewStatusEnum(str, Enum):
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
 
 
 class ReviewCompetitionResponse(Schema):
@@ -13,10 +19,7 @@ class ReviewCompetitionResponse(Schema):
     start_date: date
     end_date: date
     project_count: int
-
-    @staticmethod
-    def resolve_project_count(obj: Any) -> int:
-        return obj.projects.count()
+    my_review_status: ReviewStatusEnum
 
 
 class ReviewCompetitionListResponse(Schema):
@@ -48,6 +51,7 @@ class ReviewCompetitionDetailResponse(Schema):
     name: str
     start_date: date
     end_date: date
+    my_review_status: ReviewStatusEnum
     projects: list[ReviewProjectResponse]
 
 
@@ -55,3 +59,9 @@ class RankingUpdateRequest(Schema):
     """Request to update rankings for a competition."""
 
     project_ids: list[UUID]
+
+
+class StatusUpdateRequest(Schema):
+    """Request to update the reviewer's status for a competition."""
+
+    status: ReviewStatusEnum

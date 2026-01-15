@@ -156,6 +156,11 @@ class Competition(models.Model):
         return self.name
 
 
+class ReviewStatus(models.TextChoices):
+    IN_PROGRESS = "in_progress", "In Progress"
+    COMPLETED = "completed", "Completed"
+
+
 class CompetitionReviewer(models.Model):
     """Links a user to a competition they can review."""
 
@@ -169,6 +174,11 @@ class CompetitionReviewer(models.Model):
         Competition,
         on_delete=models.CASCADE,
         related_name="reviewers",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=ReviewStatus.choices,
+        default=ReviewStatus.IN_PROGRESS,
     )
     assigned_at = models.DateTimeField(auto_now_add=True)
 
