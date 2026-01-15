@@ -65,3 +65,9 @@ class StatusUpdateRequest(Schema):
     """Request to update the reviewer's status for a competition."""
 
     status: ReviewStatusEnum
+
+
+class SuccessResponse(Schema):
+    """Simple success response."""
+
+    success: bool = True

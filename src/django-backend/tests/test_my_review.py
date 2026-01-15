@@ -317,34 +317,20 @@ class TestUpdateRankings:
             ),
         )
 
-    def test_returns_updated_competition_detail(
-        self, client, user, auth_headers
-    ) -> None:
-        project1 = ProjectFactory(title="First")
-        project2 = ProjectFactory(title="Second")
-        competition = CompetitionFactory(projects=[project1, project2])
+    def test_returns_success_response(self, client, user, auth_headers) -> None:
+        project = ProjectFactory()
+        competition = CompetitionFactory(projects=[project])
         CompetitionReviewerFactory(user=user, competition=competition)
 
         response = client.put(
             f"/api/my-review/competitions/{competition.id}/rankings",
-            data=json.dumps({"project_ids": [str(project1.id), str(project2.id)]}),
+            data=json.dumps({"project_ids": [str(project.id)]}),
             content_type="application/json",
             **auth_headers,
         )
 
         assert_that(response.status_code, equal_to(200))
-        data = response.json()
-
-        # Response should include competition details
-        assert_that(data["id"], equal_to(str(competition.id)))
-        assert_that(data["name"], equal_to(competition.name))
-
-        # Projects should have rankings
-        project1_data = next(p for p in data["projects"] if p["id"] == str(project1.id))
-        project2_data = next(p for p in data["projects"] if p["id"] == str(project2.id))
-
-        assert_that(project1_data["my_ranking"], equal_to(1))
-        assert_that(project2_data["my_ranking"], equal_to(2))
+        assert_that(response.json(), equal_to({"success": True}))
 
     def test_returns_401_when_not_authenticated(self, client) -> None:
         competition = CompetitionFactory()
@@ -416,11 +402,8 @@ class TestUpdateReviewStatus:
         assignment = CompetitionReviewer.objects.get(user=user, competition=competition)
         assert_that(assignment.status, equal_to(ReviewStatus.IN_PROGRESS))
 
-    def test_returns_updated_competition_detail(
-        self, client, user, auth_headers
-    ) -> None:
-        project = ProjectFactory()
-        competition = CompetitionFactory(projects=[project])
+    def test_returns_success_response(self, client, user, auth_headers) -> None:
+        competition = CompetitionFactory()
         CompetitionReviewerFactory(
             user=user, competition=competition, status=ReviewStatus.IN_PROGRESS
         )
@@ -433,12 +416,7 @@ class TestUpdateReviewStatus:
         )
 
         assert_that(response.status_code, equal_to(200))
-        data = response.json()
-
-        assert_that(data["id"], equal_to(str(competition.id)))
-        assert_that(data["name"], equal_to(competition.name))
-        assert_that(data["my_review_status"], equal_to("completed"))
-        assert_that(data["projects"], has_length(1))
+        assert_that(response.json(), equal_to({"success": True}))
 
     def test_returns_401_when_not_authenticated(self, client) -> None:
         competition = CompetitionFactory()

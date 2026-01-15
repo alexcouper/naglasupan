@@ -1986,7 +1986,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReviewCompetitionDetailResponse"
+                  "$ref": "#/components/schemas/SuccessResponse"
                 }
               }
             }
@@ -2054,7 +2054,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReviewCompetitionDetailResponse"
+                  "$ref": "#/components/schemas/SuccessResponse"
                 }
               }
             }
@@ -3271,6 +3271,18 @@
           "website_url"
         ],
         "title": "ReviewProjectResponse",
+        "type": "object"
+      },
+      "SuccessResponse": {
+        "description": "Simple success response.",
+        "properties": {
+          "success": {
+            "default": true,
+            "title": "Success",
+            "type": "boolean"
+          }
+        },
+        "title": "SuccessResponse",
         "type": "object"
       },
       "RankingUpdateRequest": {
