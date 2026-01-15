@@ -3,7 +3,13 @@ from datetime import date
 import factory
 from django.contrib.auth import get_user_model
 
-from apps.projects.models import Competition, Project, ProjectStatus
+from apps.projects.models import (
+    Competition,
+    CompetitionReviewer,
+    Project,
+    ProjectRanking,
+    ProjectStatus,
+)
 from apps.tags.models import Tag
 
 User = get_user_model()
@@ -70,3 +76,21 @@ class CompetitionFactory(factory.django.DjangoModelFactory):
         if not create or not extracted:
             return
         self.projects.add(*extracted)
+
+
+class CompetitionReviewerFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CompetitionReviewer
+
+    user = factory.SubFactory(UserFactory)
+    competition = factory.SubFactory(CompetitionFactory)
+
+
+class ProjectRankingFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProjectRanking
+
+    reviewer = factory.SubFactory(UserFactory)
+    competition = factory.SubFactory(CompetitionFactory)
+    project = factory.SubFactory(ProjectFactory)
+    position = factory.Sequence(lambda n: n + 1)
