@@ -87,6 +87,11 @@ export function Navigation() {
                 My Projects
               </Link>
             )}
+            {isAuthenticated && (
+              <Link href="/my-reviews" className={linkClass("/my-reviews")}>
+                My Reviews
+              </Link>
+            )}
             {isLoading ? (
               <span className="text-gray-400 text-sm">...</span>
             ) : isAuthenticated ? (
@@ -184,6 +189,15 @@ export function Navigation() {
                 onClick={closeMenu}
               >
                 My Projects
+              </Link>
+            )}
+            {isAuthenticated && (
+              <Link
+                href="/my-reviews"
+                className={mobileLinkClass("/my-reviews")}
+                onClick={closeMenu}
+              >
+                My Reviews
               </Link>
             )}
             {isLoading ? (

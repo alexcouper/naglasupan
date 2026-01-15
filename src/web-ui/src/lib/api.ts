@@ -9,6 +9,12 @@ type ProjectCreate = components["schemas"]["ProjectCreate"];
 type ProjectImage = components["schemas"]["ProjectImageResponse"];
 type PresignedUploadResponse = components["schemas"]["PresignedUploadResponse"];
 type ApiError = components["schemas"]["Error"];
+type ReviewCompetitionListResponse =
+  components["schemas"]["ReviewCompetitionListResponse"];
+type ReviewCompetitionDetailResponse =
+  components["schemas"]["ReviewCompetitionDetailResponse"];
+type ReviewCompetition = components["schemas"]["ReviewCompetitionResponse"];
+type ReviewProject = components["schemas"]["ReviewProjectResponse"];
 
 class ApiClient {
   private accessToken: string | null = null;
@@ -258,7 +264,41 @@ class ApiClient {
     );
   }
 
+  // Review endpoints
+  async getMyReviewCompetitions(): Promise<ReviewCompetitionListResponse> {
+    return this.request<ReviewCompetitionListResponse>(
+      "/api/my-review/competitions"
+    );
+  }
+
+  async getMyReviewCompetition(
+    competitionId: string
+  ): Promise<ReviewCompetitionDetailResponse> {
+    return this.request<ReviewCompetitionDetailResponse>(
+      `/api/my-review/competitions/${competitionId}`
+    );
+  }
+
+  async updateRankings(
+    competitionId: string,
+    projectIds: string[]
+  ): Promise<ReviewCompetitionDetailResponse> {
+    return this.request<ReviewCompetitionDetailResponse>(
+      `/api/my-review/competitions/${competitionId}/rankings`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ project_ids: projectIds }),
+      }
+    );
+  }
 }
 
 export const apiClient = new ApiClient();
-export type { User, Project, ProjectImage, TokenResponse };
+export type {
+  User,
+  Project,
+  ProjectImage,
+  TokenResponse,
+  ReviewCompetition,
+  ReviewProject,
+};

@@ -28,7 +28,7 @@ dev:
 	@PORT=$$(../../scripts/find-free-port.sh 8000) && \
 	echo $$PORT > ../../.backend-port && \
 	echo "Starting Django on port $$PORT (saved to .backend-port)" && \
-	uv run python manage.py runserver 0.0.0.0:$$PORT
+	DEBUG=true uv run python manage.py runserver 0.0.0.0:$$PORT
 
 bootstrap:
 	uv run python scripts/bootstrap_db.py
