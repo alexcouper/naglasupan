@@ -154,3 +154,62 @@ class Competition(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class CompetitionReviewer(models.Model):
+    """Links a user to a competition they can review."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="competition_assignments",
+    )
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        related_name="reviewers",
+    )
+    assigned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "competition_reviewers"
+        unique_together = ("user", "competition")
+
+    def __str__(self) -> str:
+        return f"{self.user} - {self.competition}"
+
+
+class ProjectRanking(models.Model):
+    """A reviewer's ranking of a project within a competition."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    reviewer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="project_rankings",
+    )
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        related_name="project_rankings",
+    )
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="rankings",
+    )
+    position = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "project_rankings"
+        unique_together = [
+            ("reviewer", "competition", "project"),
+            ("reviewer", "competition", "position"),
+        ]
+        ordering = ["position"]
+
+    def __str__(self) -> str:
+        return f"{self.reviewer} ranked {self.project} #{self.position} in {self.competition}"
