@@ -212,4 +212,4 @@ class ProjectRanking(models.Model):
         ordering = ["position"]
 
     def __str__(self) -> str:
-        return f"{self.reviewer} ranked {self.project} #{self.position} in {self.competition}"
+        return f"{self.reviewer} - {self.project} #{self.position}"

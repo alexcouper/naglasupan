@@ -9,7 +9,15 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
-from .models import Project, ProjectImage, ProjectStatus, ProjectView
+from .models import (
+    Competition,
+    CompetitionReviewer,
+    Project,
+    ProjectImage,
+    ProjectRanking,
+    ProjectStatus,
+    ProjectView,
+)
 
 if TYPE_CHECKING:
     from django.utils.safestring import SafeString
@@ -318,3 +326,54 @@ class ProjectImageAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[ProjectImage]:
         return super().get_queryset(request).select_related("project", "project__owner")
+
+
+class CompetitionReviewerInline(admin.TabularInline):
+    model = CompetitionReviewer
+    extra = 1
+    autocomplete_fields = ("user",)
+
+
+@admin.register(Competition)
+class CompetitionAdmin(admin.ModelAdmin):
+    list_display = ("name", "start_date", "end_date", "project_count", "reviewer_count")
+    list_filter = ("start_date", "end_date")
+    search_fields = ("name",)
+    filter_horizontal = ("projects",)
+    inlines = [CompetitionReviewerInline]
+    ordering = ("-start_date",)
+
+    @admin.display(description="Projects")
+    def project_count(self, obj: Competition) -> int:
+        return obj.projects.count()
+
+    @admin.display(description="Reviewers")
+    def reviewer_count(self, obj: Competition) -> int:
+        return obj.reviewers.count()
+
+
+@admin.register(CompetitionReviewer)
+class CompetitionReviewerAdmin(admin.ModelAdmin):
+    list_display = ("user", "competition", "assigned_at")
+    list_filter = ("competition", "assigned_at")
+    search_fields = (
+        "user__email",
+        "user__first_name",
+        "user__last_name",
+        "competition__name",
+    )
+    autocomplete_fields = ("user", "competition")
+    ordering = ("-assigned_at",)
+
+
+@admin.register(ProjectRanking)
+class ProjectRankingAdmin(admin.ModelAdmin):
+    list_display = ("reviewer", "competition", "project", "position", "updated_at")
+    list_filter = ("competition", "reviewer")
+    search_fields = (
+        "reviewer__email",
+        "project__title",
+        "competition__name",
+    )
+    autocomplete_fields = ("reviewer", "competition", "project")
+    ordering = ("competition", "reviewer", "position")
