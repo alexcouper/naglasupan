@@ -12,7 +12,12 @@ from api.schemas.my_review import (
     StatusUpdateRequest,
     SuccessResponse,
 )
-from apps.projects.models import Competition, CompetitionReviewer, ProjectRanking
+from apps.projects.models import (
+    Competition,
+    CompetitionReviewer,
+    ProjectRanking,
+    ReviewStatus,
+)
 
 router = Router()
 
@@ -116,6 +121,9 @@ def update_rankings(
 
     if not assignment:
         return 404, Error(detail="Competition not found")
+
+    if assignment.status == ReviewStatus.COMPLETED:
+        return 400, Error(detail="Cannot update rankings for a completed review")
 
     competition_project_ids = set(
         Competition.objects.filter(id=competition_id).values_list(

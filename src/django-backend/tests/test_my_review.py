@@ -244,6 +244,28 @@ class TestUpdateRankings:
             equal_to("One or more projects do not belong to this competition"),
         )
 
+    def test_returns_400_when_review_is_completed(
+        self, client, user, auth_headers
+    ) -> None:
+        project = ProjectFactory()
+        competition = CompetitionFactory(projects=[project])
+        CompetitionReviewerFactory(
+            user=user, competition=competition, status=ReviewStatus.COMPLETED
+        )
+
+        response = client.put(
+            f"/api/my-review/competitions/{competition.id}/rankings",
+            data=json.dumps({"project_ids": [str(project.id)]}),
+            content_type="application/json",
+            **auth_headers,
+        )
+
+        assert_that(response.status_code, equal_to(400))
+        assert_that(
+            response.json()["detail"],
+            equal_to("Cannot update rankings for a completed review"),
+        )
+
     def test_successfully_creates_rankings(self, client, user, auth_headers) -> None:
         project1 = ProjectFactory()
         project2 = ProjectFactory()
