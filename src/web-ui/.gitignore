@@ -42,3 +42,5 @@ next-env.d.ts
 
 # generated from openapi spec
 src/lib/api-types.ts
+
+screenshots/

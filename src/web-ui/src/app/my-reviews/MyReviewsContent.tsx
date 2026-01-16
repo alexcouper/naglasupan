@@ -3,7 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth";
-import { apiClient, ReviewCompetition, ReviewProject } from "@/lib/api";
+import {
+  apiClient,
+  ReviewCompetition,
+  ReviewProject,
+  ReviewStatus,
+} from "@/lib/api";
 import { CompetitionsList } from "./CompetitionsList";
 import { CompetitionProjects } from "./CompetitionProjects";
 import { ReviewProjectDetail } from "./ReviewProjectDetail";
@@ -13,6 +18,7 @@ type View = "competitions" | "projects" | "detail";
 interface SelectedCompetition {
   id: string;
   name: string;
+  status: ReviewStatus;
 }
 
 function Breadcrumbs({
@@ -142,8 +148,8 @@ export function MyReviewsContent() {
   }, []);
 
   const handleCompetitionSelect = useCallback(
-    (id: string, name: string) => {
-      setSelectedCompetition({ id, name });
+    (id: string, name: string, status: ReviewStatus) => {
+      setSelectedCompetition({ id, name, status });
       setView("projects");
       loadCompetitionProjects(id);
     },
@@ -164,7 +170,24 @@ export function MyReviewsContent() {
     setSelectedCompetition(null);
     setSelectedProject(null);
     setProjects([]);
-  }, []);
+    loadCompetitions();
+  }, [loadCompetitions]);
+
+  const handleFinishReview = useCallback(() => {
+    if (selectedCompetition) {
+      setSelectedCompetition({
+        ...selectedCompetition,
+        status: "completed",
+      });
+      setCompetitions((prev) =>
+        prev.map((c) =>
+          c.id === selectedCompetition.id
+            ? { ...c, my_review_status: "completed" as ReviewStatus }
+            : c
+        )
+      );
+    }
+  }, [selectedCompetition]);
 
   const handleGoToProjects = useCallback(() => {
     setView("projects");
@@ -220,8 +243,10 @@ export function MyReviewsContent() {
         <CompetitionProjects
           competitionId={selectedCompetition.id}
           projects={projects}
+          isCompleted={selectedCompetition.status === "completed"}
           onProjectSelect={handleProjectSelect}
           onProjectsReorder={handleProjectsReorder}
+          onFinishReview={handleFinishReview}
         />
       )}
 

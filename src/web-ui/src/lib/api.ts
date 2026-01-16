@@ -15,6 +15,7 @@ type ReviewCompetitionDetailResponse =
   components["schemas"]["ReviewCompetitionDetailResponse"];
 type ReviewCompetition = components["schemas"]["ReviewCompetitionResponse"];
 type ReviewProject = components["schemas"]["ReviewProjectResponse"];
+type ReviewStatus = components["schemas"]["ReviewStatusEnum"];
 
 class ApiClient {
   private accessToken: string | null = null;
@@ -291,6 +292,19 @@ class ApiClient {
       }
     );
   }
+
+  async updateReviewStatus(
+    competitionId: string,
+    status: ReviewStatus
+  ): Promise<void> {
+    return this.request<void>(
+      `/api/my-review/competitions/${competitionId}/status`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ status }),
+      }
+    );
+  }
 }
 
 export const apiClient = new ApiClient();
@@ -301,4 +315,5 @@ export type {
   TokenResponse,
   ReviewCompetition,
   ReviewProject,
+  ReviewStatus,
 };
