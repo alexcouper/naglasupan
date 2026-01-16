@@ -72,7 +72,9 @@ export default function RegisterPage() {
                 </label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -87,7 +89,9 @@ export default function RegisterPage() {
                 </label>
                 <input
                   id="password"
+                  name="new-password"
                   type="password"
+                  autoComplete="new-password"
                   required
                   minLength={8}
                   value={password}
@@ -103,6 +107,7 @@ export default function RegisterPage() {
                 </label>
                 <input
                   id="kennitala"
+                  name="kennitala"
                   type="text"
                   required
                   maxLength={10}
